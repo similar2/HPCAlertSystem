@@ -1,0 +1,24 @@
+spring:
+  jackson:
+    time-zone: GMT+8
+  mvc:
+    servlet:
+      load-on-startup: 1 #SpringBoot的接口第一次访问很慢，因为DispatchServlet默认是懒加载的
+  datasource:
+    url: jdbc:mysql://172.18.6.108:3306/monitor?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+    username: admin
+    password: Root@2024
+  mail:
+    username: hpcums@163.com
+    password: OSDJHYNKTVIKJHQN
+    host: smtp.163.com
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+          starttls:
+            enable: true
+            required: true
+    port: 994

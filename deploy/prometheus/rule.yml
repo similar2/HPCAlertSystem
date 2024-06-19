@@ -1,0 +1,8 @@
+groups:
+  - name: ipmi_exporter
+    rules:
+      - alert: HighCPUTemp
+        for: 5m
+        annotations: {summary: CPU temperature is too high}
+        expr: ipmi_temperature_celsius{job="ipmi_exporter",name=~"CPU[0-9]*_Temp"} > 51
+        labels: {severity: LOW}

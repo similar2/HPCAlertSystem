@@ -1,0 +1,19 @@
+# refers:
+# - https://github.com/prometheus-community/ipmi_exporter/blob/master/ipmi_remote.yml
+# - https://github.com/prometheus-community/ipmi_exporter/issues/50
+
+modules:
+  default:
+    user: admin
+    pass: admin
+    privilege: admin
+    driver: LAN_2_0
+    workaround_flags: # https://www.gnu.org/software/freeipmi/manpages/man8/ipmi-sensors.8.html#lbAL
+      - authcap
+    # timeout: 1000
+    collectors:
+      - bmc
+      - ipmi
+      - chassis
+    # exclude_sensor_ids:
+
