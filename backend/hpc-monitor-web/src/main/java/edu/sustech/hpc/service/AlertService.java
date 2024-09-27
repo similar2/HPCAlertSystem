@@ -48,12 +48,12 @@ public class AlertService {
                 .isNull(Alert::getSolveTime));
     }
 
-    public Alert add(AlertParam alertParam){
+    public Alert add(AlertParam alertParam) {
         Alert alert = new Alert()
-                        .setDescription(alertParam.getDescription())
-                        .setDeviceName(alertParam.getDeviceName())
-                        .setAlertName(alertParam.getAlertName())
-                        .setSeverity(alertParam.getSeverity());
+                .setDescription(alertParam.getDescription())
+                .setDeviceName(alertParam.getDeviceName())
+                .setAlertName(alertParam.getAlertName())
+                .setSeverity(alertParam.getSeverity());
         return add(alert);
     }
 
@@ -63,9 +63,9 @@ public class AlertService {
         return alert;
     }
 
-    public Alert solve(Integer id, String solveMethod){
+    public Alert solve(Integer id, String solveMethod) {
         Alert alert = alertDao.selectById(id);
-        asserts(alert!=null, "告警ID不存在");
+        asserts(alert != null, "告警ID不存在");
         alert.setSolveTime(LocalDateTime.now());
         alert.setSolveMethod(solveMethod);
         alertDao.updateById(alert);
@@ -86,13 +86,13 @@ public class AlertService {
 
     void updatePrometheusAlert(Alert alert, PrometheusAlertInfo prometheusAlertInfo) {
         PrometheusAlert prometheusAlert = prometheusAlertDao.selectById(alert.getId());
-        if(prometheusAlertInfo.getActiveTime().isAfter(prometheusAlert.getLastOccurrence())) {
+        if (prometheusAlertInfo.getActiveTime().isAfter(prometheusAlert.getLastOccurrence())) {
             prometheusAlert.setLastOccurrence(prometheusAlertInfo.getActiveTime());
             prometheusAlertDao.updateById(prometheusAlert);
         }
     }
 
-    public Alert get(Integer id){
+    public Alert get(Integer id) {
         return alertDao.selectById(id);
     }
 
@@ -100,16 +100,16 @@ public class AlertService {
             String deviceName,
             LocalDateTime startTime,
             LocalDateTime endTime,
-            Boolean solved){
+            Boolean solved) {
         LambdaQueryWrapper<Alert> queryWrapper = new LambdaQueryWrapper<>();
-        if(deviceName != null)
+        if (deviceName != null)
             queryWrapper.eq(Alert::getDeviceName, deviceName);
-        if(startTime != null)
+        if (startTime != null)
             queryWrapper.ge(Alert::getCreateTime, startTime);
-        if(endTime != null)
+        if (endTime != null)
             queryWrapper.le(Alert::getCreateTime, endTime);
-        if(solved != null)
-            if(solved)
+        if (solved != null)
+            if (solved)
                 queryWrapper.isNotNull(Alert::getSolveTime);
             else
                 queryWrapper.isNull(Alert::getSolveTime);
@@ -120,15 +120,15 @@ public class AlertService {
                         String description,
                         Integer dutyUserId,
                         String deviceName,
-                        String solveMethod){
+                        String solveMethod) {
         Alert alert = alertDao.selectById(id);
-        asserts(alert!=null, "告警ID不存在");
-        if(dutyUserId!=null){ //检查责任人ID是否存在
-            asserts(userDao.selectById(dutyUserId)!=null, "责任人ID不存在");
+        asserts(alert != null, "告警ID不存在");
+        if (dutyUserId != null) { //检查责任人ID是否存在
+            asserts(userDao.selectById(dutyUserId) != null, "责任人ID不存在");
         }
         alert.setDescription(description)
-             .setDeviceName(deviceName)
-             .setSolveMethod(solveMethod);
+                .setDeviceName(deviceName)
+                .setSolveMethod(solveMethod);
         alertDao.updateById(alert);
         return alert;
     }
@@ -138,13 +138,14 @@ public class AlertService {
                 new LambdaQueryWrapper<Device>()
                         .eq(Device::getName, alert.getDeviceName())
         );
+        if (device == null) return;
         List<Assignee> assignees =
                 assigneeDao.selectList(
                         new LambdaQueryWrapper<Assignee>()
                                 .eq(Assignee::getDeviceId, device.getId())
                 );
         List<User> assigneeUsers = new ArrayList<>();
-        for(Assignee assignee : assignees) {
+        for (Assignee assignee : assignees) {
             assigneeUsers.add(
                     userDao.selectOne(
                             new LambdaQueryWrapper<User>()
@@ -152,7 +153,7 @@ public class AlertService {
                     )
             );
         }
-        for(User assigneeUser : assigneeUsers) {
+        for (User assigneeUser : assigneeUsers) {
             notifyAssignee(alert, assigneeUser);
         }
     }
