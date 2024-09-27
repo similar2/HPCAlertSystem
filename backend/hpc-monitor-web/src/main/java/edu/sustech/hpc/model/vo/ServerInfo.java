@@ -15,9 +15,11 @@ public class ServerInfo {
     private Integer id;
 
     public ServerInfo(Server server) {
-        ip = server.getIp();
-        manageIp = server.getManageIp();
-        publicIp = server.getPublicIp();
-        id = server.getId();
+        if (server != null) {
+            ip = server.getIp();
+            manageIp = server.getManageIp();
+            publicIp = server.getPublicIp();
+            id = server.getId();
+        }
     }
 }
