@@ -31,7 +31,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
 
-@PathController("/devices")
+@PathController("/api/devices")
 public class DeviceController {
 
     @Resource

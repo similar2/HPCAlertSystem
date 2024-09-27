@@ -15,8 +15,10 @@ public class ClusterInfo {
     private Integer id;
 
     public ClusterInfo(Cluster cluster) {
-        name = cluster.getName();
-        id = cluster.getId();
+        if (cluster != null) {
+            name = cluster.getName();
+            id = cluster.getId();
+        }
     }
 }
 

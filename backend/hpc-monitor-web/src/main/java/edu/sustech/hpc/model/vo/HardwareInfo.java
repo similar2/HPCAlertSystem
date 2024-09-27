@@ -17,10 +17,12 @@ public class HardwareInfo {
     private Integer serverId, hardwareId;
 
     public HardwareInfo(Hardware hardware) {
-        this.type = hardware.getType();
-        this.ip = hardware.getIp();
-        this.name = hardware.getName();
-        this.serverId = hardware.getServerId();
-        this.hardwareId = hardware.getId();
+        if (hardware != null) {
+            this.type = hardware.getType();
+            this.ip = hardware.getIp();
+            this.name = hardware.getName();
+            this.serverId = hardware.getServerId();
+            this.hardwareId = hardware.getId();
+        }
     }
 }

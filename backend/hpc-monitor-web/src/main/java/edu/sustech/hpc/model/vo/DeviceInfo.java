@@ -16,10 +16,12 @@ public class DeviceInfo {
     private String name;
     private Integer id, clusterId;
 
-    public DeviceInfo (Device device) {
-        type = device.getType();
-        name = device.getName();
-        id = device.getId();
-        clusterId = device.getClusterId();
+    public DeviceInfo(Device device) {
+        if (device != null) {
+            type = device.getType();
+            name = device.getName();
+            id = device.getId();
+            clusterId = device.getClusterId();
+        }
     }
 }
