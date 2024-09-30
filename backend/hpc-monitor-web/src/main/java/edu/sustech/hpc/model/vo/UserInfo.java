@@ -14,4 +14,5 @@ public class UserInfo {
     private Integer id;
     private String name;
     private String email;
+    private Integer role;// 1 - engineer, 2 - system admin, 3 - super admin
 }

@@ -10,4 +10,5 @@ public class PublicUserInfo {
     private Integer id; //用户ID
     private String username;
     private String email;
+    private Integer role;
 }

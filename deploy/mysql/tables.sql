@@ -89,7 +89,8 @@ create table if not exists user
     name     varchar(20) null,
     password char(60)    not null comment 'Bcrypt hashed password',
     phone    char(11)    null,
-    email    varchar(40) null
+    email    varchar(40) null,
+    role     INT CHECK (role IN (1, 2, 3))
 );
 
 create table if not exists user_with_role
