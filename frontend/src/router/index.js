@@ -53,8 +53,16 @@ const router = createRouter({
           component: () => import('@/views/user/UserAvatar.vue')
         },
         {
-          path: '/user/Password',
+          path: '/user/password',
           component: () => import('@/views/user/UserPassword.vue')
+        },
+        {
+          path: '/userManager/systemManager',
+          component: () => import('@/views/userManager/systemManager.vue')
+        },
+        {
+          path: '/userManager/engineer',
+          component: () => import('@/views/userManager/engineer.vue')
         }
       ]
     }

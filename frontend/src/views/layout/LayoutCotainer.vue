@@ -40,6 +40,7 @@ const handleCommand = async (command) => {
     })
     userStore.setUser({})
     userStore.setToken('')
+    userStore.setRole('')
     router.push('/login')
   }
 }
@@ -91,6 +92,21 @@ const handleCommand = async (command) => {
             <el-icon><Promotion /></el-icon>
             <span>人工添加</span>
           </el-menu-item> -->
+        </el-sub-menu>
+
+        <el-sub-menu index="/userManager" v-if="userStore.role == 2 || userStore.role ==3">
+          <template #title>
+            <el-icon><UserFilled /></el-icon>
+            <span>用户管理</span>
+          </template>
+          <el-menu-item index="/userManager/systemManager" v-if="userStore.role == 3">
+            <el-icon><User /></el-icon>
+            <span>系统管理</span>
+          </el-menu-item>
+          <el-menu-item index="/userManager/engineer">
+            <el-icon><User /></el-icon>
+            <span>运维工程师</span>
+          </el-menu-item>
         </el-sub-menu>
 
         <el-sub-menu index="/user">

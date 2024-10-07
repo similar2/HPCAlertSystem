@@ -48,5 +48,13 @@ public class UserController {
     public ApiResponse<UserInfo> login(@Validated @RequestBody LoginParam loginParam) {
         UserInfo userInfo = userService.login(loginParam.getEmail(), loginParam.getPassword());
         return ApiResponse.success(userInfo);
+//        System.out.println("login");
+//        return ApiResponse.success(UserInfo.builder()
+//                .token("token")
+//                .id(1)
+//                .name("name")
+//                .email(loginParam.getEmail())
+//                .role(3)
+//                .build());
     }
 }

@@ -73,6 +73,7 @@ const login = async () => {
   await form.value.validate()
   const res = await userLoginService(formModel.value)
   userStore.setToken(res.data.data.token)
+  userStore.setRole(res.data.data.role)
   ElMessage.success('登录成功')
   router.push('/')
 }
