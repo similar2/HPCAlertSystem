@@ -1,102 +1,102 @@
-create table if not exists alert
+DROP TABLE IF EXISTS alert;
+CREATE TABLE alert
 (
-    id           int auto_increment
-        primary key,
-    create_time  datetime default CURRENT_TIMESTAMP not null,
-    description  varchar(500)                       not null,
-    solve_time   datetime                           null,
-    solve_method varchar(300)                       null,
-    device_name  varchar(50)                        null,
-    alert_name   varchar(100)                       null,
-    severity     varchar(100)                       null,
-    type         varchar(20)                        null
+    id           INT AUTO_INCREMENT PRIMARY KEY,
+    create_time  DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    description  VARCHAR(500) NOT NULL,
+    solve_time   DATETIME NULL,
+    solve_method VARCHAR(300) NULL,
+    device_name  VARCHAR(50) NULL,
+    alert_name   VARCHAR(100) NULL,
+    severity     VARCHAR(100) NULL,
+    type         VARCHAR(20) NULL
 );
 
-create table if not exists assignee
+DROP TABLE IF EXISTS assignee;
+CREATE TABLE assignee
 (
-    id        int auto_increment
-        primary key,
-    device_id int null,
-    user_id   int null
+    id        INT AUTO_INCREMENT PRIMARY KEY,
+    device_id INT NULL,
+    user_id   INT NULL
 );
 
-create table if not exists bmc
+DROP TABLE IF EXISTS bmc;
+CREATE TABLE bmc
 (
-    id       int             not null
-        primary key,
-    user     varchar(30)     not null,
-    password varchar(50)     not null,
-    port     int default 623 not null
+    id       INT NOT NULL PRIMARY KEY,
+    user     VARCHAR(30) NOT NULL,
+    password VARCHAR(50) NOT NULL,
+    port     INT DEFAULT 623 NOT NULL
 );
 
-create table if not exists cluster
+DROP TABLE IF EXISTS cluster;
+CREATE TABLE cluster
 (
-    id   int auto_increment
-        primary key,
-    name varchar(30) not null
+    id   INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(30) NOT NULL
 );
 
-create table if not exists device
+DROP TABLE IF EXISTS device;
+CREATE TABLE device
 (
-    type       varchar(30)          not null,
-    name       varchar(30)          null,
-    cluster_id int                  null,
-    id         int auto_increment
-        primary key,
-    position   varchar(30)          null,
-    deleted    tinyint(1) default 0 not null
+    type       VARCHAR(30) NOT NULL,
+    name       VARCHAR(30) NULL,
+    cluster_id INT NULL,
+    id         INT AUTO_INCREMENT PRIMARY KEY,
+    position   VARCHAR(30) NULL,
+    deleted    TINYINT(1) DEFAULT 0 NOT NULL
 );
 
-create table if not exists hardware
+DROP TABLE IF EXISTS hardware;
+CREATE TABLE hardware
 (
-    type      varchar(30) not null,
-    server_id int         not null,
-    id        int auto_increment
-        primary key,
-    name      varchar(50) null,
-    ip        varchar(15) null
+    type      VARCHAR(30) NOT NULL,
+    server_id INT NOT NULL,
+    id        INT AUTO_INCREMENT PRIMARY KEY,
+    name      VARCHAR(50) NULL,
+    ip        VARCHAR(15) NULL
 );
 
-create table if not exists prometheus_alert
+DROP TABLE IF EXISTS prometheus_alert;
+CREATE TABLE prometheus_alert
 (
-    alert_id        int         not null
-        primary key,
-    last_occurrence datetime    null,
-    ip              varchar(15) null,
-    alert_name      varchar(50) null
+    alert_id        INT NOT NULL PRIMARY KEY,
+    last_occurrence DATETIME NULL,
+    ip              VARCHAR(15) NULL,
+    alert_name      VARCHAR(50) NULL
 );
 
-create table if not exists role
+DROP TABLE IF EXISTS role;
+CREATE TABLE role
 (
-    id   int auto_increment
-        primary key,
-    name varchar(30) not null
+    id   INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(30) NOT NULL
 );
 
-create table if not exists server
+DROP TABLE IF EXISTS server;
+CREATE TABLE server
 (
-    id        int         not null
-        primary key,
-    ip        varchar(15) not null comment '校园网IP',
-    manage_ip varchar(15) null comment '管理网IP',
-    public_ip varchar(15) null comment '公网IP'
+    id        INT NOT NULL PRIMARY KEY,
+    ip        VARCHAR(15) NOT NULL COMMENT '校园网IP',
+    manage_ip VARCHAR(15) NULL COMMENT '管理网IP',
+    public_ip VARCHAR(15) NULL COMMENT '公网IP'
 );
 
-create table if not exists user
+DROP TABLE IF EXISTS user;
+CREATE TABLE user
 (
-    id       int auto_increment
-        primary key,
-    name     varchar(20) null,
-    password char(60)    not null comment 'Bcrypt hashed password',
-    phone    char(11)    null,
-    email    varchar(40) null,
+    id       INT AUTO_INCREMENT PRIMARY KEY,
+    name     VARCHAR(20) NULL,
+    password CHAR(60) NOT NULL COMMENT 'Bcrypt hashed password',
+    phone    CHAR(11) NULL,
+    email    VARCHAR(40) NULL,
     role     INT CHECK (role IN (1, 2, 3))
 );
 
-create table if not exists user_with_role
+DROP TABLE IF EXISTS user_with_role;
+CREATE TABLE user_with_role
 (
-    user_id int not null,
-    role_id int not null,
-    primary key (user_id, role_id)
+    user_id INT NOT NULL,
+    role_id INT NOT NULL,
+    PRIMARY KEY (user_id, role_id)
 );
-
