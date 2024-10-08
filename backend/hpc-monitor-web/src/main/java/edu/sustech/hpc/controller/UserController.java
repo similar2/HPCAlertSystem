@@ -1,20 +1,19 @@
 package edu.sustech.hpc.controller;
 
 import edu.sustech.hpc.annotation.PathController;
+import edu.sustech.hpc.model.dto.UserPageQueryDTO;
 import edu.sustech.hpc.model.param.LoginParam;
 import edu.sustech.hpc.model.param.RegisterParam;
-import edu.sustech.hpc.model.vo.ApiResponse;
+import edu.sustech.hpc.result.ApiResponse;
 import edu.sustech.hpc.model.vo.PublicUserInfo;
 import edu.sustech.hpc.model.vo.UserInfo;
+import edu.sustech.hpc.result.PageResult;
 import edu.sustech.hpc.service.UserService;
 import jakarta.annotation.Resource;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,18 +24,18 @@ public class UserController {
 
     //获取所有脱敏后的用户信息
     @GetMapping("/all")
-    public ApiResponse<List<PublicUserInfo>> all(@RequestParam(name="user_id", required = false) Integer userId){
+    public ApiResponse<List<PublicUserInfo>> all(@RequestParam(name = "user_id", required = false) Integer userId) {
         return ApiResponse.success(userService.all(userId));
     }
 
     @PostMapping("/send-verify-code")
-    public ApiResponse sendVerifyCode(@Email @NotEmpty @RequestParam String email){
+    public ApiResponse sendVerifyCode(@Email @NotEmpty @RequestParam String email) {
         userService.sendVerifyCode(email);
         return ApiResponse.success();
     }
 
     @PostMapping("/register")
-    public ApiResponse<UserInfo> register(@Validated @RequestBody RegisterParam registerParam){
+    public ApiResponse<UserInfo> register(@Validated @RequestBody RegisterParam registerParam) {
         UserInfo userInfo = userService.register(registerParam.getVerifyCode(),
                 registerParam.getEmail(),
                 registerParam.getUsername(),
@@ -56,5 +55,27 @@ public class UserController {
 //                .email(loginParam.getEmail())
 //                .role(3)
 //                .build());
+    }
+
+    /**
+     * 分页查询
+     * @param userPageQueryDTO
+     * @return
+     */
+    @GetMapping("/page")
+    public ApiResponse<PageResult> page(UserPageQueryDTO userPageQueryDTO) {
+        PageResult pageResult = userService.pageQuery(userPageQueryDTO);
+        return ApiResponse.success(pageResult);
+    }
+
+    /**
+     * 启用或禁用账号
+     * @param status
+     * @param id
+     */
+    @PostMapping("/status/{status}")
+    public ApiResponse startOrStop(@PathVariable Integer status, Integer id){
+        userService.startOrStop(status, id);
+        return ApiResponse.success();
     }
 }
