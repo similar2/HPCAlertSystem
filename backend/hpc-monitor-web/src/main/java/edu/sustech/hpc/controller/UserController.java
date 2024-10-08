@@ -1,6 +1,7 @@
 package edu.sustech.hpc.controller;
 
 import edu.sustech.hpc.annotation.PathController;
+import edu.sustech.hpc.model.dto.UserDTO;
 import edu.sustech.hpc.model.dto.UserPageQueryDTO;
 import edu.sustech.hpc.model.param.LoginParam;
 import edu.sustech.hpc.model.param.RegisterParam;
@@ -76,6 +77,39 @@ public class UserController {
     @PostMapping("/status/{status}")
     public ApiResponse startOrStop(@PathVariable Integer status, Integer id){
         userService.startOrStop(status, id);
+        return ApiResponse.success();
+    }
+
+    /**
+     * 新增用户
+     * @param userDTO
+     * @return
+     */
+    @PostMapping
+    public ApiResponse save(@RequestBody UserDTO userDTO){
+        userService.save(userDTO);
+        return ApiResponse.success();
+    }
+
+    @GetMapping("/{id}")
+    public ApiResponse<UserInfo> getById(@PathVariable Integer id) {
+        return ApiResponse.success(userService.getById(id));
+    }
+
+    @PutMapping
+    public ApiResponse update(@RequestBody UserDTO userDTO) {
+        userService.update(userDTO);
+        return ApiResponse.success();
+    }
+
+    @GetMapping("/getByEmail/{email}")
+    public ApiResponse<UserInfo> getByEmail(@PathVariable String email) {
+        return ApiResponse.success(userService.checkEmailUnique(email));
+    }
+
+    @DeleteMapping("/{id}")
+    public ApiResponse delete(@PathVariable Integer id) {
+        userService.delete(id);
         return ApiResponse.success();
     }
 }

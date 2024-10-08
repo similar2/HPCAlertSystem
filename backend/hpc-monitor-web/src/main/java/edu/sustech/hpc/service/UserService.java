@@ -4,6 +4,7 @@ import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import edu.sustech.hpc.dao.UserDao;
+import edu.sustech.hpc.model.dto.UserDTO;
 import edu.sustech.hpc.model.dto.UserPageQueryDTO;
 import edu.sustech.hpc.model.vo.PublicUserInfo;
 import edu.sustech.hpc.model.vo.UserInfo;
@@ -20,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -156,5 +158,48 @@ public class UserService {
                 .status(status)
                 .build();
         userDao.updateById(user);
+    }
+
+    /**
+     * 新增用户
+     * @param userDTO
+     */
+    public void save(UserDTO userDTO) {
+        User user = new User();
+        BeanUtils.copyProperties(userDTO, user);
+        user.setStatus(1);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userDao.insert(user);
+    }
+
+    public UserInfo getById(Integer id) {
+        User user = userDao.selectById(id);
+        user.setPassword("*****");
+        UserInfo userInfo = new UserInfo();
+        BeanUtils.copyProperties(user, userInfo);
+        return userInfo;
+    }
+
+    public void update(UserDTO userDTO) {
+        User user = new User();
+        BeanUtils.copyProperties(userDTO, user);
+        if (userDTO.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        }
+        userDao.updateById(user);
+    }
+
+    public UserInfo checkEmailUnique(String email) {
+        User user = userDao.selectOne(new LambdaQueryWrapper<User>()
+                .eq(User::getEmail, email));
+        UserInfo userInfo = new UserInfo();
+        if (user != null) {
+            BeanUtils.copyProperties(user, userInfo);
+        }
+        return userInfo;
+    }
+
+    public void delete(Integer id) {
+        userDao.deleteById(id);
     }
 }

@@ -27,22 +27,26 @@
           @clear="handleClear"
         />
         <el-button type="primary" style="margin-left: 25px" @click="pageQuery()">查询</el-button>
+        <el-button type="primary" style="float: right" @click="handleAddUser"
+          >+添加管理员</el-button
+        >
       </div>
       <el-table :data="records" stripe style="width: 100%">
         <el-table-column prop="name" label="管理员姓名" width="280"> </el-table-column>
         <el-table-column prop="email" label="邮箱" width="300"> </el-table-column>
         <el-table-column prop="phone" label="电话" width="300"> </el-table-column>
-        <el-table-column prop="status" label="账号状态" width="220">
+        <el-table-column prop="status" label="账号状态" width="180">
           <template #default="scope">
             {{ scope.row.status === 0 ? '禁用' : '启用' }}
           </template>
         </el-table-column>
         <el-table-column label="操作">
           <template #default="scope">
-            <el-button type="text" @click="handleUpdateEmp(scope.row)">修改</el-button>
-            <el-button type="text" @click="handleStartOrStop(scope.row)">{{
+            <el-button type="primary" @click="handleUpdateUser(scope.row)">修改</el-button>
+            <el-button type="primary" @click="handleStartOrStop(scope.row)">{{
               scope.row.status === 1 ? '禁用' : '启用'
             }}</el-button>
+            <el-button type="danger" @click="handleDeleteUser(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -65,7 +69,8 @@
 
 <script setup>
 import { ref, onMounted, reactive } from 'vue'
-import { getUserList, enableOrDisableUser} from '@/api/user'
+import { getUserList, enableOrDisableUser, deleteUser} from '@/api/user'
+import router from '@/router'
 
 onMounted(() => {
   pageQuery()
@@ -124,17 +129,44 @@ const handleStartOrStop = async (row) => {
       id: row.id,
       status: !row.status ? 1 : 0
     }
-    enableOrDisableUser(p)
-        .then((res) => {
-          if (res.data.code == 200) {
-            ElMessage.success('账号状态修改成功！')
-            pageQuery()
-          } else {
-            ElMessage.error('操作失败：' + res.data.message)
-          }
-        })
+    enableOrDisableUser(p).then((res) => {
+      if (res.data.code == 200) {
+        ElMessage.success('账号状态修改成功！')
+        pageQuery()
+      } else {
+        ElMessage.error('操作失败：' + res.data.message)
+      }
+    })
   })
   pageQuery()
+}
+const handleAddUser = () => {
+  router.push({
+    path: '/userManager/add',
+    query: { role: 2 }
+  })
+}
+const handleUpdateUser = (row) => {
+  router.push({
+    path: '/userManager/add',
+    query: { id: row.id, role: 2 }
+  })
+}
+const handleDeleteUser = (row) => {
+  ElMessageBox.confirm('确认要删除当前管理员账号吗?', '温馨提示', {
+    type: 'warning',
+    confirmButtonText: '确认',
+    cancelButtonText: '取消'
+  }).then(() => {
+    deleteUser(row.id).then((res) => {
+      if (res.data.code == 200) {
+        ElMessage.success('账号删除成功！')
+        pageQuery()
+      } else {
+        ElMessage.error('操作失败：' + res.data.message)
+      }
+    })
+  })
 }
 </script>
 

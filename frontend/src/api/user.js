@@ -36,3 +36,18 @@ export const getUserList = (params) => {
   })}
 export const enableOrDisableUser = (params) => {
   return request.post( `/api/user/status/${params.status}?id=${params.id}`)}
+export const addUser = (params) =>{
+  return request.post('/api/user', params)
+}
+export const queryUserById = (id) => {
+  return request.get(`/api/user/${id}`)
+}
+export const updateUser = (params)=>{
+  return request.put('/api/user', params)
+}
+export const getByEmail = (email) => {
+  return request.get(`/api/user/getByEmail/${email}`)
+}
+export const deleteUser = (id) => {
+  return request.delete(`/api/user/${id}`)
+}
