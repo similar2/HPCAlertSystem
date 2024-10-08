@@ -104,7 +104,7 @@ public class UserController {
 
     @GetMapping("/getByEmail/{email}")
     public ApiResponse<UserInfo> getByEmail(@PathVariable String email) {
-        return ApiResponse.success(userService.checkEmailUnique(email));
+        return ApiResponse.success(userService.getByEmail(email));
     }
 
     @DeleteMapping("/{id}")

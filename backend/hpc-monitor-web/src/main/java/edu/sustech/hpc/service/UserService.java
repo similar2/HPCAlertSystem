@@ -21,7 +21,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -189,7 +188,7 @@ public class UserService {
         userDao.updateById(user);
     }
 
-    public UserInfo checkEmailUnique(String email) {
+    public UserInfo getByEmail(String email) {
         User user = userDao.selectOne(new LambdaQueryWrapper<User>()
                 .eq(User::getEmail, email));
         UserInfo userInfo = new UserInfo();
