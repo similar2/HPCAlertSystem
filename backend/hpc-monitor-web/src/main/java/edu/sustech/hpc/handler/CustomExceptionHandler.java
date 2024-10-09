@@ -1,5 +1,6 @@
 package edu.sustech.hpc.handler;
 
+import edu.sustech.hpc.exceptions.DuplicateDeviceException;
 import edu.sustech.hpc.result.ApiResponse;
 import jakarta.validation.ReportAsSingleViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -24,39 +25,44 @@ import static edu.sustech.hpc.result.ApiResponse.badRequest;
 @RestControllerAdvice
 public class CustomExceptionHandler {
 
-	@ExceptionHandler(MissingServletRequestPartException.class)
-	public ApiResponse handleMissingServletRequestPartException(MissingServletRequestPartException e){
-		return badRequest("Missing request part ["+e.getRequestPartName()+"]");
-	}
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public ApiResponse handleMissingServletRequestPartException(MissingServletRequestPartException e) {
+        return badRequest("Missing request part [" + e.getRequestPartName() + "]");
+    }
 
-	@ExceptionHandler(MissingServletRequestParameterException.class)
-	public ApiResponse handleMissingServletRequestParameterException(MissingServletRequestParameterException e){
-		return badRequest("Missing param ["+e.getParameterName()+"]");
-	}
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ApiResponse handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
+        return badRequest("Missing param [" + e.getParameterName() + "]");
+    }
 
-	@SuppressWarnings("ConstantConditions")
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ApiResponse handle(MethodArgumentNotValidException e){
-		FieldError fieldError = e.getBindingResult().getFieldError();
-		String field = fieldError.getField();
-		return badRequest("["+field+"] "+ fieldError.getDefaultMessage());
-	}
+    @SuppressWarnings("ConstantConditions")
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ApiResponse handle(MethodArgumentNotValidException e) {
+        FieldError fieldError = e.getBindingResult().getFieldError();
+        String field = fieldError.getField();
+        return badRequest("[" + field + "] " + fieldError.getDefaultMessage());
+    }
 
-	@ExceptionHandler({HttpMessageNotReadableException.class, HttpRequestMethodNotSupportedException.class})
-	public ApiResponse handleTwoHttpExceptions(Exception e) {
-		return badRequest(e.getMessage());
-	}
+    @ExceptionHandler({HttpMessageNotReadableException.class, HttpRequestMethodNotSupportedException.class})
+    public ApiResponse handleTwoHttpExceptions(Exception e) {
+        return badRequest(e.getMessage());
+    }
 
-	@ExceptionHandler(ConstraintViolationException.class)
-	public ApiResponse handleConstraintViolationException(ConstraintViolationException e) {
-		String[] split = e.getMessage().split(": ");
-		String field = split[0].split("\\.")[1];
-		String message = split[1];
-		return badRequest("["+field+"] "+message);
-	}
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ApiResponse handleConstraintViolationException(ConstraintViolationException e) {
+        String[] split = e.getMessage().split(": ");
+        String field = split[0].split("\\.")[1];
+        String message = split[1];
+        return badRequest("[" + field + "] " + message);
+    }
 
-	@ExceptionHandler(ApiException.class)
-	public ApiResponse handle(ApiException e){
-		return new ApiResponse(e.getCode(),e.getMessage());
-	}
+    @ExceptionHandler(ApiException.class)
+    public ApiResponse handle(ApiException e) {
+        return new ApiResponse(e.getCode(), e.getMessage());
+    }
+
+    @ExceptionHandler(DuplicateDeviceException.class)
+    public ApiResponse handleDuplicateDeviceException(DuplicateDeviceException e) {
+        return badRequest("Duplicate device: " + e.getMessage());
+    }
 }
