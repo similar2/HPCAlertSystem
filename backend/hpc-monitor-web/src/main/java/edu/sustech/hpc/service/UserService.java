@@ -171,6 +171,11 @@ public class UserService {
         userDao.insert(user);
     }
 
+    /**
+     * 根据id查询用户信息
+     * @param id
+     * @return
+     */
     public UserInfo getById(Integer id) {
         User user = userDao.selectById(id);
         user.setPassword("*****");
@@ -179,6 +184,10 @@ public class UserService {
         return userInfo;
     }
 
+    /**
+     * 修改用户信息
+     * @param userDTO
+     */
     public void update(UserDTO userDTO) {
         User user = new User();
         BeanUtils.copyProperties(userDTO, user);
@@ -188,6 +197,11 @@ public class UserService {
         userDao.updateById(user);
     }
 
+    /**
+     * 通过邮箱获取用户信息
+     * @param email
+     * @return
+     */
     public UserInfo getByEmail(String email) {
         User user = userDao.selectOne(new LambdaQueryWrapper<User>()
                 .eq(User::getEmail, email));
@@ -198,6 +212,10 @@ public class UserService {
         return userInfo;
     }
 
+    /**
+     * 删除用户
+     * @param id
+     */
     public void delete(Integer id) {
         userDao.deleteById(id);
     }

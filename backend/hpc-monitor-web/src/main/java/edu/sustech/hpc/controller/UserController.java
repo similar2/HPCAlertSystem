@@ -91,22 +91,42 @@ public class UserController {
         return ApiResponse.success();
     }
 
+    /**
+     * 根据id查询用户信息
+     * @param id
+     * @return
+     */
     @GetMapping("/{id}")
     public ApiResponse<UserInfo> getById(@PathVariable Integer id) {
         return ApiResponse.success(userService.getById(id));
     }
 
+    /**
+     * 修改用户信息
+     * @param userDTO
+     * @return
+     */
     @PutMapping
     public ApiResponse update(@RequestBody UserDTO userDTO) {
         userService.update(userDTO);
         return ApiResponse.success();
     }
 
+    /**
+     * 通过邮箱获取用户信息
+     * @param email
+     * @return
+     */
     @GetMapping("/getByEmail/{email}")
     public ApiResponse<UserInfo> getByEmail(@PathVariable String email) {
         return ApiResponse.success(userService.getByEmail(email));
     }
 
+    /**
+     * 删除用户
+     * @param id
+     * @return
+     */
     @DeleteMapping("/{id}")
     public ApiResponse delete(@PathVariable Integer id) {
         userService.delete(id);

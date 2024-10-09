@@ -35,15 +35,15 @@
         <el-table-column prop="name" label="工程师姓名" width="280"> </el-table-column>
         <el-table-column prop="email" label="邮箱" width="300"> </el-table-column>
         <el-table-column prop="phone" label="电话" width="300"> </el-table-column>
-        <el-table-column prop="status" label="账号状态" width="220">
+        <el-table-column prop="status" label="账号状态" width="180">
           <template #default="scope">
             {{ scope.row.status === 0 ? '禁用' : '启用' }}
           </template>
         </el-table-column>
         <el-table-column label="操作">
           <template #default="scope">
-            <el-button type="text" @click="handleUpdateUser(scope.row)">修改</el-button>
-            <el-button type="text" @click="handleStartOrStop(scope.row)">{{
+            <el-button type="primary" @click="handleUpdateUser(scope.row)">修改</el-button>
+            <el-button type="primary" @click="handleStartOrStop(scope.row)">{{
               scope.row.status === 1 ? '禁用' : '启用'
             }}</el-button>
             <el-button type="danger" @click="handleDeleteUser(scope.row)">删除</el-button>
