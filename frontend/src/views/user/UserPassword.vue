@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useUserStore } from '@/stores'
 import { userUpdatePassService } from '@/api/user'
 import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
 const formRef = ref()
 const router = useRouter()
 const userStore = useUserStore()

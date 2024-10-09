@@ -1,12 +1,14 @@
 package edu.sustech.hpc.controller;
 
 import edu.sustech.hpc.annotation.PathController;
+import edu.sustech.hpc.model.dto.AlertPageQueryDTO;
 import edu.sustech.hpc.model.param.AlertParam;
 import edu.sustech.hpc.model.param.AlertRuleParam;
 import edu.sustech.hpc.model.vo.AlertRuleInfo;
 import edu.sustech.hpc.result.ApiResponse;
 import edu.sustech.hpc.po.Alert;
 import edu.sustech.hpc.po.HardwareType;
+import edu.sustech.hpc.result.PageResult;
 import edu.sustech.hpc.service.AlertService;
 import edu.sustech.hpc.service.PrometheusService;
 import jakarta.annotation.Resource;
@@ -87,6 +89,11 @@ public class AlertController {
         JSONArray jsonArray = new JSONArray(alerts);
         String message = jsonArray.toString();
         return ApiResponse.success(message);
+    }
+
+    @GetMapping("/page")
+    public ApiResponse<PageResult> page(AlertPageQueryDTO alertPageQueryDTO){
+        return ApiResponse.success(alertService.pageQuery(alertPageQueryDTO));
     }
 
     @PostMapping("/add")

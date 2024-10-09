@@ -1,23 +1,20 @@
 package edu.sustech.hpc.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import edu.sustech.hpc.dao.*;
+import edu.sustech.hpc.model.dto.AlertPageQueryDTO;
 import edu.sustech.hpc.model.param.AlertParam;
-import edu.sustech.hpc.model.vo.AlertRuleInfo;
 import edu.sustech.hpc.model.vo.PrometheusAlertInfo;
 import edu.sustech.hpc.po.*;
+import edu.sustech.hpc.result.PageResult;
 import edu.sustech.hpc.util.EmailUtil;
 import jakarta.annotation.Resource;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static edu.sustech.hpc.util.AssertUtil.asserts;
 
@@ -40,6 +37,36 @@ public class AlertService {
 
     @Resource
     private PrometheusAlertDao prometheusAlertDao;
+
+    /**
+     * 告警信息分页查询
+     * @param alertPageQueryDTO
+     * @return
+     */
+    public PageResult pageQuery(AlertPageQueryDTO alertPageQueryDTO) {
+        Page<Alert> page = new Page<>(alertPageQueryDTO.getPage(), alertPageQueryDTO.getPageSize());
+
+        LambdaQueryWrapper<Alert> queryWrapper = new LambdaQueryWrapper<>();
+        if (alertPageQueryDTO.getDeviceName() != null && !alertPageQueryDTO.getDeviceName().isEmpty()) {
+            queryWrapper.like(Alert::getDeviceName, alertPageQueryDTO.getDeviceName());
+        }
+        if (alertPageQueryDTO.getStartTime() != null) {
+            queryWrapper.ge(Alert::getCreateTime, alertPageQueryDTO.getStartTime());
+        }
+        if (alertPageQueryDTO.getEndTime() != null) {
+            queryWrapper.le(Alert::getCreateTime, alertPageQueryDTO.getEndTime());
+        }
+        if (alertPageQueryDTO.getSolved() != null) {
+            if (alertPageQueryDTO.getSolved()) {
+                queryWrapper.isNotNull(Alert::getSolveTime);
+            } else {
+                queryWrapper.isNull(Alert::getSolveTime);
+            }
+        }
+
+        Page<Alert> userPage = alertDao.selectPage(page, queryWrapper);
+        return new PageResult(userPage.getTotal(), userPage.getRecords());
+    }
 
     Alert getActiveAlert(String alertName, String deviceName) {
         return alertDao.selectOne(new LambdaQueryWrapper<Alert>()

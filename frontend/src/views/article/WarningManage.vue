@@ -2,17 +2,23 @@
 import { onMounted, ref } from 'vue'
 import { Edit, Delete } from '@element-plus/icons-vue'
 import {
+  getWarningList as getList,
   artGetAllWarningService,
   artDelWarningService,
   artGetAllTarget
 } from '@/api/Warning'
 import WarningEdit from './components/WarningEdit.vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
 const WarningList = ref([])
+const records = ref([])
 const stateList = ref([])
 const lowCount = ref(0);
 const highCount = ref(0);
 const solvedCount = ref(0);
 const unsolvedCount = ref(0);
+const page = ref(1)
+const pageSize = ref(10)
+const total = ref(0)
 const seriousList = ref([
   {
     name: 'LOW',
@@ -35,6 +41,30 @@ stateList.value = [
     value: 2
   }
 ]
+const handleSizeChange = (newPageSize) => {
+  pageSize.value = newPageSize
+  pageQuery()
+}
+const handleCurrentChange = (newPage) => {
+  page.value = newPage
+  pageQuery()
+}
+const pageQuery = () => {
+  const data = {
+    page: page.value,
+    pageSize: pageSize.value
+  }
+  getList(data)
+    .then((res) => {
+      if (res.data.code == 200) {
+        total.value = res.data.data.total
+        records.value = res.data.data.records
+      }
+    })
+    .catch((err) => {
+      ElMessage.error('请求出错了：' + err.message)
+    })
+}
 const getWarningList = async () => {
   loading.value = true
   const res = await artGetAllWarningService()
@@ -47,6 +77,7 @@ const getWarningList = async () => {
   }
   return 0;
   })
+
   WarningList.value.forEach(warning => {
       if (warning.severity === 'LOW') {
         lowCount.value++;
@@ -79,7 +110,9 @@ const getWarningList = async () => {
       value: unsolvedCount.value
     }
   ];
-  console.log(WarningList.value)
+
+  pageQuery()
+
   loading.value = false
 }
 const getAllTarget = async () => {
@@ -137,7 +170,7 @@ onMounted(() => {
         <el-empty description="没有数据" />
       </template>
     </el-table>
-    <el-table v-loading="loading" :data="WarningList" style="width: 100%">
+    <el-table v-loading="loading" :data="records" style="width: 100%">
       <el-table-column
         label="告警序号"
         width="100"
@@ -173,8 +206,27 @@ onMounted(() => {
         <el-empty description="没有数据" />
       </template>
     </el-table>
+    <div class="pagination-container">
+        <el-pagination
+          class="pageList"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="page"
+          :page-sizes="[10, 20, 30, 40, 50, 100, 200]"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+        >
+        </el-pagination>
+      </div>
     <Warning-edit ref="dialog" @success="getWarningList"></Warning-edit>
   </page-container>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+</style>

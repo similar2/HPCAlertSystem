@@ -141,7 +141,6 @@ public class UserService {
         }
         queryWrapper.eq(User::getRole, userPageQueryDTO.getRole());
         Page<User> userPage = userDao.selectPage(page, queryWrapper);
-        Long total = userPage.getTotal();
 
         return new PageResult(userPage.getTotal(), userPage.getRecords());
     }

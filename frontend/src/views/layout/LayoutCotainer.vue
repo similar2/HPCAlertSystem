@@ -9,6 +9,7 @@ import {
   SwitchButton,
   CaretBottom
 } from '@element-plus/icons-vue'
+import { ElMessageBox, ElAvatar } from 'element-plus'
 import avatar from '@/assets/default.png'
 import { useUserStore } from '@/stores'
 import { onMounted } from 'vue'

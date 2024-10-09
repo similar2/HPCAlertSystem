@@ -14,6 +14,12 @@ export const artGetSearchWarningService = (data) => {
     return request.get(`/api/alerts/all?${params.toString()}`)
   }
 }
+// 获取告警列表（分页查询）
+export const getWarningList = (params) => {
+  return request.get('/api/alerts/page', {
+    params: params
+  })
+}
 export const artGetWarningService = (id) => request.get(`/api/alerts/get/${id}`)
 // 添加告警
 export const artAddWarningService = (data) =>

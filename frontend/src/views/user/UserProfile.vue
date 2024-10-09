@@ -2,6 +2,7 @@
 import { useUserStore } from '@/stores'
 import { ref } from 'vue'
 import { userUpdateInfoService } from '@/api/user'
+import { ElMessage } from 'element-plus'
 const {
   user: { username, nickname, email, id }
 } = useUserStore()

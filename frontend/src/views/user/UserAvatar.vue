@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { Plus, Upload } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores'
 import { userUploadAvatarService } from '@/api/user'
+import { ElMessage } from 'element-plus'
 
 const userStore = useUserStore()
 const uploadRef = ref()

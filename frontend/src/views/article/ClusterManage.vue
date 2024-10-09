@@ -5,6 +5,7 @@ import WarningSelect from './components/WarningSelect.vue'
 import MachineEdit from './components/TargetEdit.vue'
 import { artGetAllTargetService, artDelTargetService } from '@/api/Warning'
 import { useRoute } from 'vue-router'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 // const cateId = ref(44173)
 const loading = ref(false)

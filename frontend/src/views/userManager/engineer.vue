@@ -8,7 +8,7 @@
           v-model="name"
           placeholder="请输入查询的姓名"
           style="width: 15%; margin-right: 15px"
-          @clear="handleClear"
+          @clear="pageQuery"
         />
         <label style="margin-right: 8px"> 邮箱: </label>
         <el-input
@@ -16,7 +16,7 @@
           v-model="email"
           placeholder="请输入查询的邮箱号"
           style="width: 15%; margin-right: 15px"
-          @clear="handleClear"
+          @clear="pageQuery"
         />
         <label style="margin-right: 8px"> 电话: </label>
         <el-input
@@ -24,7 +24,7 @@
           v-model="phone"
           placeholder="请输入查询的电话号"
           style="width: 15%; margin-right: 15px"
-          @clear="handleClear"
+          @clear="pageQuery"
         />
         <el-button type="primary" style="margin-left: 25px" @click="pageQuery()">查询</el-button>
         <el-button type="primary" style="float: right" @click="handleAddUser"
@@ -71,6 +71,7 @@
 import { ref, onMounted, reactive } from 'vue'
 import { getUserList, enableOrDisableUser,deleteUser} from '@/api/user'
 import router from '@/router'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 onMounted(() => {
   pageQuery()
@@ -112,9 +113,6 @@ const handleSizeChange = (newPageSize) => {
 }
 const handleCurrentChange = (newPage) => {
   page.value = newPage
-  pageQuery()
-}
-const handleClear = () => {
   pageQuery()
 }
 

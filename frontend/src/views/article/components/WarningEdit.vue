@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { artEditWarningService, artAddWarningService } from '@/api/Warning'
+import { ElMessage } from 'element-plus'
 const dialogVisible = ref(false)
 const formRef = ref()
 const open = async (row) => {

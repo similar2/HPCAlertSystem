@@ -4,6 +4,7 @@ import { ref, watch } from 'vue'
 import { userRegisterService, userLoginService, userSendVerifyCode } from '@/api/user'
 import { useUserStore } from '@/stores'
 import router from '@/router'
+import { ElMessage } from 'element-plus'
 const userStore = useUserStore()
 const isRegister = ref(false)
 const form = ref()

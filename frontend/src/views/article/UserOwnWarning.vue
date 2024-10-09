@@ -4,6 +4,7 @@ import { ref } from 'vue'
 // import WarningSelect from './components/WarningSelect.vue'
 import WarningEdit from './components/OwnWarningEdit.vue'
 import { artGetAllRulesService, artDelRulesService } from '@/api/Warning'
+import { ElMessage, ElMessageBox } from 'element-plus'
 // import { useRoute } from 'vue-router'
 
 // const cateId = ref(44173)
