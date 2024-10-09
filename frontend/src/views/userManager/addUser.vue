@@ -34,6 +34,7 @@ import { addUser, queryUserById, updateUser, getByEmail } from '@/api/user'
 export default {
   data() {
     return {
+      initEmail:'',
       path: '',
       optType: '', //当前操作的类型，新增或者修改
       ruleForm: {
@@ -85,10 +86,12 @@ export default {
               } else {
                 getByEmail(value).then((res) => {
                   if (res.data.code === 200) {
-                    console.log(res.data.data)
                     if(res.data.data.email == null){
                         callback()
                     }else if(res.data.data.email == value){
+                        if(this.optType === 'update' && this.initEmail === value){
+                            callback()
+                        }
                         callback(new Error('邮箱已被注册，请使用其他邮箱！'))
                     }
                     callback()
@@ -110,6 +113,7 @@ export default {
       queryUserById(this.$route.query.id).then((res) => {
         if (res.data.code === 200) {
           this.ruleForm = res.data.data
+          this.initEmail = this.ruleForm.email
           this.ruleForm.password = '***************'
         }
       })
