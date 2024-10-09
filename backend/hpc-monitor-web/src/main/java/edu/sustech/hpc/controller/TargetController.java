@@ -1,11 +1,9 @@
 package edu.sustech.hpc.controller;
 
 import edu.sustech.hpc.annotation.PathController;
-import edu.sustech.hpc.model.param.DeviceParam;
 import edu.sustech.hpc.model.param.HardwareParam;
 import edu.sustech.hpc.model.vo.HardwareReply;
-import edu.sustech.hpc.model.vo.PrometheusTargetInfo;
-import edu.sustech.hpc.model.vo.ApiResponse;
+import edu.sustech.hpc.result.ApiResponse;
 import edu.sustech.hpc.service.HardwareService;
 import edu.sustech.hpc.service.PrometheusService;
 import jakarta.annotation.Resource;

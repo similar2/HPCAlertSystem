@@ -1,11 +1,7 @@
 <script setup>
 import { User, Lock } from '@element-plus/icons-vue'
 import { ref, watch } from 'vue'
-import {
-  userRegisterService,
-  userLoginService,
-  userSendVerifyCode
-} from '@/api/user'
+import { userRegisterService, userLoginService, userSendVerifyCode } from '@/api/user'
 import { useUserStore } from '@/stores'
 import router from '@/router'
 const userStore = useUserStore()
@@ -71,11 +67,22 @@ const register = async () => {
 }
 const login = async () => {
   await form.value.validate()
-  const res = await userLoginService(formModel.value)
-  userStore.setToken(res.data.data.token)
-  userStore.setRole(res.data.data.role)
-  ElMessage.success('登录成功')
-  router.push('/')
+  // const res = await userLoginService(formModel.value)
+  // userStore.setToken(res.data.data.token)
+  // userStore.setRole(res.data.data.role)
+  // ElMessage.success('登录成功')
+
+  userLoginService(formModel.value).then((res) => {
+    if (res.data.code == 200) {
+      userStore.setToken(res.data.data.token)
+      userStore.setRole(res.data.data.role)
+      ElMessage.success('登录成功')
+      router.push('/')
+    }else{
+      ElMessage.error(res.data.data.message)
+    }
+  })
+
 }
 watch(isRegister, () => {
   formModel.value = {
@@ -130,39 +137,20 @@ const sendVerificationCode = async () => {
           ></el-input>
         </el-form-item>
         <el-form-item prop="verifyCode">
-          <el-input
-            v-model="formModel.verifyCode"
-            placeholder="请输入验证码"
-          ></el-input>
-          <el-button @click="sendVerificationCode" type="primary"
-            >获取验证码</el-button
-          >
+          <el-input v-model="formModel.verifyCode" placeholder="请输入验证码"></el-input>
+          <el-button @click="sendVerificationCode" type="primary">获取验证码</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button
-            @click="register()"
-            class="button"
-            type="primary"
-            auto-insert-space
-          >
+          <el-button @click="register()" class="button" type="primary" auto-insert-space>
             注册
           </el-button>
         </el-form-item>
         <el-form-item class="flex">
-          <el-link type="info" :underline="false" @click="isRegister = false">
-            ← 返回
-          </el-link>
+          <el-link type="info" :underline="false" @click="isRegister = false"> ← 返回 </el-link>
         </el-form-item>
       </el-form>
       <!-- Login Form -->
-      <el-form
-        :model="formModel"
-        :rules="rules"
-        ref="form"
-        size="large"
-        autocomplete="off"
-        v-else
-      >
+      <el-form :model="formModel" :rules="rules" ref="form" size="large" autocomplete="off" v-else>
         <el-form-item>
           <h1>登录</h1>
         </el-form-item>
@@ -189,18 +177,12 @@ const sendVerificationCode = async () => {
           </div>
         </el-form-item>
         <el-form-item>
-          <el-button
-            @click="login()"
-            class="button"
-            type="primary"
-            auto-insert-space
+          <el-button @click="login()" class="button" type="primary" auto-insert-space
             >登录</el-button
           >
         </el-form-item>
         <el-form-item class="flex">
-          <el-link type="info" :underline="false" @click="isRegister = true">
-            注册 →
-          </el-link>
+          <el-link type="info" :underline="false" @click="isRegister = true"> 注册 → </el-link>
         </el-form-item>
       </el-form>
     </el-col>
@@ -212,8 +194,7 @@ const sendVerificationCode = async () => {
   height: 100vh;
   background-color: #fff;
   .bg {
-    background:
-      url('@/assets/logo2.png') no-repeat 60% center / 240px auto,
+    background: url('@/assets/logo2.png') no-repeat 60% center / 240px auto,
       url('@/assets/login_bg.jpg') no-repeat center / cover;
     border-radius: 0 20px 20px 0;
   }

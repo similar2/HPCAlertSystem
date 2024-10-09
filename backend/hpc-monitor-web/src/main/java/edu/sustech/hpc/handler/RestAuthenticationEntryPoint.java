@@ -1,7 +1,7 @@
 package edu.sustech.hpc.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.sustech.hpc.model.vo.ApiResponse;
+import edu.sustech.hpc.result.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.AuthenticationException;

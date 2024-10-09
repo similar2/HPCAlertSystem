@@ -1,6 +1,6 @@
 package edu.sustech.hpc.handler;
 
-import edu.sustech.hpc.model.vo.ApiResponse;
+import edu.sustech.hpc.result.ApiResponse;
 import jakarta.validation.ReportAsSingleViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
-import static edu.sustech.hpc.model.vo.ApiResponse.badRequest;
+import static edu.sustech.hpc.result.ApiResponse.badRequest;
 
 /**
  * 只能捕获到API阶段的Exception, 无法捕获filter链中的Exception<p>

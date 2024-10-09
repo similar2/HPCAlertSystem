@@ -1,4 +1,4 @@
-package edu.sustech.hpc.model.vo;
+package edu.sustech.hpc.result;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

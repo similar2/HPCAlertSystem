@@ -63,6 +63,14 @@ const router = createRouter({
         {
           path: '/userManager/engineer',
           component: () => import('@/views/userManager/engineer.vue')
+        },
+        {
+          path: "/userManager/add",
+          component: () => import("@/views/userManager/addUser.vue"),
+          meta: {
+            title: "添加/修改用户",
+            // hidden: true
+          }
         }
       ]
     }

@@ -2,22 +2,26 @@ package edu.sustech.hpc.service;
 
 import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import edu.sustech.hpc.dao.UserDao;
+import edu.sustech.hpc.model.dto.UserDTO;
+import edu.sustech.hpc.model.dto.UserPageQueryDTO;
 import edu.sustech.hpc.model.vo.PublicUserInfo;
 import edu.sustech.hpc.model.vo.UserInfo;
 import edu.sustech.hpc.po.User;
+import edu.sustech.hpc.result.PageResult;
 import edu.sustech.hpc.util.EmailUtil;
 import edu.sustech.hpc.util.JwtUtil;
 import jakarta.annotation.Resource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -101,7 +105,10 @@ public class UserService {
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), user.getPassword(), null);
         SecurityContextHolder.getContext().setAuthentication(authentication); //存入SecurityContext
         String jwt = JwtUtil.createJwt(String.valueOf(user.getId()));//使用id生成JWT返回
-        return new UserInfo(jwt, user.getId(), user.getName(), user.getEmail(), user.getRole());
+        UserInfo userInfo = new UserInfo();
+        BeanUtils.copyProperties(user, userInfo);
+        userInfo.setToken(jwt);
+        return userInfo;
     }
 
     public UserInfo login(String email, String password) {
@@ -109,6 +116,89 @@ public class UserService {
                 .eq(User::getEmail, email));
         asserts(user != null, "用户不存在，请先注册");
         asserts(passwordEncoder.matches(password, user.getPassword()), "密码错误");
+        asserts(user.getStatus() != 0, "账号已被锁定，请联系管理员");
         return authenticate(user);
+    }
+
+    /**
+     * 分页查询
+     * @param userPageQueryDTO
+     * @return
+     */
+    public PageResult pageQuery(UserPageQueryDTO userPageQueryDTO) {
+        // 创建分页对象
+        Page<User> page = new Page<>(userPageQueryDTO.getPage(), userPageQueryDTO.getPageSize());
+
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        if (userPageQueryDTO.getName() != null && !userPageQueryDTO.getName().isEmpty()) {
+            queryWrapper.like(User::getName, userPageQueryDTO.getName());
+        }
+        if (userPageQueryDTO.getEmail() != null && !userPageQueryDTO.getEmail().isEmpty()) {
+            queryWrapper.like(User::getEmail, userPageQueryDTO.getEmail());
+        }
+        if (userPageQueryDTO.getPhone() != null && !userPageQueryDTO.getPhone().isEmpty()) {
+            queryWrapper.like(User::getPhone, userPageQueryDTO.getPhone());
+        }
+        queryWrapper.eq(User::getRole, userPageQueryDTO.getRole());
+        Page<User> userPage = userDao.selectPage(page, queryWrapper);
+        Long total = userPage.getTotal();
+
+        return new PageResult(userPage.getTotal(), userPage.getRecords());
+    }
+
+    /**
+     * 启用或禁用账号
+     * @param status
+     * @param id
+     */
+    public void startOrStop(Integer status, Integer id) {
+        User user = User.builder()
+                .id(id)
+                .status(status)
+                .build();
+        userDao.updateById(user);
+    }
+
+    /**
+     * 新增用户
+     * @param userDTO
+     */
+    public void save(UserDTO userDTO) {
+        User user = new User();
+        BeanUtils.copyProperties(userDTO, user);
+        user.setStatus(1);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userDao.insert(user);
+    }
+
+    public UserInfo getById(Integer id) {
+        User user = userDao.selectById(id);
+        user.setPassword("*****");
+        UserInfo userInfo = new UserInfo();
+        BeanUtils.copyProperties(user, userInfo);
+        return userInfo;
+    }
+
+    public void update(UserDTO userDTO) {
+        User user = new User();
+        BeanUtils.copyProperties(userDTO, user);
+        if (userDTO.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        }
+        userDao.updateById(user);
+    }
+
+    public UserInfo getByEmail(String email) {
+        User user = userDao.selectOne(new LambdaQueryWrapper<User>()
+                .eq(User::getEmail, email));
+        UserInfo userInfo = new UserInfo();
+        if (user != null) {
+            BeanUtils.copyProperties(user, userInfo);
+        }
+        return userInfo;
+    }
+
+    public void delete(Integer id) {
+        userDao.deleteById(id);
     }
 }
