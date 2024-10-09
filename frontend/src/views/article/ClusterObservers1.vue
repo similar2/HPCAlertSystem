@@ -1,7 +1,7 @@
 <script setup>
 import { Delete, Edit, User } from '@element-plus/icons-vue'
 import { ref } from 'vue'
-import WarningSelect from './components/WarningSelect.vue'
+// import WarningSelect from './components/WarningSelect.vue'
 import ClusterEdit from './components/ClusterEdit.vue'
 import ResponseDelete from './components/ResponseDelete.vue'
 import { artGetAllDevicesService, artDelService, artGetResponseService, artAddFile } from '@/api/Warning'
@@ -13,14 +13,14 @@ const loading = ref(false)
 const ClusterList = ref([])
 const ClusterEditRef = ref()
 const ResponseDeleteRef = ref()
-const fileInputRef = ref();
+const fileInputRef = ref()
 
 ClusterList.value = []
 
 const getClusterList = async () => {
   loading.value = true
   const res = await artGetAllDevicesService()
-  ClusterList.value = res.data.data.filter(device => device.clusterId === 1);
+  ClusterList.value = res.data.data.filter(device => device.clusterId === 1)
   // console.log(ClusterList.value)
   loading.value = false
 }
@@ -51,30 +51,30 @@ const onSuccess = () => {
   getClusterList()
 }
 const onUpload = () => {
-  fileInputRef.value.click();
+  fileInputRef.value.click()
 }
 const handleFile = async (e) => {
-  const file = e.target.files[0];
+  const file = e.target.files[0]
   await artAddFile(file)
   ElMessage({ type: 'success', message: '添加成功' })
   getClusterList()
 }
 const rowClassName = ({ row }) => {
   if (row.other.alert) {
-    return 'alert-row';
+    return 'alert-row'
   }
-  return '';
+  return ''
 }
 const navigateToCluster = (hostId) => {
-    router.push({ path: `/article/Cluster`, query: { clusterId: 1, hostId: hostId } });
-  }
+  router.push({ path: `/article/Cluster`, query: { clusterId: 1, hostId: hostId } })
+}
 </script>
 <template>
   <page-container title="监控管理">
     <template #extra>
       <el-button @click="onAddCluster">添加监控对象</el-button>
       <el-button type="primary" @click="onUpload">上传Excel文件</el-button>
-      <input type="file" ref="fileInputRef" @change="handleFile" style="display: none" accept=".xlsx,.xls"/>
+      <input type="file" ref="fileInputRef" @change="handleFile" style="display: none" accept=".xlsx,.xls" />
     </template>
     <el-form inline>
       <el-form-item label="监控类型：">
@@ -100,8 +100,8 @@ const navigateToCluster = (hostId) => {
           >{{ row.name }}</a>
         </template>
       </el-table-column>
-    <el-table-column prop="position" label="Position"></el-table-column>
-    <el-table-column prop="type" label="Type"></el-table-column>
+      <el-table-column prop="position" label="Position"></el-table-column>
+      <el-table-column prop="type" label="Type"></el-table-column>
       <el-table-column label="操作" width="150">
         <template #default="{ row }">
           <el-button
