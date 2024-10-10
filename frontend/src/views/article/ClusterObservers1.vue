@@ -8,24 +8,20 @@ import { artGetAllDevicesService, artDelService, artGetResponseService, artAddFi
 import router from '@/router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
-// const cateId = ref(44173)
 const loading = ref(false)
 const ClusterList = ref([])
 const ClusterEditRef = ref()
 const ResponseDeleteRef = ref()
-const fileInputRef = ref();
-
-ClusterList.value = []
+const fileInputRef = ref()
 
 const getClusterList = async () => {
   loading.value = true
   const res = await artGetAllDevicesService()
-  ClusterList.value = res.data.data.filter(device => device.clusterId === 1);
-  // console.log(ClusterList.value)
+  ClusterList.value = res.data.data.filter(device => device.clusterId === 1)
   loading.value = false
 }
 getClusterList()
-// 编辑新增逻辑
+
 const onAddCluster = () => {
   ClusterEditRef.value.open({})
 }
@@ -51,24 +47,22 @@ const onSuccess = () => {
   getClusterList()
 }
 const onUpload = () => {
-  fileInputRef.value.click();
+  fileInputRef.value.click()
 }
 const handleFile = async (e) => {
-  const file = e.target.files[0];
+  const file = e.target.files[0]
   await artAddFile(file)
   ElMessage({ type: 'success', message: '添加成功' })
   getClusterList()
 }
 const rowClassName = ({ row }) => {
-  if (row.other.alert) {
-    return 'alert-row';
-  }
-  return '';
+  return row.other.alert ? 'alert-row' : ''
 }
 const navigateToCluster = (hostId) => {
-    router.push({ path: `/article/Cluster`, query: { clusterId: 1, hostId: hostId } });
-  }
+  router.push({ path: `/article/Cluster`, query: { clusterId: 1, hostId: hostId } })
+}
 </script>
+
 <template>
   <page-container title="监控管理">
     <template #extra>
@@ -78,7 +72,7 @@ const navigateToCluster = (hostId) => {
     </template>
     <el-form inline>
       <el-form-item label="监控类型：">
-        <Warning-select></Warning-select>
+        <WarningSelect></WarningSelect>
       </el-form-item>
       <el-form-item label="活跃情况：">
         <el-select>
@@ -94,45 +88,24 @@ const navigateToCluster = (hostId) => {
     <el-table :data="ClusterList" style="width: 100%" v-loading="loading" :row-class-name="rowClassName">
       <el-table-column label="主机名" prop="name">
         <template #default="{ row }">
-          <a
-            class="link hover-blue"
-            @click="navigateToCluster(row.id)"
-          >{{ row.name }}</a>
+          <a class="link hover-blue" @click="navigateToCluster(row.id)">{{ row.name }}</a>
         </template>
       </el-table-column>
-    <el-table-column prop="position" label="Position"></el-table-column>
-    <el-table-column prop="type" label="Type"></el-table-column>
+      <el-table-column prop="position" label="Position"></el-table-column>
+      <el-table-column prop="type" label="Type"></el-table-column>
       <el-table-column label="操作" width="150">
         <template #default="{ row }">
-          <el-button
-            :icon="User"
-            circle
-            plain
-            type="primary"
-            @click="onEditResponse(row)"
-          ></el-button>
-          <el-button
-            :icon="Edit"
-            circle
-            plain
-            type="primary"
-            @click="onEditCluster(row)"
-          ></el-button>
-          <el-button
-            :icon="Delete"
-            circle
-            plain
-            type="danger"
-            @click="onDeleteCluster(row)"
-          ></el-button>
+          <el-button :icon="User" circle plain type="primary" @click="onEditResponse(row)"></el-button>
+          <el-button :icon="Edit" circle plain type="primary" @click="onEditCluster(row)"></el-button>
+          <el-button :icon="Delete" circle plain type="danger" @click="onDeleteCluster(row)"></el-button>
         </template>
       </el-table-column>
       <template #empty>
         <el-empty description="没有数据" />
       </template>
     </el-table>
-    <Cluster-edit ref="ClusterEditRef" @success="onSuccess"></Cluster-edit>
-    <Response-delete ref="ResponseDeleteRef" @success="onSuccess"></Response-delete>
+    <ClusterEdit ref="ClusterEditRef" @success="onSuccess"></ClusterEdit>
+    <ResponseDelete ref="ResponseDeleteRef" @success="onSuccess"></ResponseDelete>
   </page-container>
 </template>
 
@@ -140,7 +113,6 @@ const navigateToCluster = (hostId) => {
 .el-table::v-deep(.alert-row) {
   --el-table-tr-bg-color: var(--el-color-warning-light-9);
 }
-
 .hover-blue:hover {
   color: skyblue;
   cursor: pointer;

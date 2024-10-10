@@ -52,11 +52,11 @@ const handleCommand = async (command) => {
     <el-aside width="200px">
       <div class="el-aside__logo"></div>
       <el-menu
-        active-text-color="#ffd04b"
-        background-color="#232323"
-        :default-active="$route.path"
-        text-color="#fff"
-        router
+          active-text-color="#ffd04b"
+          background-color="#232323"
+          :default-active="$route.path"
+          text-color="#fff"
+          router
       >
         <el-sub-menu index="/article/manage">
           <template #title>
@@ -77,10 +77,10 @@ const handleCommand = async (command) => {
               <span>监控集群</span>
             </template>
             <el-menu-item
-              v-for="cluster in clusters"
-              :key="cluster.id"
-              :index="`/article/observers${cluster.id}`"
-              @click="() => router.push(`/article/observers${cluster.id}`)"
+                v-for="cluster in clusters"
+                :key="cluster.id"
+                :index="`/article/observers${cluster.id}`"
+                @click="() => router.push(`/article/observers${cluster.id}`)"
             >
               <span>{{ cluster.name }}</span>
             </el-menu-item>
@@ -145,16 +145,16 @@ const handleCommand = async (command) => {
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item command="profile" :icon="User"
-                >基本资料</el-dropdown-item
+              >基本资料</el-dropdown-item
               >
               <el-dropdown-item command="avatar" :icon="Crop"
-                >更换头像</el-dropdown-item
+              >更换头像</el-dropdown-item
               >
               <el-dropdown-item command="password" :icon="EditPen"
-                >重置密码</el-dropdown-item
+              >重置密码</el-dropdown-item
               >
               <el-dropdown-item command="logout" :icon="SwitchButton"
-                >退出登录</el-dropdown-item
+              >退出登录</el-dropdown-item
               >
             </el-dropdown-menu>
           </template>

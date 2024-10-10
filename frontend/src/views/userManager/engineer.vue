@@ -1,75 +1,84 @@
 <template>
   <div class="page-container">
-    <div class="container">
+    <el-card class="container" shadow="hover">
       <div class="tableBar">
-        <label style="margin-right: 8px"> 工程师姓名: </label>
-        <el-input
-          clearable
-          v-model="name"
-          placeholder="请输入查询的姓名"
-          style="width: 15%; margin-right: 15px"
-          @clear="pageQuery"
-        />
-        <label style="margin-right: 8px"> 邮箱: </label>
-        <el-input
-          clearable
-          v-model="email"
-          placeholder="请输入查询的邮箱号"
-          style="width: 15%; margin-right: 15px"
-          @clear="pageQuery"
-        />
-        <label style="margin-right: 8px"> 电话: </label>
-        <el-input
-          clearable
-          v-model="phone"
-          placeholder="请输入查询的电话号"
-          style="width: 15%; margin-right: 15px"
-          @clear="pageQuery"
-        />
-        <el-button type="primary" style="margin-left: 25px" @click="pageQuery()">查询</el-button>
-        <el-button type="primary" style="float: right" @click="handleAddUser"
-          >+添加运维工程师</el-button
-        >
+        <el-row>
+          <el-col :span="6">
+            <label>工程师姓名:</label>
+            <el-input
+                clearable
+                v-model="name"
+                placeholder="请输入查询的姓名"
+                @clear="pageQuery"
+            />
+          </el-col>
+          <el-col :span="6">
+            <label>邮箱:</label>
+            <el-input
+                clearable
+                v-model="email"
+                placeholder="请输入查询的邮箱号"
+                @clear="pageQuery"
+            />
+          </el-col>
+          <el-col :span="6">
+            <label>电话:</label>
+            <el-input
+                clearable
+                v-model="phone"
+                placeholder="请输入查询的电话号"
+                @clear="pageQuery"
+            />
+          </el-col>
+          <el-col :span="6" class="button-group">
+            <el-button type="primary" @click="pageQuery">查询</el-button>
+            <el-button type="success" @click="handleAddUser">+ 添加运维工程师</el-button>
+          </el-col>
+        </el-row>
       </div>
       <el-table :data="records" stripe style="width: 100%">
-        <el-table-column prop="name" label="工程师姓名" width="280"> </el-table-column>
-        <el-table-column prop="email" label="邮箱" width="300"> </el-table-column>
-        <el-table-column prop="phone" label="电话" width="300"> </el-table-column>
-        <el-table-column prop="status" label="账号状态" width="180">
+        <el-table-column prop="name" label="工程师姓名" width="280"></el-table-column>
+        <el-table-column prop="email" label="邮箱" width="300"></el-table-column>
+        <el-table-column prop="phone" label="电话" width="300"></el-table-column>
+        <el-table-column label="账号状态" width="180">
           <template #default="scope">
-            {{ scope.row.status === 0 ? '禁用' : '启用' }}
+            <el-badge
+                :value="scope.row.status === 1 ? '启用' : '禁用'"
+                :is-dot="scope.row.status === 0"
+                class="status-badge"
+                :type="scope.row.status === 1 ? 'success' : 'danger'"
+            />
           </template>
         </el-table-column>
         <el-table-column label="操作">
           <template #default="scope">
-            <el-button type="primary" @click="handleUpdateUser(scope.row)">修改</el-button>
-            <el-button type="primary" @click="handleStartOrStop(scope.row)">{{
-              scope.row.status === 1 ? '禁用' : '启用'
-            }}</el-button>
-            <el-button type="danger" @click="handleDeleteUser(scope.row)">删除</el-button>
+            <el-button size="small" type="primary" @click="handleUpdateUser(scope.row)">修改</el-button>
+            <el-button size="small" type="warning" @click="handleStartOrStop(scope.row)">
+              {{ scope.row.status === 1 ? '禁用' : '启用' }}
+            </el-button>
+            <el-button size="small" type="danger" @click="handleDeleteUser(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
       <div class="pagination-container">
         <el-pagination
-          class="pageList"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="page"
-          :page-sizes="[10, 20, 30, 40, 50]"
-          :page-size="pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="total"
-        >
-        </el-pagination>
+            class="pageList"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="page"
+            :page-sizes="[10, 20, 30, 40, 50]"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total"
+        />
       </div>
-    </div>
+    </el-card>
   </div>
 </template>
-  
-  <script setup>
+
+<script setup>
 import { ref, onMounted, reactive } from 'vue'
-import { getUserList, enableOrDisableUser,deleteUser} from '@/api/user'
+import { getUserList, enableOrDisableUser, deleteUser } from '@/api/user'
 import router from '@/router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
@@ -77,7 +86,6 @@ onMounted(() => {
   pageQuery()
 })
 
-// const locale = zhCn
 const name = ref('')
 const email = ref('')
 const phone = ref('')
@@ -96,16 +104,16 @@ const pageQuery = async () => {
     role: 1
   }
   getUserList(params)
-    .then((res) => {
-      if (res.data.code == 200) {
-        total.value = res.data.data.total
-        records.length = 0
-        Object.assign(records, res.data.data.records)
-      }
-    })
-    .catch((err) => {
-      ElMessage.error('请求出错了：' + err.message)
-    })
+      .then((res) => {
+        if (res.data.code == 200) {
+          total.value = res.data.data.total
+          records.length = 0
+          Object.assign(records, res.data.data.records)
+        }
+      })
+      .catch((err) => {
+        ElMessage.error('请求出错了：' + err.message)
+      })
 }
 const handleSizeChange = (newPageSize) => {
   pageSize.value = newPageSize
@@ -117,7 +125,6 @@ const handleCurrentChange = (newPage) => {
 }
 
 const handleStartOrStop = async (row) => {
-  //弹出确认提示框
   await ElMessageBox.confirm('确认要修改当前工程师账号的状态吗?', '温馨提示', {
     type: 'warning',
     confirmButtonText: '确认',
@@ -136,8 +143,8 @@ const handleStartOrStop = async (row) => {
       }
     })
   })
-  pageQuery()
 }
+
 const handleAddUser = () => {
   router.push({
     path: '/userManager/add',
@@ -167,8 +174,8 @@ const handleDeleteUser = (row) => {
   })
 }
 </script>
-  
-  <style>
+
+<style>
 .pagination-container {
   display: flex;
   justify-content: center;
@@ -183,5 +190,13 @@ const handleDeleteUser = (row) => {
 }
 .tableBar {
   margin-bottom: 20px;
+}
+.button-group {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+.status-badge {
+  margin-right: 5px;
 }
 </style>
