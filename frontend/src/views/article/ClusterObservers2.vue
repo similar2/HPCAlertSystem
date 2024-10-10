@@ -1,7 +1,7 @@
 <script setup>
 import { Delete, Edit, User } from '@element-plus/icons-vue'
 import { ref } from 'vue'
-import WarningSelect from './components/WarningSelect.vue'
+// import WarningSelect from './components/WarningSelect.vue'
 import ClusterEdit from './components/ClusterEdit.vue'
 import ResponseDelete from './components/ResponseDelete.vue'
 import { artGetAllDevicesService, artDelService, artGetResponseService, artAddFile } from '@/api/Warning'

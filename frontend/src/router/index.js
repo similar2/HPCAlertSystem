@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -65,10 +66,10 @@ const router = createRouter({
           component: () => import('@/views/userManager/engineer.vue')
         },
         {
-          path: "/userManager/add",
-          component: () => import("@/views/userManager/addUser.vue"),
+          path: '/userManager/add',
+          component: () => import('@/views/userManager/addUser.vue'),
           meta: {
-            title: "添加/修改用户",
+            title: '添加/修改用户'
             // hidden: true
           }
         }

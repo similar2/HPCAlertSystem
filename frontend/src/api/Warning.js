@@ -1,16 +1,16 @@
 import request from '@/utils/request'
+
 export const artGetAllWarningService = () => request.get('/api/alerts/all')
 export const artGetSearchWarningService = (data) => {
-  const params = new URLSearchParams();
+  const params = new URLSearchParams()
   for (const key in data) {
     if (data[key] !== null && data[key] !== '') {
-      params.append(key, data[key]);
+      params.append(key, data[key])
     }
   }
   if (params.toString() === '') {
     return request.get('/api/alerts/all')
-  }
-  else {
+  } else {
     return request.get(`/api/alerts/all?${params.toString()}`)
   }
 }
@@ -73,14 +73,14 @@ export const artGetResponseService = (id) =>
 export const artAddResponseService = (id, data) =>
   request.post(`/api/devices/assignees/add/${id}`, data)
 //删除告警人
-export const artDeleteResponseService = (id, data) => 
+export const artDeleteResponseService = (id, data) =>
   request.post(`/api/devices/assignees/delete/${id}`, data)
 export const artAddFile = (file) => {
-  const formData = new FormData();
-  formData.append('file', file);
+  const formData = new FormData()
+  formData.append('file', file)
   return request.post('/api/devices/file', formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
-  });
+  })
 }
