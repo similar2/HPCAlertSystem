@@ -10,7 +10,7 @@ rule_files:
 scrape_configs:
   - job_name: ipmi
     params:
-      module: ['default']
+      module: [ 'default' ]
     # scrape_interval: 10s
     metrics_path: /ipmi
     scheme: http
@@ -19,13 +19,13 @@ scrape_configs:
           - targets.yml
         refresh_interval: 5m
     relabel_configs: # https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config
-      - source_labels: [__address__]
+      - source_labels: [ __address__ ]
         separator: ;
         regex: (.*)
         target_label: __param_target
         replacement: ${1}
         action: replace
-      - source_labels: [__param_target]
+      - source_labels: [ __param_target ]
         separator: ;
         regex: (.*)
         target_label: instance
@@ -36,3 +36,9 @@ scrape_configs:
         target_label: __address__
         replacement: ipmi-exporter:9290 # docker-compose.yml中的service域名
         action: replace
+  # Node Exporter configuration
+  - job_name: node
+    scrape_interval: 15s
+    static_configs:
+      - targets:
+          - 172.18.6.108:9100  # IP address of the host where Node Exporter is running
