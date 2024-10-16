@@ -166,7 +166,9 @@ public class UserService {
         User user = new User();
         BeanUtils.copyProperties(userDTO, user);
         user.setStatus(1);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (userDTO.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        }
         userDao.insert(user);
     }
 

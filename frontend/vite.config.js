@@ -9,6 +9,10 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  optimizeDeps: {
+    // 禁用ES模块语法解析
+    syntaxDynamicImport: false
+  },
   plugins: [
     vue(),
     // AutoImport({

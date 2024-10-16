@@ -106,7 +106,7 @@ public class UserController {
      * @param userDTO
      * @return
      */
-    @PutMapping
+    @PostMapping("/update")
     public ApiResponse update(@RequestBody UserDTO userDTO) {
         userService.update(userDTO);
         return ApiResponse.success();
@@ -127,7 +127,7 @@ public class UserController {
      * @param id
      * @return
      */
-    @DeleteMapping("/{id}")
+    @PostMapping("/{id}")
     public ApiResponse delete(@PathVariable Integer id) {
         userService.delete(id);
         return ApiResponse.success();

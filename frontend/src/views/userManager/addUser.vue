@@ -134,7 +134,7 @@ export default {
                   this.ruleForm = {
                     name: '',
                     password: '',
-                    sex: '1',
+                    role: this.ruleForm.role,
                     phone: '',
                     email: ''
                   }
