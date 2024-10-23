@@ -2,6 +2,7 @@ package edu.sustech.hpc.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import edu.sustech.hpc.dao.RoleDao;
@@ -29,6 +30,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -205,7 +207,17 @@ public class UserService {
         if (userDTO.getPassword() != null) {
             user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         }
+        user.setCreateTime(LocalDateTime.now());
+        user.setUpdateTime(LocalDateTime.now());
         userDao.insert(user);
+
+        List<Integer> roleIds = userDTO.getRoleIds();
+        roleIds.forEach(roleId -> userRoleDao.insert(
+                UserRole.builder()
+                        .userId(user.getId())
+                        .roleId(roleId)
+                        .build()
+        ));
     }
 
     /**
@@ -228,10 +240,19 @@ public class UserService {
     public void update(UserDTO userDTO) {
         User user = new User();
         BeanUtils.copyProperties(userDTO, user);
-        if (userDTO.getPassword() != null) {
+        if (StrUtil.isNotBlank(userDTO.getPassword())) {
             user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         }
         userDao.updateById(user);
+
+        List<Integer> roleIds = userDTO.getRoleIds();
+        userRoleDao.delete(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, user.getId()));
+        roleIds.forEach(roleId -> userRoleDao.insert(
+                UserRole.builder()
+                        .userId(user.getId())
+                        .roleId(roleId)
+                        .build()
+        ));
     }
 
     /**

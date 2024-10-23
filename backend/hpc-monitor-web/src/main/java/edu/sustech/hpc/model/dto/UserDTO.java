@@ -2,6 +2,8 @@ package edu.sustech.hpc.model.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author Yuxian Wu
  * @version 1.0
@@ -20,5 +22,7 @@ public class UserDTO {
 
     private String email;
 
-    private Integer role;
+    private Integer deleted;
+
+    private List<Integer> roleIds;
 }

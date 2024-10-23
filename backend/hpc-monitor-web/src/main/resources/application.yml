@@ -22,3 +22,8 @@ spring:
             enable: true
             required: true
     port: 994
+logging:
+  level:
+    edu.sustech.hpc: debug
+  pattern:
+    dateformat: HH:mm:ss:SSS

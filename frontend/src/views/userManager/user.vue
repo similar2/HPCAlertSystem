@@ -53,8 +53,16 @@
     <el-dialog :title="textMap[dialogStatus]" v-model="dialogFormVisible">
       <el-form class="small-space" :model="tempUser" label-position="left" label-width="80px"
                style='width: 300px; margin-left:50px;'>
-        <el-form-item label="用户名" required v-if="dialogStatus==='create'">
+        <el-form-item label="姓名" required>
+          <el-input type="text" v-model="tempUser.name">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" required>
           <el-input type="text" v-model="tempUser.email">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="电话" required>
+          <el-input type="text" v-model="tempUser.phone">
           </el-input>
         </el-form-item>
         <el-form-item label="密码" v-if="dialogStatus==='create'" required>
@@ -75,10 +83,6 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="昵称" required>
-          <el-input type="text" v-model="tempUser.name">
-          </el-input>
-        </el-form-item>
       </el-form>
       <template v-slot:footer>
         <div class="dialog-footer">
@@ -92,7 +96,7 @@
 </template>
 
 <script>
-import { getUserList, getRoleList } from '@/api/userManager'
+import { getUserList, getRoleList, addUser, updateUser, deleteUser } from '@/api/user'
 export default {
   data(){
     return{
@@ -224,6 +228,8 @@ export default {
         create: '新建用户'
       },
       tempUser: {
+        name:'',
+        phone: '',
         email: '',
         password: '',
         name: '',
@@ -293,9 +299,10 @@ export default {
     },
     showCreate() {
       //显示新增对话框
-      this.tempUser.email = "";
-      this.tempUser.password = "";
-      this.tempUser.name = "";
+      this.tempUser.email = ""
+      this.tempUser.password = ""
+      this.tempUser.name = ""
+      this.tempUser.phone = ""
       this.tempUser.roleIds = [];
       this.tempUser.id = "";
       this.dialogStatus = "create"
@@ -305,9 +312,9 @@ export default {
       let user = this.list[$index];
       this.tempUser.email = user.email;
       this.tempUser.name = user.name;
+      this.tempUser.phone = user.phone; 
       this.tempUser.roleIds = user.roles.map(x => x.id);
       this.tempUser.id = user.id;
-      this.tempUser.deleteStatus = '1';
       this.tempUser.password = '';
       this.dialogStatus = "update"
       this.dialogFormVisible = true
@@ -334,39 +341,50 @@ export default {
     },
     createUser() {
       if (!this.validate(true)) return
-      //添加新用户
-      this.api({
-        url: "/user/addUser",
-        method: "post",
-        data: this.tempUser
-      }).then(() => {
+      this.tempUser.deleted = 0
+      addUser(this.tempUser)
+      .then(res => {
         this.$message.success('添加成功')
-        this.getList();
-        this.dialogFormVisible = false
+        this.getList()
+        this.dialogFormVisible = false;
       })
     },
     updateUser() {
       if (!this.validate(false)) return
-      //修改用户信息
-      let _vue = this;
-      this.api({
-        url: "/user/updateUser",
-        method: "post",
-        data: this.tempUser
-      }).then(() => {
+      updateUser(this.tempUser)
+      .then(res => {
         this.$message.success('修改成功')
-        this.dialogFormVisible = false
-        _vue.getList();
-
+        this.getList()
+        this.dialogFormVisible = false;
       })
+      //修改用户信息
+      // let _vue = this;
+      // this.api({
+      //   url: "/user/updateUser",
+      //   method: "post",
+      //   data: this.tempUser
+      // }).then(() => {
+      //   this.$message.success('修改成功')
+      //   this.dialogFormVisible = false
+      //   _vue.getList();
+
+      // })
     },
     removeUser($index) {
-      let _vue = this;
+      // let _vue = this;
       this.$confirm('确定删除此用户?', '提示', {
         confirmButtonText: '确定',
         showCancelButton: false,
         type: 'warning'
       }).then(() => {
+        deleteUser(this.list[$index].id)
+        .then(res => {
+          this.$message.success('删除成功')
+          this.getList()
+        })
+        .catch(() => {
+          this.$message.error("删除失败")
+        })
         // let user = _vue.list[$index];
         // user.deleteStatus = '2';
         // user.roleIds = user.roles.map(x => x.id)
