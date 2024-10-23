@@ -37,6 +37,12 @@ public class PrometheusServiceTest {
     }
 
     @Test
+    public void getFilterOptionsByMetricName() {
+        HardwareType bmc = HardwareType.BMC;
+        prometheusService.getFilterOptionsByMetricName(bmc, "ipmi_fan_speed");
+    }
+
+    @Test
     public void addAlertRuleTest() {
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode objectNode = objectMapper.createObjectNode();

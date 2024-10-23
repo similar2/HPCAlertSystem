@@ -40,16 +40,6 @@ export const artEditService = (data, id) =>
   request.patch(`/api/devices/${id}`, data)
 //删除设备
 export const artDelService = (id) => request.delete(`/api/devices/${id}`)
-//获取target
-export const artGetAllTarget = () =>
-  request.get('/api/target?job=ipmi_exporter')
-export const artGetAllTargetService = () => request.get('/api/target')
-//增加target
-export const artAddTargetService = (data) => {
-  request.post('/api/target', data)
-}
-//删除target
-export const artDelTargetService = (id) => request.post(`/api/target/${id}`)
 //获取全部规则
 export const artGetAllRulesService = () => request.get('/api/alerts/rules')
 //增加规则
