@@ -51,3 +51,7 @@ export const getByEmail = (email) => {
 export const deleteUser = (id) => {
   return request.post(`/api/user/${id}`)
 }
+
+export const getRoleList = () => {
+  return request.get('/api/user/roleList')
+}
