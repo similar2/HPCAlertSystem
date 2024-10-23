@@ -18,14 +18,6 @@ const router = createRouter({
           component: () => import('@/views/article/WarningManage.vue')
         },
         {
-          path: '/article/cluster',
-          component: () => import('@/views/article/ClusterManage.vue')
-        },
-        // {
-        //   path: '/article/machine',
-        //   component: () => import('@/views/article/MachineManage.vue')
-        // },
-        {
           path: '/article/detail',
           component: () => import('@/views/article/WarningDetail.vue')
         },
