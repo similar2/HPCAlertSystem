@@ -21,7 +21,7 @@
       <el-table-column align="center" label="角色" width="200">
         <template v-slot="{ row }">
           <div style="margin-right: 4px; display: inline-block" v-for="(i, index) in row.roles" :key="index">
-            <el-tag type="success" v-if="i.roleId === 1">{{ i.roleName }}</el-tag>
+            <el-tag type="success" v-if="i.id === 1">{{ i.roleName }}</el-tag>
             <el-tag type="primary" v-else>{{ i.roleName }}</el-tag>
           </div>
         </template>
@@ -69,9 +69,9 @@
           <el-select v-model="tempUser.roleIds" multiple placeholder="支持多角色" style="width: 300px">
             <el-option
               v-for="item in roles"
-              :key="item.roleId"
+              :key="item.id"
               :label="item.roleName"
-              :value="item.roleId">
+              :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import { getUserList } from '@/api/userManager'
+import { getUserList, getRoleList } from '@/api/userManager'
 export default {
   data(){
     return{
@@ -103,7 +103,7 @@ export default {
                 "deleteStatus": "1",
                 "roles": [
                     {
-                        "roleId": 8,
+                        "id": 8,
                         "roleName": "超级管理"
                     }
                 ],
@@ -118,15 +118,15 @@ export default {
                 "deleteStatus": "1",
                 "roles": [
                     {
-                        "roleId": 3,
+                        "id": 3,
                         "roleName": "程序员"
                     },
                     {
-                        "roleId": 7,
+                        "id": 7,
                         "roleName": "运维工程师"
                     },
                     {
-                        "roleId": 9,
+                        "id": 9,
                         "roleName": "系统管理"
                     }
                 ],
@@ -141,7 +141,7 @@ export default {
                 "deleteStatus": "1",
                 "roles": [
                     {
-                        "roleId": 9,
+                        "id": 9,
                         "roleName": "系统管理"
                     }
                 ],
@@ -156,11 +156,11 @@ export default {
                 "deleteStatus": "1",
                 "roles": [
                     {
-                        "roleId": 5,
+                        "id": 5,
                         "roleName": "测试"
                     },
                     {
-                        "roleId": 7,
+                        "id": 7,
                         "roleName": "运维工程师"
                     }
                 ],
@@ -175,7 +175,7 @@ export default {
                 "deleteStatus": "1",
                 "roles": [
                     {
-                        "roleId": 5,
+                        "id": 5,
                         "roleName": "测试"
                     }
                 ],
@@ -193,27 +193,27 @@ export default {
       },
       roles: [
       {
-                "roleId": 1,
+                "id": 1,
                 "roleName": "管理员"
             },
             {
-                "roleId": 3,
+                "id": 3,
                 "roleName": "程序员"
             },
             {
-                "roleId": 5,
+                "id": 5,
                 "roleName": "测试"
             },
             {
-                "roleId": 7,
+                "id": 7,
                 "roleName": "运维工程师"
             },
             {
-                "roleId": 8,
+                "id": 8,
                 "roleName": "超级管理"
             },
             {
-                "roleId": 9,
+                "id": 9,
                 "roleName": "系统管理"
             }
       ],//角色列表
@@ -235,11 +235,16 @@ export default {
   created() {
     this.getList();
     // if (this.hasPerm('user:add') || this.hasPerm('user:update')) {
-    //   this.getAllRoles();
+      this.getAllRoles();
     // }
   },
   methods: {
     getAllRoles() {
+      getRoleList()
+      .then(res => {
+        console.log(res)
+        this.roles = res.data.data;
+      })
       // this.api({
       //   url: "/user/getAllRoles",
       //   method: "get"
@@ -255,8 +260,7 @@ export default {
         console.log(res)
         this.listLoading = false;
         this.list = res.data.data.records
-        // this.list = res.list;
-        this.totalCount = res.totalCount;
+        this.totalCount = res.data.data.total;
       })
       // this.api({
       //   url: "/user/list",
@@ -301,7 +305,7 @@ export default {
       let user = this.list[$index];
       this.tempUser.email = user.email;
       this.tempUser.name = user.name;
-      this.tempUser.roleIds = user.roles.map(x => x.roleId);
+      this.tempUser.roleIds = user.roles.map(x => x.id);
       this.tempUser.id = user.id;
       this.tempUser.deleteStatus = '1';
       this.tempUser.password = '';
@@ -365,7 +369,7 @@ export default {
       }).then(() => {
         // let user = _vue.list[$index];
         // user.deleteStatus = '2';
-        // user.roleIds = user.roles.map(x => x.roleId)
+        // user.roleIds = user.roles.map(x => x.id)
         // _vue.api({
         //   url: "/user/updateUser",
         //   method: "post",

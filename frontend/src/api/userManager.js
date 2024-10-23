@@ -5,3 +5,7 @@ export const getUserList = (params) => {
     params:params
   })
 }
+
+export const getRoleList = () => {
+  return request.get('/api/user/roleList')
+}
