@@ -58,21 +58,21 @@ const router = createRouter({
           component: () => import('@/views/user/UserPassword.vue')
         },
         {
-          path: '/userManager/systemManager',
-          component: () => import('@/views/userManager/systemManager.vue')
+          path: '/userManager/user',
+          component: () => import('@/views/userManager/user.vue')
         },
         {
-          path: '/userManager/engineer',
-          component: () => import('@/views/userManager/engineer.vue')
+          path: '/userManager/role',
+          component: () => import('@/views/userManager/role.vue')
         },
-        {
-          path: '/userManager/add',
-          component: () => import('@/views/userManager/addUser.vue'),
-          meta: {
-            title: '添加/修改用户'
-            // hidden: true
-          }
-        }
+        // {
+        //   path: '/userManager/add',
+        //   component: () => import('@/views/userManager/addUser.vue'),
+        //   meta: {
+        //     title: '添加/修改用户'
+        //     // hidden: true
+        //   }
+        // }
       ]
     }
   ]

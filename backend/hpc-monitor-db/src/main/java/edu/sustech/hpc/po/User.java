@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -16,10 +19,14 @@ import lombok.experimental.Accessors;
 public class User {
     @TableId(type=IdType.AUTO)
     private Integer id;
-    private String name;
-    private String password; //BCrypt hashed password
-    private String phone;
     private String email;
-    private Integer role;// 1 - engineer, 2 - system admin, 3 - super admin
+    private String password; //BCrypt hashed password
+    private String name;
+    private String phone;
     private Integer status; // 0 - inactive, 1 - active
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createTime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime updateTime;
+    private Integer deleted;
 }

@@ -13,7 +13,6 @@ public class UserPageQueryDTO {
     private String name;
     private String email;
     private String phone;
-    private int page;
+    private int pageNum;
     private int pageSize;
-    private int role;
 }

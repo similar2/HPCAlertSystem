@@ -1,6 +1,6 @@
 package edu.sustech.hpc.dao;
 
 import com.github.yulichang.base.MPJBaseMapper;
-import edu.sustech.hpc.po.User;
+import edu.sustech.hpc.po.Role;
 
-public interface UserDao extends MPJBaseMapper<User> {}
+public interface RoleDao extends MPJBaseMapper<Role> {}

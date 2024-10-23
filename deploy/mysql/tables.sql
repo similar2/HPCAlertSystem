@@ -78,23 +78,26 @@ CREATE TABLE server
 DROP TABLE IF EXISTS user;
 create table user
 (
-    id       int auto_increment
+    `id`          int auto_increment
         primary key,
-    name     varchar(20)   null,
-    password char(60)      not null comment 'Bcrypt hashed password',
-    phone    char(11)      null,
-    email    varchar(40)   null,
-    status   int default 1 not null comment '账号状态 0禁用 1启用'
+    `email`       varchar(40) null,
+    `password`    char(60)    not null comment 'Bcrypt hashed password',
+    `name`        varchar(20) null,
+    `phone`       char(11)    null,
+    `status`      int              default 1 not null comment '账号状态 0禁用 1启用',
+    `create_time` timestamp   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` timestamp   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    `deleted`     INT              DEFAULT '0' COMMENT '是否已经删除  0有效  1被删除'
 );
 
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role`
 (
-    `id`            int(11)   NOT NULL AUTO_INCREMENT,
-    `role_name`     varchar(20)    DEFAULT NULL COMMENT '角色名',
-    `create_time`   timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-    `update_time`   timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `delete_status` varchar(1)     DEFAULT '1' COMMENT '是否有效  1有效  2无效',
+    `id`          int(11)   NOT NULL AUTO_INCREMENT,
+    `role_name`   varchar(20)    DEFAULT NULL COMMENT '角色名',
+    `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted`     INT            default '1' null comment '是否删除  0有效 1删除',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 5
@@ -136,7 +139,7 @@ CREATE TABLE `role_permission`
     `permission_id` int(11)        DEFAULT NULL COMMENT '权限id',
     `create_time`   timestamp NULL DEFAULT CURRENT_TIMESTAMP,
     `update_time`   timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `delete_status` varchar(1)     DEFAULT '1' COMMENT '是否有效 1有效     2无效',
+    `deleted` INT     DEFAULT 1 COMMENT '是否删除 0有效     1删除',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 23

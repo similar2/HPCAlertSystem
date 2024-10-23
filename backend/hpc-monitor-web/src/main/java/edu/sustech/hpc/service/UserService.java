@@ -1,14 +1,21 @@
 package edu.sustech.hpc.service;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import edu.sustech.hpc.dao.RoleDao;
 import edu.sustech.hpc.dao.UserDao;
+import edu.sustech.hpc.dao.UserRoleDao;
 import edu.sustech.hpc.model.dto.UserDTO;
 import edu.sustech.hpc.model.dto.UserPageQueryDTO;
 import edu.sustech.hpc.model.vo.PublicUserInfo;
+import edu.sustech.hpc.model.vo.RoleVo;
 import edu.sustech.hpc.model.vo.UserInfo;
+import edu.sustech.hpc.model.vo.UserPageQueryVo;
+import edu.sustech.hpc.po.Role;
 import edu.sustech.hpc.po.User;
+import edu.sustech.hpc.po.UserRole;
 import edu.sustech.hpc.result.PageResult;
 import edu.sustech.hpc.util.EmailUtil;
 import edu.sustech.hpc.util.JwtUtil;
@@ -22,7 +29,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -65,6 +75,10 @@ public class UserService {
     @Resource
     private UserDao userDao;
     @Resource
+    private UserRoleDao userRoleDao;
+    @Resource
+    private RoleDao roleDao;
+    @Resource
     private PasswordEncoder passwordEncoder;
 
     //获取所有脱敏后的用户信息
@@ -76,8 +90,7 @@ public class UserService {
                 .map(user -> new PublicUserInfo()
                         .setId(user.getId())
                         .setUsername(user.getName())
-                        .setEmail(user.getEmail())
-                        .setRole(user.getRole()))
+                        .setEmail(user.getEmail()))
                 .collect(Collectors.toList());
     }
 
@@ -94,8 +107,7 @@ public class UserService {
         user = new User()
                 .setName(username)
                 .setPassword(passwordEncoder.encode(password))
-                .setEmail(email)
-                .setRole(1);//set as engineer as default
+                .setEmail(email);
         userDao.insert(user);
         return authenticate(user);
     }
@@ -127,7 +139,7 @@ public class UserService {
      */
     public PageResult pageQuery(UserPageQueryDTO userPageQueryDTO) {
         // 创建分页对象
-        Page<User> page = new Page<>(userPageQueryDTO.getPage(), userPageQueryDTO.getPageSize());
+        Page<User> page = new Page<>(userPageQueryDTO.getPageNum(), userPageQueryDTO.getPageSize());
 
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         if (userPageQueryDTO.getName() != null && !userPageQueryDTO.getName().isEmpty()) {
@@ -139,10 +151,34 @@ public class UserService {
         if (userPageQueryDTO.getPhone() != null && !userPageQueryDTO.getPhone().isEmpty()) {
             queryWrapper.like(User::getPhone, userPageQueryDTO.getPhone());
         }
-        queryWrapper.eq(User::getRole, userPageQueryDTO.getRole());
         Page<User> userPage = userDao.selectPage(page, queryWrapper);
 
-        return new PageResult(userPage.getTotal(), userPage.getRecords());
+        List<UserPageQueryVo> records = BeanUtil.copyToList(userPage.getRecords(), UserPageQueryVo.class);
+
+        // 查出所有的角色
+        List<Role> roles = roleDao.selectList(null);
+        Map<Integer, String> roleMap = roles.stream()
+                .collect(Collectors.toMap(
+                        Role::getId,
+                        Role::getRoleName
+                ));
+
+        for (UserPageQueryVo userPageQueryVo : records) {
+            List<UserRole> userRoles = userRoleDao.selectList(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, userPageQueryVo.getId()));
+
+            userPageQueryVo.setRoles( userRoles.stream()
+                    .map(userRole -> {
+                        Integer roleId = userRole.getRoleId();
+                        String roleName = roleMap.get(roleId);
+                        return RoleVo.builder()
+                                .id(roleId)
+                                .roleName(roleName)
+                                .build();
+                    })
+                    .toList());
+        }
+
+        return new PageResult(userPage.getTotal(), records);
     }
 
     /**

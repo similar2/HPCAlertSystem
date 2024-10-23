@@ -15,6 +15,5 @@ public class UserInfo {
     private String name;
     private String email;
     private String phone;
-    private Integer role;// 1 - engineer, 2 - system admin, 3 - super admin
     private Integer status; // 0 - inactive, 1 - active
 }

@@ -14,9 +14,7 @@ export const useUserStore = defineStore(
       // user.value = res.data.data
     }
     const setUser = (obj) => (user.value = obj)
-    const role = ref('') // 定义角色
-    const setRole = (r) => (role.value = r)
-    return { token, setToken, user, getUser, setUser, role, setRole }
+    return { token, setToken, user, getUser, setUser}
   },
   {
     persist: true // 持久化

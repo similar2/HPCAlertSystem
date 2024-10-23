@@ -95,18 +95,18 @@ const handleCommand = async (command) => {
           </el-menu-item> -->
         </el-sub-menu>
 
-        <el-sub-menu index="/userManager" v-if="userStore.role == 2 || userStore.role ==3">
+        <el-sub-menu index="/userManager">
           <template #title>
             <el-icon><UserFilled /></el-icon>
-            <span>用户管理</span>
+            <span>用户权限</span>
           </template>
-          <el-menu-item index="/userManager/systemManager" v-if="userStore.role == 3">
+          <el-menu-item index="/userManager/user">
             <el-icon><User /></el-icon>
-            <span>系统管理</span>
+            <span>用户列表</span>
           </el-menu-item>
-          <el-menu-item index="/userManager/engineer">
+          <el-menu-item index="/userManager/role">
             <el-icon><User /></el-icon>
-            <span>运维工程师</span>
+            <span>权限管理</span>
           </el-menu-item>
         </el-sub-menu>
 
