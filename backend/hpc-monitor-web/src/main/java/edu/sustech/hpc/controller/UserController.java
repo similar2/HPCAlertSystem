@@ -48,18 +48,11 @@ public class UserController {
     public ApiResponse<UserInfo> login(@Validated @RequestBody LoginParam loginParam) {
         UserInfo userInfo = userService.login(loginParam.getEmail(), loginParam.getPassword());
         return ApiResponse.success(userInfo);
-//        System.out.println("login");
-//        return ApiResponse.success(UserInfo.builder()
-//                .token("token")
-//                .id(1)
-//                .name("name")
-//                .email(loginParam.getEmail())
-//                .role(3)
-//                .build());
     }
 
     /**
      * 分页查询
+     *
      * @param userPageQueryDTO
      * @return
      */
@@ -71,28 +64,31 @@ public class UserController {
 
     /**
      * 启用或禁用账号
+     *
      * @param status
      * @param id
      */
     @PostMapping("/status/{status}")
-    public ApiResponse startOrStop(@PathVariable Integer status, Integer id){
+    public ApiResponse startOrStop(@PathVariable Integer status, Integer id) {
         userService.startOrStop(status, id);
         return ApiResponse.success();
     }
 
     /**
      * 新增用户
+     *
      * @param userDTO
      * @return
      */
     @PostMapping
-    public ApiResponse save(@RequestBody UserDTO userDTO){
+    public ApiResponse save(@RequestBody UserDTO userDTO) {
         userService.save(userDTO);
         return ApiResponse.success();
     }
 
     /**
      * 根据id查询用户信息
+     *
      * @param id
      * @return
      */
@@ -103,6 +99,7 @@ public class UserController {
 
     /**
      * 修改用户信息
+     *
      * @param userDTO
      * @return
      */
@@ -114,6 +111,7 @@ public class UserController {
 
     /**
      * 通过邮箱获取用户信息
+     *
      * @param email
      * @return
      */
@@ -124,6 +122,7 @@ public class UserController {
 
     /**
      * 删除用户
+     *
      * @param id
      * @return
      */
