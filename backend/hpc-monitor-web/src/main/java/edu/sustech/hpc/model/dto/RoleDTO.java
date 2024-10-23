@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * @author Yuxian Wu
  * @version 1.0
- * @Description: TODO
+ * @Description: 接收前端传来的角色信息
  * @Create: 2024-10-24 2:20
  */
 @Data

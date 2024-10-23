@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 /**
  * @author Yuxian Wu
  * @version 1.0
- * @Description: TODO
+ * @Description: 权限管理服务
  * @Create: 2024-10-24 1:27
  */
 @Service

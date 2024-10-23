@@ -239,7 +239,7 @@ public class UserService {
      */
     public void update(UserDTO userDTO) {
         User user = new User();
-        BeanUtils.copyProperties(userDTO, user);
+        BeanUtils.copyProperties(userDTO, user, "password");
         if (StrUtil.isNotBlank(userDTO.getPassword())) {
             user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         }
