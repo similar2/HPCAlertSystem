@@ -5,15 +5,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * @author Yuxian Wu
+ * @version 1.0
+ * @Description: TODO
+ * @Create: 2024-10-23 10:13
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserInfo {
-    private String token;
+public class RoleVo {
     private Integer id;
-    private String name;
-    private String email;
-    private String phone;
-    private Integer status; // 0 - inactive, 1 - active
+    private String roleName;
 }

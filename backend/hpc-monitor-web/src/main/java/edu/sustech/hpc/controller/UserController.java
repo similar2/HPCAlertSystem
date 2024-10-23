@@ -5,10 +5,12 @@ import edu.sustech.hpc.model.dto.UserDTO;
 import edu.sustech.hpc.model.dto.UserPageQueryDTO;
 import edu.sustech.hpc.model.param.LoginParam;
 import edu.sustech.hpc.model.param.RegisterParam;
+import edu.sustech.hpc.model.vo.RoleVo;
 import edu.sustech.hpc.result.ApiResponse;
 import edu.sustech.hpc.model.vo.PublicUserInfo;
 import edu.sustech.hpc.model.vo.UserInfo;
 import edu.sustech.hpc.result.PageResult;
+import edu.sustech.hpc.service.RoleService;
 import edu.sustech.hpc.service.UserService;
 import jakarta.annotation.Resource;
 import jakarta.validation.constraints.Email;
@@ -22,6 +24,9 @@ import java.util.List;
 public class UserController {
     @Resource
     private UserService userService;
+
+    @Resource
+    private RoleService roleService;
 
     //获取所有脱敏后的用户信息
     @GetMapping("/all")
@@ -106,7 +111,7 @@ public class UserController {
      * @param userDTO
      * @return
      */
-    @PutMapping
+    @PostMapping("/update")
     public ApiResponse update(@RequestBody UserDTO userDTO) {
         userService.update(userDTO);
         return ApiResponse.success();
@@ -127,9 +132,19 @@ public class UserController {
      * @param id
      * @return
      */
-    @DeleteMapping("/{id}")
+    @PostMapping("/{id}")
     public ApiResponse delete(@PathVariable Integer id) {
         userService.delete(id);
         return ApiResponse.success();
+    }
+
+    /**
+     * 获取角色列表
+     * @return
+     */
+    @GetMapping("/roleList")
+    public ApiResponse<List<RoleVo>> getRoleList(){
+        List<RoleVo> roleVoList = roleService.getRoleList();
+        return ApiResponse.success(roleVoList);
     }
 }

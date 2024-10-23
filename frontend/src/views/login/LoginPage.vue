@@ -76,7 +76,6 @@ const login = async () => {
   userLoginService(formModel.value).then((res) => {
     if (res.data.code == 200) {
       userStore.setToken(res.data.data.token)
-      userStore.setRole(res.data.data.role)
       ElMessage.success('登录成功')
       router.push('/')
     }else{

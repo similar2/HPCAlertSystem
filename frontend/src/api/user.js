@@ -43,11 +43,11 @@ export const queryUserById = (id) => {
   return request.get(`/api/user/${id}`)
 }
 export const updateUser = (params)=>{
-  return request.put('/api/user', params)
+  return request.post('/api/user/update', params)
 }
 export const getByEmail = (email) => {
   return request.get(`/api/user/getByEmail/${email}`)
 }
 export const deleteUser = (id) => {
-  return request.delete(`/api/user/${id}`)
+  return request.post(`/api/user/${id}`)
 }
