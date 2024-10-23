@@ -1,5 +1,6 @@
 package edu.sustech.hpc.result;
 
+import edu.sustech.hpc.model.vo.RoleVo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -36,5 +37,10 @@ public class ApiResponse<T> {
 
     public static ApiResponse internalServerError(String message){
         return new ApiResponse(500,message);
+    }
+
+    public static ApiResponse<RoleVo> error(String roleNotFound) {
+
+        return null;
     }
 }

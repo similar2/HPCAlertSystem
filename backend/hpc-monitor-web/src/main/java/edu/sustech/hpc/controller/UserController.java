@@ -1,6 +1,7 @@
 package edu.sustech.hpc.controller;
 
 import edu.sustech.hpc.annotation.PathController;
+import edu.sustech.hpc.model.dto.RoleDTO;
 import edu.sustech.hpc.model.dto.UserDTO;
 import edu.sustech.hpc.model.dto.UserPageQueryDTO;
 import edu.sustech.hpc.model.param.LoginParam;
@@ -15,6 +16,7 @@ import edu.sustech.hpc.service.UserService;
 import jakarta.annotation.Resource;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -147,4 +149,30 @@ public class UserController {
         List<RoleVo> roleVoList = roleService.getRoleList();
         return ApiResponse.success(roleVoList);
     }
+//    @GetMapping("/{id}")
+//    public ApiResponse<RoleVo> getRoleById(@PathVariable Long id) {
+//        RoleVo roleVo = roleService.getRoleById(id);
+//        return ApiResponse.success(roleVo);
+//    }
+//
+//    @PostMapping("/create")
+//    public ApiResponse<String> createRole(@RequestBody RoleDTO roleDto) {
+//        roleService.createRole(roleDto);
+//        return ApiResponse.success("Role created successfully");
+//    }
+//
+//    // 4. 更新角色信息
+//    @PutMapping("/update/{id}")
+//    public ApiResponse<String> updateRole(@PathVariable Long id, @RequestBody RoleDTO roleDto) {
+//        roleService.updateRole(id, roleDto);
+//        return ApiResponse.success("Role updated successfully");
+//    }
+//
+//    // 5. 删除角色
+//    @DeleteMapping("/delete/{id}")
+//    public ApiResponse<String> deleteRole(@PathVariable Long id) {
+//        roleService.deleteRole(id);
+//        return ApiResponse.success("Role deleted successfully");
+//    }
+
 }

@@ -29,12 +29,12 @@
           <div v-else>
             <div v-for="(menu, index) in row.menus" :key="index" style="text-align: left">
               <span style="width: 100px; display: inline-block; text-align: right">{{ menu.menuName }}</span>
-              <el-tag 
-                v-for="perm in menu.permissions" 
-                :key="perm.permissionName" 
-                v-text="perm.permissionName" 
-                style="margin-right: 3px;" 
-                type="primary">
+              <el-tag
+                  v-for="perm in menu.permissions"
+                  :key="perm.permissionName"
+                  v-text="perm.permissionName"
+                  style="margin-right: 3px;"
+                  type="primary">
               </el-tag>
             </div>
           </div>
@@ -94,332 +94,10 @@ export default {
     return {
       list: [
         {
-            "roleId": 8,
-            "roleName": "超级管理",
-            "menus": [
-                {
-                    "permissions": [
-                        {
-                            "permissionId": 101,
-                            "permissionName": "列表"
-                        },
-                        {
-                            "permissionId": 102,
-                            "permissionName": "新增"
-                        },
-                        {
-                            "permissionId": 103,
-                            "permissionName": "修改"
-                        }
-                    ],
-                    "menuCode": "article",
-                    "menuName": "告警信息管理"
-                },
-                {
-                    "permissions": [
-                        {
-                            "permissionId": 601,
-                            "permissionName": "列表"
-                        },
-                        {
-                            "permissionId": 602,
-                            "permissionName": "新增"
-                        },
-                        {
-                            "permissionId": 603,
-                            "permissionName": "修改"
-                        }
-                    ],
-                    "menuCode": "user",
-                    "menuName": "用户"
-                },
-                {
-                    "permissions": [
-                        {
-                            "permissionId": 701,
-                            "permissionName": "列表"
-                        },
-                        {
-                            "permissionId": 702,
-                            "permissionName": "新增"
-                        },
-                        {
-                            "permissionId": 703,
-                            "permissionName": "修改"
-                        },
-                        {
-                            "permissionId": 704,
-                            "permissionName": "删除"
-                        }
-                    ],
-                    "menuCode": "role",
-                    "menuName": "角色权限"
-                }
-            ],
-            "users": [
-                {
-                    "nickname": "超级用户",
-                    "userId": 10003
-                }
-            ]
-        },
-        {
-            "roleId": 9,
-            "roleName": "系统管理",
-            "menus": [
-                {
-                    "permissions": [
-                        {
-                            "permissionId": 101,
-                            "permissionName": "列表"
-                        },
-                        {
-                            "permissionId": 102,
-                            "permissionName": "新增"
-                        },
-                        {
-                            "permissionId": 103,
-                            "permissionName": "修改"
-                        }
-                    ],
-                    "menuCode": "article",
-                    "menuName": "告警信息管理"
-                },
-                {
-                    "permissions": [
-                        {
-                            "permissionId": 601,
-                            "permissionName": "列表"
-                        },
-                        {
-                            "permissionId": 602,
-                            "permissionName": "新增"
-                        },
-                        {
-                            "permissionId": 603,
-                            "permissionName": "修改"
-                        }
-                    ],
-                    "menuCode": "user",
-                    "menuName": "用户"
-                }
-            ],
-            "users": [
-                {
-                    "nickname": "莎士比亚\uD83D\uDE18",
-                    "userId": 10004
-                },
-                {
-                    "nickname": "\uD83C\uDF39",
-                    "userId": 10005
-                }
-            ]
-        },
-        {
-            "roleId": 3,
-            "roleName": "程序员",
-            "menus": [
-                {
-                    "permissions": [
-                        {
-                            "permissionId": 101,
-                            "permissionName": "列表"
-                        },
-                        {
-                            "permissionId": 102,
-                            "permissionName": "新增"
-                        }
-                    ],
-                    "menuCode": "article",
-                    "menuName": "告警信息管理"
-                },
-                {
-                    "permissions": [
-                        {
-                            "permissionId": 601,
-                            "permissionName": "列表"
-                        },
-                        {
-                            "permissionId": 603,
-                            "permissionName": "修改"
-                        }
-                    ],
-                    "menuCode": "user",
-                    "menuName": "用户"
-                },
-                {
-                    "permissions": [
-                        {
-                            "permissionId": 701,
-                            "permissionName": "列表"
-                        },
-                        {
-                            "permissionId": 702,
-                            "permissionName": "新增"
-                        },
-                        {
-                            "permissionId": 704,
-                            "permissionName": "删除"
-                        }
-                    ],
-                    "menuCode": "role",
-                    "menuName": "角色权限"
-                }
-            ],
-            "users": [
-                {
-                    "nickname": "莎士比亚\uD83D\uDE18",
-                    "userId": 10004
-                }
-            ]
-        },
-        {
-            "roleId": 5,
-            "roleName": "测试",
-            "menus": [
-                {
-                    "permissions": [
-                        {
-                            "permissionId": 101,
-                            "permissionName": "列表"
-                        }
-                    ],
-                    "menuCode": "article",
-                    "menuName": "告警信息管理"
-                },
-                {
-                    "permissions": [
-                        {
-                            "permissionId": 601,
-                            "permissionName": "列表"
-                        }
-                    ],
-                    "menuCode": "user",
-                    "menuName": "用户"
-                },
-                {
-                    "permissions": [
-                        {
-                            "permissionId": 701,
-                            "permissionName": "列表"
-                        }
-                    ],
-                    "menuCode": "role",
-                    "menuName": "角色权限"
-                }
-            ],
-            "users": [
-                {
-                    "nickname": "\uD83D\uDE2F",
-                    "userId": 10008
-                },
-                {
-                    "nickname": "123",
-                    "userId": 10009
-                }
-            ]
-        },
-        {
-            "roleId": 7,
-            "roleName": "运维工程师",
-            "menus": [
-                {
-                    "permissions": [
-                        {
-                            "permissionId": 101,
-                            "permissionName": "列表"
-                        },
-                        {
-                            "permissionId": 102,
-                            "permissionName": "新增"
-                        },
-                        {
-                            "permissionId": 103,
-                            "permissionName": "修改"
-                        }
-                    ],
-                    "menuCode": "article",
-                    "menuName": "告警信息管理"
-                }
-            ],
-            "users": [
-                {
-                    "nickname": "莎士比亚\uD83D\uDE18",
-                    "userId": 10004
-                },
-                {
-                    "nickname": "\uD83D\uDE2F",
-                    "userId": 10008
-                }
-            ]
-        },
-      ],//表格的数据
-      allPermission: [
-      {
-                "permissions": [
-                    {
-                        "requiredPerm": 1,
-                        "id": 101,
-                        "permissionName": "列表"
-                    },
-                    {
-                        "requiredPerm": 2,
-                        "id": 102,
-                        "permissionName": "新增"
-                    },
-                    {
-                        "requiredPerm": 2,
-                        "id": 103,
-                        "permissionName": "修改"
-                    }
-                ],
-                "menuName": "告警信息管理"
-            },
-            {
-                "permissions": [
-                    {
-                        "requiredPerm": 1,
-                        "id": 601,
-                        "permissionName": "列表"
-                    },
-                    {
-                        "requiredPerm": 2,
-                        "id": 602,
-                        "permissionName": "新增"
-                    },
-                    {
-                        "requiredPerm": 2,
-                        "id": 603,
-                        "permissionName": "修改"
-                    }
-                ],
-                "menuName": "用户"
-            },
-            {
-                "permissions": [
-                    {
-                        "requiredPerm": 1,
-                        "id": 701,
-                        "permissionName": "列表"
-                    },
-                    {
-                        "requiredPerm": 2,
-                        "id": 702,
-                        "permissionName": "新增"
-                    },
-                    {
-                        "requiredPerm": 2,
-                        "id": 703,
-                        "permissionName": "修改"
-                    },
-                    {
-                        "requiredPerm": 2,
-                        "id": 704,
-                        "permissionName": "删除"
-                    }
-                ],
-                "menuName": "角色权限"
-            }
+           roleName: '管理员',
+            menus: [],
+            users: []
+          }
       ],
       listLoading: false,//数据加载等待动画
       dialogStatus: 'create',
@@ -437,6 +115,26 @@ export default {
     }
   },
   methods: {
+    getAllPermisson() {
+      //查询所有权限
+      this.api({
+        url: "/user/listAllPermission",
+        method: "get"
+      }).then(data => {
+        this.allPermission = data.list;
+      })
+    },
+    getList() {
+      //查询列表
+      this.listLoading = true;
+      this.api({
+        url: "/user/listRole",
+        method: "get"
+      }).then(data => {
+        this.listLoading = false;
+        this.list = data.list;
+      })
+    },
     getIndex($index) {
       //表格序号
       return $index + 1
@@ -463,35 +161,91 @@ export default {
       this.dialogStatus = "update"
       this.dialogFormVisible = true
     },
-    removeRole(users) {
-      if (users.length > 0) {
-        this.$message.error("该角色下有用户,请先将用户移出此角色");
+    createRole() {
+      if (!this.checkRoleNameUnique()) {
         return;
       }
-      // let _vue = this;
-      // let role = _vue.list[$index];
-      // _vue.api({
-      //     url: "/user/deleteRole",
-      //     method: "post",
-      //     data: {
-      //       roleId: role.roleId
-      //     }
-      // }).then(() => {
-      //     _vue.list.splice($index,1);
-      // }).catch(e => {
-      // })
+      if (!this.checkPermissionNum()) {
+        return;
+      }
+      //添加新角色
+      this.api({
+        url: "/user/addRole",
+        method: "post",
+        data: this.tempRole
+      }).then(() => {
+        this.getList();
+        this.dialogFormVisible = false
+      })
+    },
+    updateRole() {
+      if (!this.checkRoleNameUnique(this.tempRole.roleId)) {
+        return;
+      }
+      if (!this.checkPermissionNum()) {
+        return;
+      }
+      //修改角色
+      this.api({
+        url: "/user/updateRole",
+        method: "post",
+        data: this.tempRole
+      }).then(() => {
+        this.getList();
+        this.dialogFormVisible = false
+      })
+    },
+    checkPermissionNum() {
+      //校验至少有一种权限
+      if (this.tempRole.permissions.length === 0) {
+        this.$message.error("请至少选择一种权限");
+        return false;
+      }
+      return true;
+    },
+    checkRoleNameUnique(roleId) {
+      //校验名称重复
+      let roleName = this.tempRole.roleName;
+      if (!roleName) {
+        this.$message.error("请填写角色名称");
+        return false;
+      }
+      let roles = this.list;
+      let result = true;
+      for (let j = 0; j < roles.length; j++) {
+        if (roles[j].roleName === roleName && (!roleId || roles[j].roleId !== roleId  )) {
+          this.$message.error("角色名称已存在");
+          result = false;
+          break;
+        }
+      }
+      return result;
+    },
+    removeRole($index) {
+      let _vue = this;
+      let role = _vue.list[$index];
+      _vue.api({
+        url: "/user/deleteRole",
+        method: "post",
+        data: {
+          roleId: role.roleId
+        }
+      }).then(() => {
+        _vue.list.splice($index,1);
+      }).catch(e => {
+      })
     },
     isMenuNone(_index) {
-        //判断本级菜单内的权限是否一个都没选
-        let menu = this.allPermission[_index].permissions;
-        let result = true;
-        for (let j = 0; j < menu.length; j++) {
-          if (this.tempRole.permissions.indexOf(menu[j].id) > -1) {
-            result = false;
-            break;
-          }
+      //判断本级菜单内的权限是否一个都没选
+      let menu = this.allPermission[_index].permissions;
+      let result = true;
+      for (let j = 0; j < menu.length; j++) {
+        if (this.tempRole.permissions.indexOf(menu[j].id) > -1) {
+          result = false;
+          break;
         }
-        return result;
+      }
+      return result;
     },
     isMenuAll(_index) {
       //判断本级菜单内的权限是否全选了
