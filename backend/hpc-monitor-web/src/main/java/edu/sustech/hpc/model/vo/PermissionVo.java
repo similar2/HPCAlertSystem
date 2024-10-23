@@ -5,19 +5,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 /**
  * @author Yuxian Wu
  * @version 1.0
- * @Description: 传给前端的角色信息
- * @Create: 2024-10-23 10:13
+ * @Description: 传给前端的权限信息
+ * @Create: 2024-10-24 1:08
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RoleVo {
+public class PermissionVo {
+    private Integer permissionId;
+    private String permissionName;
+
     private Integer id;
-    private String roleName;
+    private Integer requiredPerm;
 }

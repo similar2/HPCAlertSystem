@@ -276,5 +276,6 @@ public class UserService {
      */
     public void delete(Integer id) {
         userDao.deleteById(id);
+        userRoleDao.delete(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, id));
     }
 }

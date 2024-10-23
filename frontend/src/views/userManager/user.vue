@@ -202,126 +202,13 @@ export default {
         ]
       },
       totalCount: 0, //分页组件--数据总条数
-      list: [
-        {
-          createTime: '2017.10.30 11:52:38',
-          deleteStatus: '1',
-          roles: [
-            {
-              id: 8,
-              roleName: '超级管理'
-            }
-          ],
-          name: '超级用户',
-          updateTime: '2021.05.08 23:26:56',
-          id: 10003,
-          email: 'admin@qq.com',
-          phone: '15589655896'
-        },
-        {
-          createTime: '2017.10.30 16:13:02',
-          deleteStatus: '1',
-          roles: [
-            {
-              id: 3,
-              roleName: '程序员'
-            },
-            {
-              id: 7,
-              roleName: '运维工程师'
-            },
-            {
-              id: 9,
-              roleName: '系统管理'
-            }
-          ],
-          name: '莎士比亚\uD83D\uDE18',
-          updateTime: '2024.10.16 19:38:34',
-          id: 10004,
-          email: 'user@qq.com',
-          phone: '15589655896'
-        },
-        {
-          createTime: '2017.11.15 14:02:56',
-          deleteStatus: '1',
-          roles: [
-            {
-              id: 9,
-              roleName: '系统管理'
-            }
-          ],
-          name: '\uD83C\uDF39',
-          updateTime: '2021.05.08 23:26:23',
-          id: 10005,
-          email: 'aaa@qq.com',
-          phone: '15589655896'
-        },
-        {
-          createTime: '2021.05.08 23:21:54',
-          deleteStatus: '1',
-          roles: [
-            {
-              id: 5,
-              roleName: '测试'
-            },
-            {
-              id: 7,
-              roleName: '运维工程师'
-            }
-          ],
-          name: '\uD83D\uDE2F',
-          updateTime: '2024.10.16 19:39:26',
-          id: 10008,
-          email: 'sa@qq.com',
-          phone: '15589655896'
-        },
-        {
-          createTime: '2024.10.16 19:39:49',
-          deleteStatus: '1',
-          roles: [
-            {
-              id: 5,
-              roleName: '测试'
-            }
-          ],
-          name: '123',
-          updateTime: '2024.10.17 02:18:39',
-          id: 10009,
-          email: '123456@qq.com',
-          phone: '15589655896'
-        }
-      ],
+      list: [],
       listLoading: false,
       listQuery: {
         pageNum: 1, //页码
         pageSize: 10 //每页条数
       },
-      roles: [
-        {
-          id: 1,
-          roleName: '管理员'
-        },
-        {
-          id: 3,
-          roleName: '程序员'
-        },
-        {
-          id: 5,
-          roleName: '测试'
-        },
-        {
-          id: 7,
-          roleName: '运维工程师'
-        },
-        {
-          id: 8,
-          roleName: '超级管理'
-        },
-        {
-          id: 9,
-          roleName: '系统管理'
-        }
-      ], //角色列表
+      roles: [], //角色列表
       dialogStatus: 'create',
       dialogFormVisible: false,
       textMap: {
@@ -456,7 +343,7 @@ export default {
         return false
       }
       if (u.name.trim().length === 0) {
-        this.$message.warning('请填写昵称')
+        this.$message.warning('请填写姓名')
         return false
       }
       if (u.roleIds.length === 0) {
@@ -481,18 +368,6 @@ export default {
         this.getList()
         this.dialogFormVisible = false
       })
-      //修改用户信息
-      // let _vue = this;
-      // this.api({
-      //   url: "/user/updateUser",
-      //   method: "post",
-      //   data: this.tempUser
-      // }).then(() => {
-      //   this.$message.success('修改成功')
-      //   this.dialogFormVisible = false
-      //   _vue.getList();
-
-      // })
     },
     removeUser($index) {
       // let _vue = this;
@@ -509,19 +384,6 @@ export default {
           .catch(() => {
             this.$message.error('删除失败')
           })
-        // let user = _vue.list[$index];
-        // user.deleteStatus = '2';
-        // user.roleIds = user.roles.map(x => x.id)
-        // _vue.api({
-        //   url: "/user/updateUser",
-        //   method: "post",
-        //   data: user
-        // }).then(() => {
-        //   this.$message.success('删除成功')
-        //   _vue.getList()
-        // }).catch(() => {
-        //   _vue.$message.error("删除失败")
-        // })
       })
     }
   }

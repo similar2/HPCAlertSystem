@@ -5,19 +5,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 /**
  * @author Yuxian Wu
  * @version 1.0
- * @Description: 传给前端的角色信息
- * @Create: 2024-10-23 10:13
+ * @Description: 根据角色查询用户存储用户信息的类
+ * @Create: 2024-10-23 23:50
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RoleVo {
-    private Integer id;
-    private String roleName;
+public class RoleUserVo {
+    private String name;
+    private Integer userId;
 }

@@ -137,9 +137,6 @@ CREATE TABLE `role_permission`
     `id`            int(11)   NOT NULL AUTO_INCREMENT,
     `role_id`       int(11)        DEFAULT NULL COMMENT '角色id',
     `permission_id` int(11)        DEFAULT NULL COMMENT '权限id',
-    `create_time`   timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-    `update_time`   timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted` INT     DEFAULT 1 COMMENT '是否删除 0有效     1删除',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 23
