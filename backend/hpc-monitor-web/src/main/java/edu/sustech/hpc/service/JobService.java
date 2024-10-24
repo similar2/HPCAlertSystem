@@ -45,8 +45,5 @@ public abstract class JobService {
     public abstract JsonNode getActivePrometheusAlertInfoOther(JSONObject alertInfo);
 
     public abstract void checkAddActiveAlert(PrometheusAlertInfo prometheusAlertInfo);
-
-    public abstract String getAlertRuleFilteredExpr(AlertRuleParam alertRuleParam);
-
     public abstract Hardware _getHardwarePo(PrometheusTargetInfo prometheusTargetInfo);
 }

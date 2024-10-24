@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import edu.sustech.hpc.model.param.AlertRuleParam;
 import edu.sustech.hpc.model.vo.*;
 import edu.sustech.hpc.po.*;
 import edu.sustech.hpc.util.Utils;
@@ -163,24 +162,5 @@ public class BmcService extends JobService {
         } else {
             alertService.updatePrometheusAlert(alert, prometheusAlertInfo);
         }
-    }
-
-    @Override
-    public String getAlertRuleFilteredExpr(AlertRuleParam alertRuleParam) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Iterator<String> it = alertRuleParam.getFilters().fieldNames(); it.hasNext(); ) {
-            String filterName = it.next();
-            String filterOptionSimplified = alertRuleParam.getFilters().get(filterName).asText();
-            String filterOption = filterObjects.get(alertRuleParam.getMetricName()).get(filterName).get(filterOptionSimplified);
-            System.out.println(filterObjects.get(alertRuleParam.getMetricName()).get(filterName));
-            System.out.println(filterOption);
-            System.out.println(filterOptionSimplified);
-            stringBuilder.append("," + filterName);
-            if (filterOptionSimplified.equals(filterOption)) {
-                stringBuilder.append("=");
-            } else stringBuilder.append("=~");
-            stringBuilder.append("\"" + filterOption + "\"");
-        }
-        return stringBuilder.toString();
     }
 }
