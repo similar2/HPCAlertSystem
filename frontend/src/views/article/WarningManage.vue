@@ -58,20 +58,20 @@ const pageQuery = () => {
 
 const getWarningList = async () => {
   loading.value = true
-  const res = await artGetAllWarningService()
-  WarningList.value = JSON.parse(res.data.data).sort((a, b) => {
-    if (a.solveTime && !b.solveTime) return 1
-    if (!a.solveTime && b.solveTime) return -1
-    return 0
-  })
+  // const res = await artGetAllWarningService()
+  // WarningList.value = JSON.parse(res.data.data).sort((a, b) => {
+  //   if (a.solveTime && !b.solveTime) return 1
+  //   if (!a.solveTime && b.solveTime) return -1
+  //   return 0
+  // })
 
-  WarningList.value.forEach(warning => {
-    if (warning.severity === 'LOW') lowCount.value++
-    else if (warning.severity === 'HIGH') highCount.value++
+  // WarningList.value.forEach(warning => {
+  //   if (warning.severity === 'LOW') lowCount.value++
+  //   else if (warning.severity === 'HIGH') highCount.value++
 
-    if (warning.solveTime) solvedCount.value++
-    else unsolvedCount.value++
-  })
+  //   if (warning.solveTime) solvedCount.value++
+  //   else unsolvedCount.value++
+  // })
 
   seriousList.value = [
     { name: 'LOW', value: lowCount.value },

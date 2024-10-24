@@ -14,8 +14,8 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config) => {
     const userStore = useUserStore()
-    if (userStore.token) {
-      config.headers.Authorization = userStore.token
+    if (userStore.user.token) {
+      config.headers.Authorization = userStore.user.token
     }
     return config
   },

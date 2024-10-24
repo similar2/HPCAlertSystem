@@ -4,6 +4,7 @@ import com.github.yulichang.base.MPJBaseMapper;
 import edu.sustech.hpc.po.Permission;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface PermissionDao extends MPJBaseMapper<Permission> {

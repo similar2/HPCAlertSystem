@@ -22,7 +22,7 @@ clusters.value = [
   { id: 2, name: '启明集群' }
 ]
 onMounted(() => {
-  userStore.getUser()
+  // userStore.getUser()
   // fetchClusters()
 })
 // const fetchClusters = async () => {
@@ -40,8 +40,7 @@ const handleCommand = async (command) => {
       cancelButtonText: '取消'
     })
     userStore.setUser({})
-    userStore.setToken('')
-    userStore.setRole('')
+    userStore.setPermissions([])
     router.push('/login')
   }
 }
@@ -67,7 +66,7 @@ const handleCommand = async (command) => {
             <el-icon><Management /></el-icon>
             <span>概要栏</span>
           </el-menu-item>
-          <el-menu-item index="/article/detail">
+          <el-menu-item index="/article/detail" v-permission="'article:list'">
             <el-icon><Promotion /></el-icon>
             <span>问题列表</span>
           </el-menu-item>
@@ -81,11 +80,12 @@ const handleCommand = async (command) => {
                 :key="cluster.id"
                 :index="`/article/observers${cluster.id}`"
                 @click="() => router.push(`/article/observers${cluster.id}`)"
+                v-permission="`cluster${cluster.id}:list`"
             >
               <span>{{ cluster.name }}</span>
             </el-menu-item>
           </el-sub-menu>
-          <el-menu-item index="/article/warning">
+          <el-menu-item index="/article/warning" v-permission="'rule:list'">
             <el-icon><Promotion /></el-icon>
             <span>自定义告警规则</span>
           </el-menu-item>
@@ -100,13 +100,13 @@ const handleCommand = async (command) => {
             <el-icon><UserFilled /></el-icon>
             <span>用户权限</span>
           </template>
-          <el-menu-item index="/userManager/user">
+          <el-menu-item index="/userManager/user" v-permission="'user:list'">
             <el-icon><User /></el-icon>
             <span>用户列表</span>
           </el-menu-item>
-          <el-menu-item index="/userManager/role">
+          <el-menu-item index="/userManager/role" v-permission="'role:list'">
             <el-icon><User /></el-icon>
-            <span>权限管理</span>
+            <span>角色管理</span>
           </el-menu-item>
         </el-sub-menu>
 

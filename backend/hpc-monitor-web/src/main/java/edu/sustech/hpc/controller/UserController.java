@@ -206,4 +206,14 @@ public class UserController {
         return ApiResponse.success();
     }
 
+    /**
+     * 根据用户id获取权限信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/permissions/{id}")
+    public ApiResponse<List<String>> getPermissionsByUserId(@PathVariable Integer id) {
+        return ApiResponse.success(permissionService.getPermissionsByUserId(id));
+    }
+
 }

@@ -61,7 +61,7 @@
         class="small-space"
         :model="tempRole"
         label-position="left"
-        label-width="100px"
+        label-width="150px"
         style="width: 600px; margin-left: 50px"
       >
         <el-form-item label="角色名称" required>

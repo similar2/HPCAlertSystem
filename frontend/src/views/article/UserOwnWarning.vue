@@ -49,7 +49,7 @@ const onSuccess = (type) => {
 <template>
   <page-container title="自定义告警规则">
     <template #extra>
-      <el-button @click="onAddMachine">添加自定义告警规则</el-button>
+      <el-button @click="onAddMachine" v-permission="'rule:add'">添加自定义告警规则</el-button>
     </template>
     <!-- <el-form inline>
       <el-form-item label="监控类型：">
@@ -81,6 +81,7 @@ const onSuccess = (type) => {
             plain
             type="primary"
             @click="onEditMachine(row)"
+            v-permission="'rule:update'"
           ></el-button>
           <el-button
             :icon="Delete"
@@ -88,6 +89,7 @@ const onSuccess = (type) => {
             plain
             type="danger"
             @click="onDeleteMachine(row)"
+            v-permission="'rule:delete'"
           ></el-button>
         </template>
       </el-table-column>

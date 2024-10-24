@@ -1,8 +1,8 @@
 <script setup>
 import { User, Lock } from '@element-plus/icons-vue'
 import { ref, watch } from 'vue'
-import { userRegisterService, userLoginService, userSendVerifyCode } from '@/api/user'
-import { useUserStore } from '@/stores'
+import { userRegisterService, userLoginService, userSendVerifyCode, getPermissionsByUserId } from '@/api/user'
+import { useUserStore} from '@/stores'
 import router from '@/router'
 import { ElMessage } from 'element-plus'
 const userStore = useUserStore()
@@ -75,9 +75,13 @@ const login = async () => {
 
   userLoginService(formModel.value).then((res) => {
     if (res.data.code == 200) {
-      userStore.setToken(res.data.data.token)
+      userStore.setUser(res.data.data)
       ElMessage.success('登录成功')
       router.push('/')
+      getPermissionsByUserId(res.data.data.id)
+      .then((res) => {
+        userStore.setPermissions(res.data.data)
+      })
     }else{
       ElMessage.error(res.data.data.message)
     }

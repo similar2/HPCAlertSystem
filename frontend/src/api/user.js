@@ -55,3 +55,7 @@ export const deleteUser = (id) => {
 export const getRoleList = () => {
   return request.get('/api/user/roleList')
 }
+
+export const getPermissionsByUserId = (id) => {
+  return request.get(`/api/user/permissions/${id}`)
+}

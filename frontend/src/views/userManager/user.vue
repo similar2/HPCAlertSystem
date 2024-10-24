@@ -235,7 +235,6 @@ export default {
   methods: {
     getAllRoles() {
       getRoleList().then((res) => {
-        console.log(res)
         this.roles = res.data.data
       })
       // this.api({
@@ -249,7 +248,6 @@ export default {
       //查询列表
       this.listLoading = true
       getUserList(this.listQuery).then((res) => {
-        console.log(res)
         this.listLoading = false
         this.list = res.data.data.records
         this.totalCount = res.data.data.total
