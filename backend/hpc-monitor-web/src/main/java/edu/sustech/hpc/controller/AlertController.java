@@ -32,7 +32,7 @@ public class AlertController {
     private PrometheusService prometheusService;
 
     @GetMapping("/rules")
-    public ApiResponse getAlertRules(){
+    public ApiResponse getAlertRules() {
         List<AlertRuleInfo> alertRuleInfoList;
         try {
             alertRuleInfoList = prometheusService.getAllAlertRules();
@@ -45,20 +45,20 @@ public class AlertController {
     }
 
     @PostMapping("/rules/add")
-    public ApiResponse addAlertRule(@Validated @RequestBody AlertRuleParam alertRuleParam){
+    public ApiResponse addAlertRule(@Validated @RequestBody AlertRuleParam alertRuleParam) {
         return ApiResponse.success(prometheusService.addAlertRule(alertRuleParam));
     }
 
     @PostMapping("/rules/delete")
-    public ApiResponse deleteAlertRule(@RequestParam(name="type") String type,
-                                       @RequestParam(name="alert_name") String alertName){
+    public ApiResponse deleteAlertRule(@RequestParam(name = "type") String type,
+                                       @RequestParam(name = "alert_name") String alertName) {
         return ApiResponse.success(prometheusService.deleteAlertRule(
                 HardwareType.valueOf(type), alertName));
     }
 
     @GetMapping("/rules/metric_names")
     public ApiResponse getAlertRules(
-            @RequestParam(name="type") String type){
+            @RequestParam(name = "type") String type) {
         List<String> metricNames = prometheusService.getMetricNames(HardwareType.valueOf(type));
         JSONArray json = new JSONArray(metricNames);
         String message = json.toString();
@@ -67,8 +67,8 @@ public class AlertController {
 
     @GetMapping("/rules/metric_filters")
     public ApiResponse getAlertRules(
-            @RequestParam(name="type") String type,
-            @RequestParam(name="metric") String metricName){
+            @RequestParam(name = "type") String type,
+            @RequestParam(name = "metric") String metricName) {
         Map<String, List<String>> filterOptionList;
         filterOptionList = prometheusService.getFilterOptionsByMetricName(
                 HardwareType.valueOf(type), metricName
@@ -80,11 +80,11 @@ public class AlertController {
 
     @GetMapping("/all")
     public ApiResponse getActiveAlerts(
-            @RequestParam(name="device_name", required = false) String deviceName,
-            @RequestParam(name="start_time", required = false) LocalDateTime startTime,
-            @RequestParam(name="end_time", required = false) LocalDateTime endTime,
-            @RequestParam(name="solved", required = false) Boolean solved
-    ){
+            @RequestParam(name = "device_name", required = false) String deviceName,
+            @RequestParam(name = "start_time", required = false) LocalDateTime startTime,
+            @RequestParam(name = "end_time", required = false) LocalDateTime endTime,
+            @RequestParam(name = "solved", required = false) Boolean solved
+    ) {
         List<Alert> alerts = alertService.getAll(deviceName, startTime, endTime, solved);
         JSONArray jsonArray = new JSONArray(alerts);
         String message = jsonArray.toString();
@@ -92,24 +92,24 @@ public class AlertController {
     }
 
     @GetMapping("/page")
-    public ApiResponse<PageResult> page(AlertPageQueryDTO alertPageQueryDTO){
+    public ApiResponse<PageResult> page(AlertPageQueryDTO alertPageQueryDTO) {
         return ApiResponse.success(alertService.pageQuery(alertPageQueryDTO));
     }
 
     @PostMapping("/add")
-    public ApiResponse<Alert> add(@Validated @RequestBody AlertParam alertParam){
+    public ApiResponse<Alert> add(@Validated @RequestBody AlertParam alertParam) {
         Alert alert = alertService.add(alertParam);
         return ApiResponse.success(alert);
     }
 
     @PostMapping("/solve/{id}")
-    public ApiResponse<Alert> solve(@PathVariable Integer id, @RequestParam String solveMethod){
+    public ApiResponse<Alert> solve(@PathVariable Integer id, @RequestParam String solveMethod) {
         Alert alert = alertService.solve(id, solveMethod);
         return ApiResponse.success(alert);
     }
 
     @GetMapping("/get/{id}")
-    public ApiResponse<Alert> get(@PathVariable Integer id){
+    public ApiResponse<Alert> get(@PathVariable Integer id) {
         Alert alert = alertService.get(id);
         return ApiResponse.success(alert);
     }
