@@ -395,7 +395,10 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.requiredPerm {
+  color: #ff0e13;
+}
 .container {
   background: #fff;
   position: relative;
