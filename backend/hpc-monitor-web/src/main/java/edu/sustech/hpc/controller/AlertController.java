@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-@PathController("/api/alerts")
+@PathController("/alerts")
 @CrossOrigin
 public class AlertController {
 

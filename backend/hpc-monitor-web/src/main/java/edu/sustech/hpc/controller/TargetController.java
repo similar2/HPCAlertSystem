@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
-@PathController("/api/target")
+@PathController("/target")
 public class TargetController {
     @Resource
     private PrometheusService prometheusService;

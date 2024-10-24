@@ -7,6 +7,7 @@ import edu.sustech.hpc.model.dto.UserPageQueryDTO;
 import edu.sustech.hpc.model.param.LoginParam;
 import edu.sustech.hpc.model.param.RegisterParam;
 import edu.sustech.hpc.model.vo.*;
+import edu.sustech.hpc.po.UserRole;
 import edu.sustech.hpc.result.ApiResponse;
 import edu.sustech.hpc.result.PageResult;
 import edu.sustech.hpc.service.PermissionService;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@PathController("/api/user")
+@PathController("/user")
 public class UserController {
     @Resource
     private UserService userService;
@@ -214,6 +215,16 @@ public class UserController {
     @GetMapping("/permissions/{id}")
     public ApiResponse<List<String>> getPermissionsByUserId(@PathVariable Integer id) {
         return ApiResponse.success(permissionService.getPermissionsByUserId(id));
+    }
+
+    /**
+     * 移除用户角色关系
+     * @param userRole
+     */
+    @PostMapping("/removeUserRole")
+    public ApiResponse removeUserRole(@RequestBody UserRole userRole){
+        userService.removeUserRole(userRole);
+        return ApiResponse.success();
     }
 
 }

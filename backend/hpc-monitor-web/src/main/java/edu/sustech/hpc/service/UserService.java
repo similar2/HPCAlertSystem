@@ -278,4 +278,14 @@ public class UserService {
         userDao.deleteById(id);
         userRoleDao.delete(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, id));
     }
+
+    /**
+     * 移除用户角色关系
+     * @param userRole
+     */
+    public void removeUserRole(UserRole userRole) {
+        userRoleDao.delete(new LambdaQueryWrapper<UserRole>()
+                .eq(UserRole::getUserId, userRole.getUserId())
+                .eq(UserRole::getRoleId, userRole.getRoleId()));
+    }
 }

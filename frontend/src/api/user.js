@@ -59,3 +59,11 @@ export const getRoleList = () => {
 export const getPermissionsByUserId = (id) => {
   return request.get(`/api/user/permissions/${id}`)
 }
+
+export const removeUserRole = (roleId, userId) => {
+  const p = {
+    roleId: roleId,
+    userId, userId
+  }
+  return request.post('/api/user/removeUserRole', p)
+}

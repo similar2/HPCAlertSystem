@@ -3,7 +3,7 @@ import { useUserStore } from '@/stores'
 import { ElMessage } from 'element-plus'
 import router from '@/router'
 
-const baseURL = 'http://localhost:8080/'
+const baseURL = 'http://172.18.6.108/'
 
 const instance = axios.create({
   baseURL,
