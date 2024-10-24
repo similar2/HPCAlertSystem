@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="container">
     <div class="filter-container">
       <el-form>
         <el-form-item>
@@ -107,6 +107,7 @@
       </template>
     </el-dialog>
   </div>
+  
 </template>
 
 <script>
@@ -367,4 +368,11 @@ export default {
 </script>
 
 <style>
+.container {
+  background: #fff;
+  position: relative;
+  z-index: 1;
+  padding: 30px 28px;
+  border-radius: 4px;
+}
 </style>

@@ -78,12 +78,12 @@ const router = createRouter({
 
 router.beforeEach((to) => {
   const userStore = useUserStore()
-  if (!userStore.user.value.token && to.path !== '/login') return '/login'
+  if (!userStore?.user?.value?.token && to.path !== '/login') return '/login'
 
-
-  getPermissionsByUserId(userStore.user.value.id).then(res => {
-    userStore.setPermissions(res.data.data)
-  })
+  if (userStore?.user?.value?.id){
+    getPermissionsByUserId(userStore.user.value.id).then(res => {
+      userStore.setPermissions(res.data.data)
+  })}
   if (to.meta.requiresAuth && !userStore.permissions.includes(to.meta.requiredPermission)) return '/404'
 })
 

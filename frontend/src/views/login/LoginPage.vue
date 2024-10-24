@@ -77,10 +77,10 @@ const login = async () => {
     if (res.data.code == 200) {
       userStore.setUser(res.data.data)
       ElMessage.success('登录成功')
-      router.push('/')
       getPermissionsByUserId(res.data.data.id)
       .then((res) => {
         userStore.setPermissions(res.data.data)
+        router.push('/')
       })
     }else{
       ElMessage.error(res.data.data.message)
