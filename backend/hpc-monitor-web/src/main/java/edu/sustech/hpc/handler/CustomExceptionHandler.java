@@ -1,6 +1,7 @@
 package edu.sustech.hpc.handler;
 
 import edu.sustech.hpc.exceptions.DuplicateDeviceException;
+import edu.sustech.hpc.exceptions.PromQLValidationException;
 import edu.sustech.hpc.result.ApiResponse;
 import jakarta.validation.ReportAsSingleViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -65,4 +66,10 @@ public class CustomExceptionHandler {
     public ApiResponse handleDuplicateDeviceException(DuplicateDeviceException e) {
         return badRequest("Duplicate device: " + e.getMessage());
     }
+
+    @ExceptionHandler(PromQLValidationException.class)
+    public ApiResponse handlePromQLValidationException(PromQLValidationException e) {
+        return badRequest("PromQL Validation Error: " + e.getMessage());
+    }
+
 }

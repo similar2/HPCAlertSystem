@@ -1,10 +1,12 @@
 package edu.sustech.hpc.service;
 
 import com.google.common.io.CharStreams;
+import edu.sustech.hpc.exceptions.PromQLValidationException;
 import edu.sustech.hpc.model.param.AlertRuleParam;
 import edu.sustech.hpc.model.vo.*;
 import edu.sustech.hpc.po.AlertSeverity;
 import edu.sustech.hpc.po.HardwareType;
+import edu.sustech.hpc.util.PrometheusUtils;
 import edu.sustech.hpc.util.Utils;
 import edu.sustech.hpc.util.YamlObj;
 import jakarta.annotation.Resource;
@@ -141,6 +143,10 @@ public class PrometheusService {
 //                        jobName + "\"" + jobService.getAlertRuleFilteredExpr(alertRuleParam)
 //                        + "} " + alertRuleParam.getExpr();
         String expr = alertRuleParam.getExpr();
+        // ** Validate the PromQL expression before proceeding **
+
+        PrometheusUtils.validatePromQL(expr);  // Using the utility method
+
         rule.put("expr", expr);
         if (alertRuleParam.getTimeDuration() != null)
             rule.put("for", alertRuleParam.getTimeDuration());
