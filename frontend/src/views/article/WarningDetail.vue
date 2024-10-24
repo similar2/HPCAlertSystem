@@ -162,7 +162,7 @@ const change = () => {
 <template>
   <page-container title="问题具体信息">
     <template #extra>
-      <el-button @click="onAddWarning">人工添加问题</el-button>
+      <el-button @click="onAddWarning" v-permission="'article:add'">人工添加问题</el-button>
     </template>
 
     <el-form inline>
@@ -227,6 +227,7 @@ const change = () => {
               plain
               type="primary"
               @click="onEditWarning(row)"
+              v-permission="'article:update'"
           ></el-button>
           <el-button
               :icon="Delete"
@@ -235,6 +236,7 @@ const change = () => {
               type="danger"
               :disabled="hasSolution(row)"
               @click="onDelWarning(row)"
+              v-permission="'article:delete'"
           ></el-button>
         </template>
       </el-table-column>
