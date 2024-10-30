@@ -14,8 +14,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AlertRuleParam {
     HardwareType type;
-    String metricName;
-    JsonNode filters;
     String timeDuration;
     String expr;
     String alertName;

@@ -4,8 +4,7 @@ import { Edit, Delete } from '@element-plus/icons-vue'
 import {
   getWarningList as getList,
   artGetAllWarningService,
-  artDelWarningService,
-  artGetAllTarget
+  artDelWarningService
 } from '@/api/Warning'
 import WarningEdit from './components/WarningEdit.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -13,10 +12,10 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 const WarningList = ref([])
 const records = ref([])
 const stateList = ref([])
-const lowCount = ref(0);
-const highCount = ref(0);
-const solvedCount = ref(0);
-const unsolvedCount = ref(0);
+const lowCount = ref(0)
+const highCount = ref(0)
+const solvedCount = ref(0)
+const unsolvedCount = ref(0)
 const page = ref(1)
 const pageSize = ref(10)
 const total = ref(0)
@@ -46,42 +45,42 @@ const pageQuery = () => {
     pageSize: pageSize.value
   }
   getList(data)
-      .then((res) => {
-        if (res.data.code == 200) {
-          total.value = res.data.data.total
-          records.value = res.data.data.records
-        }
-      })
-      .catch((err) => {
-        ElMessage.error('请求出错了：' + err.message)
-      })
+    .then((res) => {
+      if (res.data.code == 200) {
+        total.value = res.data.data.total
+        records.value = res.data.data.records
+      }
+    })
+    .catch((err) => {
+      ElMessage.error('请求出错了：' + err.message)
+    })
 }
 
 const getWarningList = async () => {
   loading.value = true
-  const res = await artGetAllWarningService()
-  WarningList.value = JSON.parse(res.data.data).sort((a, b) => {
-    if (a.solveTime && !b.solveTime) return 1;
-    if (!a.solveTime && b.solveTime) return -1;
-    return 0;
-  })
+  // const res = await artGetAllWarningService()
+  // WarningList.value = JSON.parse(res.data.data).sort((a, b) => {
+  //   if (a.solveTime && !b.solveTime) return 1
+  //   if (!a.solveTime && b.solveTime) return -1
+  //   return 0
+  // })
 
-  WarningList.value.forEach(warning => {
-    if (warning.severity === 'LOW') lowCount.value++;
-    else if (warning.severity === 'HIGH') highCount.value++;
+  // WarningList.value.forEach(warning => {
+  //   if (warning.severity === 'LOW') lowCount.value++
+  //   else if (warning.severity === 'HIGH') highCount.value++
 
-    if (warning.solveTime) solvedCount.value++;
-    else unsolvedCount.value++;
-  });
+  //   if (warning.solveTime) solvedCount.value++
+  //   else unsolvedCount.value++
+  // })
 
   seriousList.value = [
     { name: 'LOW', value: lowCount.value },
     { name: 'HIGH', value: highCount.value }
-  ];
+  ]
   stateList.value = [
     { name: '已解决', value: solvedCount.value },
     { name: '未解决', value: unsolvedCount.value }
-  ];
+  ]
 
   pageQuery()
   loading.value = false
@@ -100,7 +99,6 @@ const onDelWarning = async (row) => {
 
 onMounted(() => {
   getWarningList()
-  artGetAllTarget()
 })
 </script>
 
@@ -141,18 +139,18 @@ onMounted(() => {
       <el-table-column label="操作" width="100">
         <template #default="{ row }">
           <el-button
-              :icon="Edit"
-              circle
-              plain
-              type="primary"
-              @click="onEditWarning(row)"
+            :icon="Edit"
+            circle
+            plain
+            type="primary"
+            @click="onEditWarning(row)"
           ></el-button>
           <el-button
-              :icon="Delete"
-              circle
-              plain
-              type="danger"
-              @click="onDelWarning(row)"
+            :icon="Delete"
+            circle
+            plain
+            type="danger"
+            @click="onDelWarning(row)"
           ></el-button>
         </template>
       </el-table-column>
@@ -163,14 +161,14 @@ onMounted(() => {
 
     <div class="pagination-container">
       <el-pagination
-          class="pageList"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="page"
-          :page-sizes="[10, 20, 30, 40, 50, 100, 200]"
-          :page-size="pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="total"
+        class="pageList"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="page"
+        :page-sizes="[10, 20, 30, 40, 50, 100, 200]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
       >
       </el-pagination>
     </div>

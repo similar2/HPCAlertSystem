@@ -1,5 +1,6 @@
 package edu.sustech.hpc.po;
 
 public enum HardwareType {
-    BMC
+    BMC,
+    HOST // a usual server, mostly works for node exporter
 }

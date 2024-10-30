@@ -16,10 +16,10 @@ public class PrometheusServiceTest {
     @Resource
     private PrometheusService prometheusService;
 
-    @Test
-    public void getAllHardwareReplyTest() throws IOException {
-        System.out.println(prometheusService.getAllHardwareReply());
-    }
+//    @Test
+//    public void getAllHardwareReplyTest() throws IOException {
+//        System.out.println(prometheusService.getAllHardwareReply());
+//    }
 
     @Test
     public void getAllAlertRulesTest() throws IOException {
@@ -37,6 +37,12 @@ public class PrometheusServiceTest {
     }
 
     @Test
+    public void getFilterOptionsByMetricName() {
+        HardwareType bmc = HardwareType.BMC;
+        prometheusService.getFilterOptionsByMetricName(bmc, "ipmi_fan_speed");
+    }
+
+    @Test
     public void addAlertRuleTest() {
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode objectNode = objectMapper.createObjectNode();
@@ -44,12 +50,10 @@ public class PrometheusServiceTest {
 
         AlertRuleParam alertRuleParam =
                 AlertRuleParam.builder().alertName("HighCPUTemp")
-                        .expr("> 55")
+                        .expr("up")
                         .description("CPU temperatue too high")
                         .type(HardwareType.BMC)
-                        .metricName("ipmi_temperature_celsius")
                         .severity(AlertSeverity.CRITICAL)
-                        .filters(objectNode)
                         .timeDuration("5m")
                         .build();
         prometheusService.addAlertRule(alertRuleParam);

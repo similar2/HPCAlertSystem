@@ -239,7 +239,7 @@ public class UserService {
      */
     public void update(UserDTO userDTO) {
         User user = new User();
-        BeanUtils.copyProperties(userDTO, user);
+        BeanUtils.copyProperties(userDTO, user, "password");
         if (StrUtil.isNotBlank(userDTO.getPassword())) {
             user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         }
@@ -276,5 +276,16 @@ public class UserService {
      */
     public void delete(Integer id) {
         userDao.deleteById(id);
+        userRoleDao.delete(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, id));
+    }
+
+    /**
+     * 移除用户角色关系
+     * @param userRole
+     */
+    public void removeUserRole(UserRole userRole) {
+        userRoleDao.delete(new LambdaQueryWrapper<UserRole>()
+                .eq(UserRole::getUserId, userRole.getUserId())
+                .eq(UserRole::getRoleId, userRole.getRoleId()));
     }
 }

@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @author Yuxian Wu
  * @version 1.0
- * @Description: TODO
+ * @Description: 传给前端的分页查询到的用户信息
  * @Create: 2024-10-23 10:00
  */
 @Data

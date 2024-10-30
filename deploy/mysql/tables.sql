@@ -119,7 +119,7 @@ CREATE TABLE `user_role`
 DROP TABLE IF EXISTS `permission`;
 CREATE TABLE `permission`
 (
-    `id`                  int(11) NOT NULL DEFAULT '0' COMMENT '自定id,主要供前端展示权限列表分类排序使用.',
+    `id`                  int(11) NOT NULL AUTO_INCREMENT COMMENT '自定id,主要供前端展示权限列表分类排序使用.',
     `menu_code`           varchar(255)     DEFAULT '' COMMENT '归属菜单,前端判断并展示菜单使用,',
     `menu_name`           varchar(255)     DEFAULT '' COMMENT '菜单的中文释义',
     `permission_code`     varchar(255)     DEFAULT '' COMMENT '权限的代码/通配符,对应代码中@RequiresPermissions 的value',
@@ -137,9 +137,6 @@ CREATE TABLE `role_permission`
     `id`            int(11)   NOT NULL AUTO_INCREMENT,
     `role_id`       int(11)        DEFAULT NULL COMMENT '角色id',
     `permission_id` int(11)        DEFAULT NULL COMMENT '权限id',
-    `create_time`   timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-    `update_time`   timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted` INT     DEFAULT 1 COMMENT '是否删除 0有效     1删除',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 23

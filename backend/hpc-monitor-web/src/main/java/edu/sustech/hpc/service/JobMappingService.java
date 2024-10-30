@@ -14,11 +14,15 @@ import java.util.Map;
 public class JobMappingService {
     @Resource
     private BmcService bmcService;
+    @Resource
+    private HostService hostService;
 
     public JobService getJobService(HardwareType hardwareType) {
         switch (hardwareType) {
             case BMC:
                 return bmcService;
+            case HOST:
+                return hostService;
             default:
                 return null;
         }
@@ -28,6 +32,9 @@ public class JobMappingService {
         switch (jobName) {
             case "ipmi_exporter":
                 return bmcService;
+
+            case "node_exporter":
+                return hostService;
             default:
                 return null;
         }

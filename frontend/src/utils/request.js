@@ -3,7 +3,7 @@ import { useUserStore } from '@/stores'
 import { ElMessage } from 'element-plus'
 import router from '@/router'
 
-const baseURL = 'http://localhost:8080/'
+const baseURL = 'http://172.18.6.108/'
 
 const instance = axios.create({
   baseURL,
@@ -14,8 +14,8 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config) => {
     const userStore = useUserStore()
-    if (userStore.token) {
-      config.headers.Authorization = userStore.token
+    if (userStore.user?.value?.token) {
+      config.headers.Authorization = userStore.user.value.token
     }
     return config
   },

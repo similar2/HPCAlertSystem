@@ -2,11 +2,14 @@
 import { ref } from 'vue'
 import ChannelSelect from './ClusterSelect.vue'
 import ResponseEdit from './ResponseEdit.vue'
-import { artAddDeviceService, artEditService, artGetDeviceService } from '@/api/Warning'
+import {
+  artAddDeviceService,
+  artEditService,
+  artGetDeviceService
+} from '@/api/Warning'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import { ElMessage } from 'element-plus'
-// import { baseURL } from '@/utils/request'
-// import axios from 'axios'
+
 const visibleDrawer = ref(false)
 const emit = defineEmits(['success'])
 const defaultForm = {
@@ -15,10 +18,10 @@ const defaultForm = {
   type: '',
   clusterId: 1,
   other: {
-          ip: '',
-          manageIp: '',
-          publicIp: ''
-        }
+    ip: '',
+    manageIp: '',
+    publicIp: ''
+  }
 }
 const ResponseEditRef = ref()
 let flag = false
@@ -27,14 +30,14 @@ const formModel = ref({ ...defaultForm })
 const open = async (row) => {
   visibleDrawer.value = true
   formModel.value = { ...defaultForm }
-  if(row.name !== undefined && row.name !== '') {
+  if (row.name !== undefined && row.name !== '') {
     id = row.id
     const res = await artGetDeviceService(row.id)
     formModel.value.name = row.name
     formModel.value.position = row.position
     formModel.value.type = row.type
     formModel.value.clusterId = row.clusterId
-    if(res.data.data.other != null) {
+    if (res.data.data.other != null) {
       formModel.value.other.ip = res.data.data.other.ip
       formModel.value.other.manageIp = res.data.data.other.manageIp
       formModel.value.other.publicIp = res.data.data.other.publicIp
@@ -46,12 +49,14 @@ const open = async (row) => {
   }
 }
 const onAddResponse = async () => {
-  const { ip, manageIp, publicIp } = formModel.value.other;
+  const { ip, manageIp, publicIp } = formModel.value.other
   if (!ip && !manageIp && !publicIp) {
-    formModel.value.other = null;
+    formModel.value.other = null
   }
   // 添加请求
-  const res = flag ? await artEditService(formModel.value, id) : await artAddDeviceService(formModel.value)
+  const res = flag
+    ? await artEditService(formModel.value, id)
+    : await artAddDeviceService(formModel.value)
   console.log(res.data.data.id)
   // eslint-disable-next-line no-undef
   ElMessage.success('添加成功')
@@ -64,13 +69,15 @@ const onAddResponse = async () => {
   ResponseEditRef.value.open(res.data.data.id, [])
 }
 const onPublish = async () => {
-  const { ip, manageIp, publicIp } = formModel.value.other;
+  const { ip, manageIp, publicIp } = formModel.value.other
   if (!ip && !manageIp && !publicIp) {
-    formModel.value.other = null;
+    formModel.value.other = null
   }
 
   // 添加请求
-  flag ? await artEditService(formModel.value, id) : await artAddDeviceService(formModel.value)
+  flag
+    ? await artEditService(formModel.value, id)
+    : await artAddDeviceService(formModel.value)
   // eslint-disable-next-line no-undef
   ElMessage.success('添加成功')
   visibleDrawer.value = false
@@ -103,7 +110,10 @@ defineExpose({
         ></el-input>
       </el-form-item>
       <el-form-item label="设备位置" prop="position">
-        <el-input v-model="formModel.position" placeholder="请输入设备位置"></el-input>
+        <el-input
+          v-model="formModel.position"
+          placeholder="请输入设备位置"
+        ></el-input>
       </el-form-item>
       <el-form-item label="类型" prop="type">
         <el-input v-model="formModel.type" placeholder="请输入类型"></el-input>
@@ -141,6 +151,7 @@ defineExpose({
       height: 178px;
       display: block;
     }
+
     .el-upload {
       border: 1px dashed var(--el-border-color);
       border-radius: 6px;
@@ -149,9 +160,11 @@ defineExpose({
       overflow: hidden;
       transition: var(--el-transition-duration-fast);
     }
+
     .el-upload:hover {
       border-color: var(--el-color-primary);
     }
+
     .el-icon.avatar-uploader-icon {
       font-size: 28px;
       color: #8c939d;
@@ -161,8 +174,10 @@ defineExpose({
     }
   }
 }
+
 .editor {
   width: 100%;
+
   :deep(.ql-editor) {
     min-height: 200px;
   }

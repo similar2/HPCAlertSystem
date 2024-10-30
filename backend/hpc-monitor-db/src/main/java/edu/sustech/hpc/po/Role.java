@@ -1,8 +1,8 @@
 package edu.sustech.hpc.po;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -16,5 +16,6 @@ public class Role {
     private String roleName;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
+    @TableLogic
     private Integer deleted;
 }

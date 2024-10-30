@@ -10,14 +10,15 @@ import java.util.List;
 /**
  * @author Yuxian Wu
  * @version 1.0
- * @Description: 传给前端的角色信息
- * @Create: 2024-10-23 10:13
+ * @Description: 相同类别的权限信息
+ * @Create: 2024-10-23 23:44
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RoleVo {
-    private Integer id;
-    private String roleName;
+public class PermissionByGroupVo {
+    private String menuCode;
+    private String menuName;
+    private List<PermissionVo> permissions;
 }
