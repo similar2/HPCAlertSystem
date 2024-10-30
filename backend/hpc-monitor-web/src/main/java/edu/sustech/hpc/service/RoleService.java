@@ -45,7 +45,7 @@ public class RoleService {
             log.error("Role with id {} not found", id);
             return;
         }
-        BeanUtil.copyProperties(roleDto, existingRole, "id");  // 忽略ID，避免覆盖
+        BeanUtil.copyProperties(roleDto, existingRole, "id");
         roleDao.updateById(existingRole);
         log.info("Role updated: {}", existingRole);
     }

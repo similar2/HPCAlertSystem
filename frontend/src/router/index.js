@@ -63,7 +63,7 @@ const router = createRouter({
         },
         {
           path: '/userManager/role',
-          component: () => import('@/views/userManager/role.vue')
+          component: () => import('@/views/userManager/permission.vue')
         },
         // {
         //   path: '/userManager/add',

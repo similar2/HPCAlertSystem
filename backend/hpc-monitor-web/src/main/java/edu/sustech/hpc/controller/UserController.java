@@ -30,7 +30,6 @@ public class UserController {
     @Resource
     private RoleService roleService;
 
-    //获取所有脱敏后的用户信息
     @GetMapping("/all")
     public ApiResponse<List<PublicUserInfo>> all(@RequestParam(name = "user_id", required = false) Integer userId) {
         return ApiResponse.success(userService.all(userId));
