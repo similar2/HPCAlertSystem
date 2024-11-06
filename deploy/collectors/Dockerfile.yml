@@ -1,0 +1,30 @@
+# Use a Go base image to build the application
+FROM golang:1.20-alpine as builder
+  
+  # Set the Current Working Directory inside the container
+WORKDIR /app
+  
+  # Copy the Go script into the container
+COPY user_collector.go .  
+  
+  # Build the Go binary
+RUN go mod init user_collector && go build -o user_collector .
+  
+  # Now start a new image from Alpine to keep the container small
+FROM alpine:latest
+  
+  # Install required packages (bash, curl, etc.)
+RUN apk add --no-cache bash curl
+  
+  # Create the directory for storing metrics
+RUN mkdir -p /metrics
+  
+  # Copy the compiled binary from the builder image
+COPY --from=builder /app/user_collector /usr/local/bin/user_collector
+  
+  # Set the environment variables (optional, can also be set in docker-compose.yml)
+ENV OUTPUT_PATH=/metrics/user_count.prom
+ENV SLEEP_INTERVAL=1
+  
+  # Start the custom script when the container starts
+CMD ["/usr/local/bin/user_collector"]

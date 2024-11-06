@@ -2,6 +2,31 @@
 
 使用 [Docker Compose](https://docs.docker.com/compose) 能够十分方便地部署本项目，步骤如下：
 
+- **部署前注意事项**
+
+  - `Controller` url前缀去除`/api`
+
+    - AlertController.java
+      - 改为`@PathController("/alerts")`
+    - DeviceController.java
+      - 改为`@PathController("/devices")`
+    - UserController.java
+      - 改为`@PathController("/user")`
+
+  - 规则配置文件路径更改
+
+    - `src/main/java/edu/sustech/hpc/service/JobService.java`
+      - 改为`String ruleConfigFile = "/prometheus/rule.yml";`
+
+  - 前端url修改
+
+    - `frontend/src/utils/request.js`
+      - 改为`const baseURL = 'http://172.18.6.108/'`  或实际地址
+    
+
+如果想要本地测试或运行的话，反之即可，也就是加上`/api`前缀、路径位置改为本地位置、url改为`localhost`或本机地址。
+     
+
 1. **构建后端**
 
    进入`/backend`文件夹，使用Maven将后端打成Jar包: `mvn package -D mvn.test.skip=true`。或者使用IDEA自带的Maven插件打Jar包，步骤如图。之后将Jar包移动到`/deploy`文件夹内
