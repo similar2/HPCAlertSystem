@@ -23,7 +23,7 @@ public abstract class JobService {
     String jobName;
     HardwareType hardwareType;
     //String ruleConfigFile = "/prometheus/rule.yml";
-    String ruleConfigFile = "E:\\project\\HPCAlertSystem\\deploy\\prometheus\\rule.yml";
+    String ruleConfigFile = "/prometheus/rule.yml";
 
 
     Map<String, Map<String, Map<String, String>>> filterObjects = new HashMap<>();

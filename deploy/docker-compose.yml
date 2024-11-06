@@ -13,19 +13,33 @@ services:
   # Node Exporter service
   node-exporter:
     image: prom/node-exporter:v1.6.1
-    container_name: hpc-monitor-node-exporter
+    container_name: node-exporter
     restart: unless-stopped
     ports:
-      - "9100:9100"
+      - "9100:9100"  # Expose Node Exporter's metrics port
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /:/rootfs:ro
+      - shared-metrics:/etc/node_exporter/textfile_collector:ro  # Shared volume for custom metrics
     command:
       - --path.procfs=/host/proc
       - --path.sysfs=/host/sys
-      - --collector.filesystem.ignored-mount-points
-      - '^/(sys|proc|dev|host|etc)($|/)'
+      - --collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($|/)"
+      - --collector.textfile.directory=/etc/node_exporter/textfile_collector  # Directory for custom metrics
+
+  custom-collectors:
+    build:
+      context: ./collectors  # Path relative to deploy/ for the custom collector directory
+      dockerfile: Dockerfile.yml
+    container_name: custom-collectors
+    restart: unless-stopped
+    volumes:
+      - shared-metrics:/metrics  # Shared volume to output custom metrics
+    environment:
+      - OUTPUT_PATH=/metrics/user_count.prom  # Path for custom metric output
+      - SLEEP_INTERVAL=1  # Interval for custom collector script
+
   prometheus:
     image: prom/prometheus:v2.50.1
     container_name: hpc-monitor-prometheus
@@ -89,3 +103,8 @@ services:
     privileged: true #容器内的root有真正的root权限，否则只是一个普通用户，没有.conf文件权限
     depends_on:
       - web
+volumes:
+  shared-metrics:
+
+
+

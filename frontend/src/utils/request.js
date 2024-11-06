@@ -4,9 +4,6 @@ import { ElMessage } from 'element-plus'
 import router from '@/router'
 
 const getBaseURL = (url) => {
-    if (url.startsWith('/api/permissions')) {
-        return 'http://localhost:8080'
-    }
     return 'http://172.18.6.108'
 }
 
