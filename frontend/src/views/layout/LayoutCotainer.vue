@@ -108,6 +108,10 @@ const handleCommand = async (command) => {
             <el-icon><User /></el-icon>
             <span>角色管理</span>
           </el-menu-item>
+          <el-menu-item index="/userManager/permission" >
+            <el-icon><User /></el-icon>
+            <span>权限管理</span>
+          </el-menu-item>
         </el-sub-menu>
 
         <el-sub-menu index="/user">

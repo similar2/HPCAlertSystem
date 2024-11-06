@@ -66,6 +66,12 @@ const router = createRouter({
             requiredPermission: 'role:list'
           }
         },
+        {
+          path: '/userManager/permission',
+          name: 'Permission',
+          component: () => import('@/views/userManager/permission.vue'),
+          meta: { permission: 'permission:list' }
+        },
       ]
     },
     {
