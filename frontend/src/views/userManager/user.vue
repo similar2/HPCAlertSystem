@@ -1,7 +1,23 @@
+<script setup>
+import { getPermissionsByUserId } from '@/api/user'
+import {useUserStore} from "@/stores/index.js";
+import  { ref } from 'vue'
+const userStore = useUserStore()
+const permission_role = ref([]);
+
+getPermissionsByUserId(userStore.user.value.id).then(response => {
+  console.log("permission by id : ", response.data.data);
+  permission_role.value = response.data.data;
+  console.log("permissions: ", permission_role.value);
+}).catch(error => {
+  console.error("获取权限失败: ", error);
+});
+</script>
+
 <template>
   <page-container title="用户列表">
     <template #extra>
-      <el-button type="success" v-permission="'user:add'" @click="showCreate">添加用户</el-button>
+      <el-button type="success" v-if="permission_role.includes('user:add')" @click="showCreate">添加用户</el-button>
     </template>
 
     <div class="container">
@@ -65,16 +81,8 @@
         ></el-table-column>
         <el-table-column align="center" label="管理" width="220" fixed="right">
           <template v-slot="{ row, $index }">
-            <el-button type="primary" @click="showUpdate($index)" v-permission="'user:update'"
-              >修改</el-button
-            >
-            <el-button
-              type="danger"
-              v-if="row.id !== id"
-              @click="removeUser($index)"
-              v-permission="'user:update'"
-              >删除
-            </el-button>
+            <el-button type="primary" v-if="permission_role.includes('user:update')" @click="showUpdate($index)">修改</el-button>
+            <el-button type="danger" v-if="row.id !== id && permission_role.includes('user:delete')" @click="removeUser($index)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -149,6 +157,8 @@
 
 <script>
 import { getUserList, getRoleList, addUser, updateUser, deleteUser, getByEmail } from '@/api/user'
+
+
 export default {
   data() {
     return {

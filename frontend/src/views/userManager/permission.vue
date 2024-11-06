@@ -1,3 +1,20 @@
+<script setup>
+import { getPermissionsByUserId } from '@/api/user'
+import {useUserStore} from "@/stores/index.js";
+import {ref} from 'vue'
+const userStore = useUserStore()
+const permission_role = ref([]); // 用于存储权限列表
+
+getPermissionsByUserId(userStore.user.value.id).then(response => {
+  console.log("permission by id : ", response.data.data);
+  permission_role.value = response.data.data;
+  console.log("permissions: ", permissions.value);
+}).catch(error => {
+  console.error("获取权限失败: ", error);
+});
+
+</script>
+
 <template>
   <div class="background-container">
     <div class="app-container">
@@ -8,9 +25,9 @@
       <div class="button-panel">
         <div class="button-container">
           <el-button type="primary" @click="promptQueryById">根据ID查询权限</el-button>
-          <el-button type="success" @click="promptUpdatePermission">更新权限</el-button>
-          <el-button type="danger" @click="promptDeletePermission">删除权限</el-button>
-          <el-button type="primary" @click="openCreateDialog">新建权限</el-button>
+          <el-button type="success" @click="promptUpdatePermission" v-if="permission_role.includes('role:update')">更新权限</el-button>
+          <el-button type="danger" @click="promptDeletePermission" v-if="permission_role.includes('role:delete')">删除权限</el-button>
+          <el-button type="primary" @click="openCreateDialog" v-if="permission_role.includes('role:add')">新建权限</el-button>
           <el-button v-if="isSearching" type="info" @click="resetSearch">返回</el-button>
         </div>
       </div>
@@ -134,13 +151,11 @@ export default {
           });
     },
 
-    // 打开新建权限的对话框
     openCreateDialog() {
       this.resetNewPermissionData();   // 重置输入框
       this.showCreateDialog = true;    // 显示对话框
     },
 
-    // 重置新建权限的数据
     resetNewPermissionData() {
       this.newPermission = {
         menuCode: '',
@@ -150,7 +165,6 @@ export default {
       };
     },
 
-    // 提交新建权限
     submitCreatePermission() {
       if (!this.newPermission.menuCode || !this.newPermission.permissionCode ||
           !this.newPermission.menuName || !this.newPermission.permissionName ||

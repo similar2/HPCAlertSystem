@@ -44,6 +44,8 @@ const handleCommand = async (command) => {
     router.push('/login')
   }
 }
+
+console.log('userStore', userStore.user.value.id)
 </script>
 
 <template>
@@ -95,6 +97,7 @@ const handleCommand = async (command) => {
           </el-menu-item> -->
         </el-sub-menu>
 
+
         <el-sub-menu index="/userManager">
           <template #title>
             <el-icon><UserFilled /></el-icon>
@@ -104,11 +107,12 @@ const handleCommand = async (command) => {
             <el-icon><User /></el-icon>
             <span>用户列表</span>
           </el-menu-item>
+
           <el-menu-item index="/userManager/role" v-permission="'role:list'">
             <el-icon><User /></el-icon>
             <span>角色管理</span>
           </el-menu-item>
-          <el-menu-item index="/userManager/permission" >
+          <el-menu-item index="/userManager/permission" v-if="userStore.user.value.id === 1" >
             <el-icon><User /></el-icon>
             <span>权限管理</span>
           </el-menu-item>
