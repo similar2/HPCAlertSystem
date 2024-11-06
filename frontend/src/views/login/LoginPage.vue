@@ -6,6 +6,7 @@ import { useUserStore} from '@/stores'
 import router from '@/router'
 import { ElMessage } from 'element-plus'
 const userStore = useUserStore()
+console.log("userStore: " + userStore)
 const isRegister = ref(false)
 const form = ref()
 const formModel = ref({
