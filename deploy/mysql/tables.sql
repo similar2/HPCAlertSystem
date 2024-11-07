@@ -120,11 +120,11 @@ DROP TABLE IF EXISTS `permission`;
 CREATE TABLE `permission`
 (
     `id`                  int(11) NOT NULL AUTO_INCREMENT COMMENT '自定id,主要供前端展示权限列表分类排序使用.',
-    `menu_code`           varchar(255)     DEFAULT '' COMMENT '归属菜单,前端判断并展示菜单使用,',
-    `menu_name`           varchar(255)     DEFAULT '' COMMENT '菜单的中文释义',
-    `permission_code`     varchar(255)     DEFAULT '' COMMENT '权限的代码/通配符,对应代码中@RequiresPermissions 的value',
-    `permission_name`     varchar(255)     DEFAULT '' COMMENT '本权限的中文释义',
-    `required_permission` tinyint(1)       DEFAULT '2' COMMENT '是否本菜单必选权限, 1.必选 2非必选 通常是"列表"权限是必选',
+    `menu_code`           varchar(255) DEFAULT '' COMMENT '归属菜单,前端判断并展示菜单使用,',
+    `menu_name`           varchar(255) DEFAULT '' COMMENT '菜单的中文释义',
+    `permission_code`     varchar(255) DEFAULT '' COMMENT '权限的代码/通配符,对应代码中@RequiresPermissions 的value',
+    `permission_name`     varchar(255) DEFAULT '' COMMENT '本权限的中文释义',
+    `required_permission` tinyint(1)   DEFAULT '2' COMMENT '是否本菜单必选权限, 1.必选 2非必选 通常是"列表"权限是必选',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -134,10 +134,31 @@ CREATE TABLE `permission`
 DROP TABLE IF EXISTS `role_permission`;
 CREATE TABLE `role_permission`
 (
-    `id`            int(11)   NOT NULL AUTO_INCREMENT,
-    `role_id`       int(11)        DEFAULT NULL COMMENT '角色id',
-    `permission_id` int(11)        DEFAULT NULL COMMENT '权限id',
+    `id`            int(11) NOT NULL AUTO_INCREMENT,
+    `role_id`       int(11) DEFAULT NULL COMMENT '角色id',
+    `permission_id` int(11) DEFAULT NULL COMMENT '权限id',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 23
   DEFAULT CHARSET = utf8mb4 COMMENT ='角色-权限关联表';
+
+
+-- Insert the specified target servers into the server table
+INSERT INTO server (id, ip, manage_ip, public_ip)
+VALUES (4, '11.11.3.101', NULL, NULL),
+       (5, '11.11.3.102', NULL, NULL),
+       (6, '11.11.3.103', NULL, NULL),
+       (7, '11.11.3.104', NULL, NULL);
+-- Insert data into the device table
+INSERT INTO device (type, name, cluster_id, id, position, deleted)
+VALUES ('SERVER', 'Device 101', 1, 4, 'Rack 1', 0),
+       ('SERVER', 'Device 102', 1, 5, 'Rack 2', 0),
+       ('SERVER', 'Device 103', 1, 6, 'Rack 3', 0),
+       ('SERVER', 'Device 104', 1, 7, 'Rack 4', 0);
+
+-- Insert data into the hardware table
+INSERT INTO hardware (type, server_id, name, ip)
+VALUES ('BMC', 4, 'IPMI Hardware 101', '11.11.3.101'),
+       ('BMC', 5, 'IPMI Hardware 102', '11.11.3.102'),
+       ('BMC', 6, 'IPMI Hardware 103', '11.11.3.103'),
+       ('BMC', 7, 'IPMI Hardware 104', '11.11.3.104');
