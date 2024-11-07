@@ -59,6 +59,7 @@ services:
       - ./mysql/data:/var/lib/mysql
       - ./mysql/tables.sql:/docker-entrypoint-initdb.d/tables.sql
 
+
   web:
     image: openjdk:21
     container_name: hpc-monitor-web

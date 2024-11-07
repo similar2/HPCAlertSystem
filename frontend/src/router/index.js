@@ -66,6 +66,12 @@ const router = createRouter({
             requiredPermission: 'role:list'
           }
         },
+        {
+          path: '/userManager/permission',
+          //name: 'Permission',
+          component: () => import('@/views/userManager/permission.vue'),
+          meta: { permission: 'permission:list' }
+        },
       ]
     },
     {
@@ -84,7 +90,7 @@ router.beforeEach((to) => {
     getPermissionsByUserId(userStore.user.value.id).then(res => {
       userStore.setPermissions(res.data.data)
   })}
-  if (to.meta.requiresAuth && !userStore.permissions.includes(to.meta.requiredPermission)) return '/404'
+  //if (to.meta.requiresAuth && !userStore.permissions.includes(to.meta.requiredPermission)) return '/404'
 })
 
 export default router
