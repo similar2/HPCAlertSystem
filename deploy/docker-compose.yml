@@ -1,4 +1,3 @@
-# https://github.com/mailcow/mailcow-dockerized/issues/5797
 version: '3.2'
 services:
   ipmi-exporter:
@@ -10,7 +9,6 @@ services:
       - --config.file=/ipmi-exporter.yml
     volumes:
       - ./ipmi-exporter.yml:/ipmi-exporter.yml
-  # Node Exporter service
   node-exporter:
     image: prom/node-exporter:v1.6.1
     container_name: node-exporter
@@ -21,24 +19,12 @@ services:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /:/rootfs:ro
-      - shared-metrics:/etc/node_exporter/textfile_collector:ro  # Shared volume for custom metrics
+      - ./collectors/metrics:/metrics:ro  # Ensure the metrics dir is correct
     command:
       - --path.procfs=/host/proc
       - --path.sysfs=/host/sys
       - --collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($|/)"
-      - --collector.textfile.directory=/etc/node_exporter/textfile_collector  # Directory for custom metrics
-
-  custom-collectors:
-    build:
-      context: ./collectors  # Path relative to deploy/ for the custom collector directory
-      dockerfile: Dockerfile.yml
-    container_name: custom-collectors
-    restart: unless-stopped
-    volumes:
-      - shared-metrics:/metrics  # Shared volume to output custom metrics
-    environment:
-      - OUTPUT_PATH=/metrics/user_count.prom  # Path for custom metric output
-      - SLEEP_INTERVAL=1  # Interval for custom collector script
+      - --collector.textfile.directory=/metrics  # Adjusted path to match the mount point
 
   prometheus:
     image: prom/prometheus:v2.50.1
@@ -102,8 +88,20 @@ services:
     privileged: true #容器内的root有真正的root权限，否则只是一个普通用户，没有.conf文件权限
     depends_on:
       - web
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"  # Map port 3000 on the container to port 3000 on the host
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin  # Default admin username
+      - GF_SECURITY_ADMIN_PASSWORD=admin  # Default admin password (change this for security)
+    volumes:
+      - grafana-data:/var/lib/grafana  # Persistent storage for Grafana data
+    depends_on:
+      - prometheus  # Ensure Grafana starts after Prometheus
 volumes:
-  shared-metrics:
-
+  grafana-data:
 
 
