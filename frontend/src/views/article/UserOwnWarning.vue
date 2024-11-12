@@ -1,17 +1,14 @@
 <script setup>
 import { Delete, Edit } from '@element-plus/icons-vue'
 import { ref } from 'vue'
-// import WarningSelect from './components/WarningSelect.vue'
 import WarningEdit from './components/OwnWarningEdit.vue'
 import { artGetAllRulesService, artDelRulesService } from '@/api/Warning'
 import { ElMessage, ElMessageBox } from 'element-plus'
-// import { useRoute } from 'vue-router'
+import PageContainer from '@/components/pageContainer.vue'
 
-// const cateId = ref(44173)
 const loading = ref(false)
 const rulesList = ref([])
 const machineEditRef = ref()
-// const route = useRoute()
 
 const getmachineList = async () => {
   loading.value = true
@@ -49,23 +46,9 @@ const onSuccess = (type) => {
 <template>
   <page-container title="自定义告警规则">
     <template #extra>
-      <el-button @click="onAddMachine" v-permission="'rule:add'">添加自定义告警规则</el-button>
+      <el-button @click="onAddMachine">添加自定义告警规则</el-button>
     </template>
-    <!-- <el-form inline>
-      <el-form-item label="监控类型：">
-        <Warning-select></Warning-select>
-      </el-form-item>
-      <el-form-item label="活跃情况：">
-        <el-select>
-          <el-option label="活跃中" value="活跃中"></el-option>
-          <el-option label="休眠" value="休眠"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button @click="onSearch" type="primary">搜索</el-button>
-        <el-button @click="onReset">重置</el-button>
-      </el-form-item>
-    </el-form> -->
+
     <el-table :data="rulesList" style="width: 100%" v-loading="loading">
       <el-table-column label="警报名称" prop="alertName"></el-table-column>
       <el-table-column label="警报规则" prop="alertRule"></el-table-column>
