@@ -16,6 +16,8 @@
     "@element-plus/icons-vue": "^2.3.1",
     "@vueup/vue-quill": "^1.2.0",
     "axios": "^1.6.8",
+    "chart.js": "^4.4.6",
+    "chartjs-adapter-date-fns": "^3.0.0",
     "element-plus": "^2.6.2",
     "normalize.css": "^8.0.1",
     "pinia": "^2.1.7",
