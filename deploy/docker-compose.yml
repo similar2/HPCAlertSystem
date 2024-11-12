@@ -89,20 +89,6 @@ services:
     privileged: true #容器内的root有真正的root权限，否则只是一个普通用户，没有.conf文件权限
     depends_on:
       - web
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    restart: unless-stopped
-    ports:
-      - "3000:3000"  # Map port 3000 on the container to port 3000 on the host
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin  # Default admin username
-      - GF_SECURITY_ADMIN_PASSWORD=admin  # Default admin password (change this for security)
-    volumes:
-      - grafana-data:/var/lib/grafana  # Persistent storage for Grafana data
-    depends_on:
-      - prometheus  # Ensure Grafana starts after Prometheus
-volumes:
-  grafana-data:
+
 
 
