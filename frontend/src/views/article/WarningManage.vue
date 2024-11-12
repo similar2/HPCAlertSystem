@@ -27,7 +27,6 @@ const userStep = ref(60) // Default to 1-minute interval
 const showCpuSettings = ref(false)
 const showUserSettings = ref(false) // Control visibility of the settings panel
 
-
 // CPU formatted start and end times
 const formattedCpuStartTime = ref(formatToDateTimeLocal(cpuStartTime.value))
 const formattedCpuEndTime = ref(formatToDateTimeLocal(cpuEndTime.value))
