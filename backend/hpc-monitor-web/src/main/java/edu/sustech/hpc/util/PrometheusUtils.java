@@ -1,7 +1,6 @@
 package edu.sustech.hpc.util;
 
 import edu.sustech.hpc.exceptions.PromQLValidationException;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -12,7 +11,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.stream.Collectors;
 
 public class PrometheusUtils {
 
@@ -48,7 +46,11 @@ public class PrometheusUtils {
                 JSONObject jsonResponse = new JSONObject(response.toString());
                 if (!jsonResponse.getString("status").equals("success")) {
                     throw new PromQLValidationException("Invalid PromQL Expression: " + jsonResponse);
+                } else if (jsonResponse.getJSONObject("data").getJSONArray("result").isEmpty()) {
+                    throw new PromQLValidationException("Not Existing Metric Name or No Data Yet");
                 }
+
+
             }
 
         } catch (IOException e) {

@@ -18,26 +18,19 @@ public class JobMappingService {
     private HostService hostService;
 
     public JobService getJobService(HardwareType hardwareType) {
-        switch (hardwareType) {
-            case BMC:
-                return bmcService;
-            case HOST:
-                return hostService;
-            default:
-                return null;
-        }
+        return switch (hardwareType) {
+            case BMC -> bmcService;
+            case HOST -> hostService;
+            default -> null;
+        };
     }
 
     public JobService getJobService(String jobName) {
-        switch (jobName) {
-            case "ipmi_exporter":
-                return bmcService;
-
-            case "node_exporter":
-                return hostService;
-            default:
-                return null;
-        }
+        return switch (jobName) {
+            case "ipmi_exporter" -> bmcService;
+            case "node_exporter" -> hostService;
+            default -> null;
+        };
     }
 
     public HardwareType getHardwareType(String jobName) {

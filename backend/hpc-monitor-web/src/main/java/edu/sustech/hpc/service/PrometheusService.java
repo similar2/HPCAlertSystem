@@ -1,7 +1,6 @@
 package edu.sustech.hpc.service;
 
 import com.google.common.io.CharStreams;
-import edu.sustech.hpc.exceptions.PromQLValidationException;
 import edu.sustech.hpc.model.param.AlertRuleParam;
 import edu.sustech.hpc.model.vo.*;
 import edu.sustech.hpc.po.AlertSeverity;
@@ -19,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,14 +27,9 @@ import java.util.Map;
 
 @Service
 public class PrometheusService {
-    @Resource
-    private DatabaseService databaseService;
 
     @Resource
     private JobMappingService jobMappingService;
-
-    PrometheusService() {
-    }
 
     @Scheduled(fixedRate = 60000)
     public void getAlertFromPrometheus() throws IOException {
@@ -188,7 +183,7 @@ public class PrometheusService {
 
     public List<AlertRuleInfo> getAllAlertRules() throws IOException {
         JSONObject response = new JSONObject(CharStreams.toString(new InputStreamReader(
-                new URL("http://172.18.6.108:9090/api/v1/rules").openStream(), "UTF-8")));
+                new URL("http://172.18.6.108:9090/api/v1/rules").openStream(), StandardCharsets.UTF_8)));
         JSONArray ruleGroups = response.getJSONObject("data")
                 .getJSONArray("groups");
         List<AlertRuleInfo> alertRuleInfoList = new ArrayList<>();
@@ -259,7 +254,7 @@ public class PrometheusService {
 
     public List<PrometheusAlertInfo> getActiveAlerts() throws IOException {
         JSONObject response = new JSONObject(CharStreams.toString(new InputStreamReader(
-                new URL("http://172.18.6.108:9090/api/v1/alerts").openStream(), "UTF-8")));
+                new URL("http://172.18.6.108:9090/api/v1/alerts").openStream(), StandardCharsets.UTF_8)));
         JSONArray alerts = response.getJSONObject("data").getJSONArray("alerts");
         List<PrometheusAlertInfo> prometheusAlertInfoList = new ArrayList<>();
         for (int i = 0; i < alerts.length(); i++) {
