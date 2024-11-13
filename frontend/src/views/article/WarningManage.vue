@@ -13,7 +13,7 @@ const cpuChartInstance = ref(null)
 const cpuQuery = ref(
   '100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)'
 ) //default cpu query
-const cpuEndTime = ref(Math.floor(Date.now() / 1000) - 24 * 3600) // Default to 24 hours ago
+const cpuEndTime = ref(Math.floor(Date.now() / 1000)) // Default to 24 hours ago
 const cpuStartTime = ref(cpuEndTime.value - 24 * 3600) // Default to 48 hours ago
 const cpuStep = ref(60) // Default to 1-minute interval
 
@@ -35,6 +35,8 @@ const formattedCpuEndTime = ref(formatToDateTimeLocal(cpuEndTime.value))
 const formattedUserStartTime = ref(formatToDateTimeLocal(userStartTime.value))
 const formattedUserEndTime = ref(formatToDateTimeLocal(userEndTime.value))
 
+// Refs for the user data
+const loggedInUsernames = ref([])
 // Update Unix timestamp when input changes for CPU chart
 const updateCpuStartTime = () => {
   cpuStartTime.value = Math.floor(
@@ -61,20 +63,28 @@ const updateUserEndTime = () => {
   )
 }
 
-const fetchQueryData = async (query, startTime, endTime, step) => {
+const fetchPrometheusData = async (
+  query,
+  endpoint = 'query_range',
+  params = {}
+) => {
   try {
     const baseURL = getBaseURL()
-    const url = `${baseURL}:9090/api/v1/query_range?query=${encodeURIComponent(
-      query
-    )}&start=${startTime}&end=${endTime}&step=${step}`
+    let url = `${baseURL}:9090/api/v1/${endpoint}?query=${encodeURIComponent(query)}`
+
+    // Add additional parameters if provided (e.g., start, end, step)
+    for (const [key, value] of Object.entries(params)) {
+      url += `&${key}=${value}`
+    }
+
     const response = await fetch(url)
     const result = await response.json()
 
+    console.log('Query URL:', url)
+    console.log('Raw Response:', result)
+
     if (result.status === 'success') {
-      return result.data.result[0].values.map(([timestamp, value]) => ({
-        timestamp: new Date(timestamp * 1000),
-        value: parseFloat(value)
-      }))
+      return result.data.result
     } else {
       console.error('Prometheus query failed:', result.error)
       return []
@@ -82,6 +92,35 @@ const fetchQueryData = async (query, startTime, endTime, step) => {
   } catch (error) {
     console.error('Error fetching data:', error)
     return []
+  }
+}
+
+const fetchQueryData = async (query, startTime, endTime, step) => {
+  const result = await fetchPrometheusData(query, 'query_range', {
+    start: startTime,
+    end: endTime,
+    step: step
+  })
+
+  if (result.length > 0) {
+    return result[0].values.map(([timestamp, value]) => ({
+      timestamp: new Date(timestamp * 1000),
+      value: parseFloat(value)
+    }))
+  } else {
+    console.warn('Query succeeded but returned no data.')
+    return []
+  }
+}
+
+const fetchLoggedInUsernames = async () => {
+  const result = await fetchPrometheusData('logged_in_user_details', 'query')
+
+  if (result.length > 0) {
+    loggedInUsernames.value = result.map((entry) => entry.metric.username)
+  } else {
+    console.warn('Query succeeded but returned no data.')
+    loggedInUsernames.value = []
   }
 }
 
@@ -158,6 +197,9 @@ const updateUserChart = async () => {
     'Number of Users'
   )
 }
+const updateUserNames = async () => {
+  await fetchLoggedInUsernames()
+}
 // Function to handle clicks outside the settings panel
 const handleClickOutside = (event) => {
   if (
@@ -168,7 +210,13 @@ const handleClickOutside = (event) => {
     showUserSettings.value = false
   }
 }
-
+// Function to update the times dynamically
+const updateTimes = () => {
+  cpuEndTime.value = Math.floor(Date.now() / 1000) // Recalculate 24 hours ago
+  cpuStartTime.value = cpuEndTime.value - 24 * 3600 // Recalculate 48 hours ago
+  userStartTime.value = Math.floor(Date.now() / 1000)
+  userEndTime.value = userEndTime.value - 24 * 3600
+}
 document.addEventListener('click', handleClickOutside)
 
 onBeforeUnmount(() => {
@@ -176,6 +224,8 @@ onBeforeUnmount(() => {
 })
 
 onMounted(() => {
+  updateUserNames()
+  updateTimes()
   updateCpuChart()
   updateUserChart()
 })
@@ -264,6 +314,10 @@ onMounted(() => {
         <button @click="updateUserChart">Update User Chart</button>
       </div>
       <canvas id="userChart"></canvas>
+      <h3>Currently Logged-in Users</h3>
+      <ul>
+        <li v-for="user in loggedInUsernames" :key="user">{{ user }}</li>
+      </ul>
     </div>
   </page-container>
 </template>

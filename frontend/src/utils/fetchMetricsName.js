@@ -1,20 +1,25 @@
-// Custom method to dynamically fetch suggestions
 import { getBaseURL } from '@/utils/request.js'
 
 export const fetchDynamicSuggestions = async (callback) => {
   try {
-    // Replace this with your own method for fetching dynamic data
+    // Fetch the data from the API
     const response = await fetch(
-      `${getBaseURL()}/9090/api/v1/label/__name__/values`
+      `${getBaseURL()}:9090/api/v1/label/__name__/values`
     )
+    const result = await response.json()
 
-    const data = await response.json()
+    // Log result for debugging
+    console.log('Fetched result:', result)
 
-    // Process and format the response data for the autocomplete
-    const formattedSuggestions = data.map((item) => ({ value: item }))
-
-    // Update suggestions and call the callback with the results
-    callback(formattedSuggestions)
+    // Check if the response has the expected structure and is an array
+    if (result && Array.isArray(result.data)) {
+      // Map over the data array
+      const formattedSuggestions = result.data.map((item) => ({ value: item }))
+      callback(formattedSuggestions)
+    } else {
+      console.error('Unexpected data structure:', result)
+      callback([]) // Return an empty array if the structure is unexpected
+    }
   } catch (error) {
     console.error('Error fetching suggestions:', error)
     callback([]) // Return an empty list in case of an error

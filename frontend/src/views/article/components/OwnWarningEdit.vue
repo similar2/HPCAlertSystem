@@ -116,6 +116,9 @@ onMounted(() => {
   fetchDynamicSuggestions((results) => {
     // Ensure `results` is an array and add it to the existing `suggestions`
     if (Array.isArray(results)) {
+      results.forEach((result, index) => {
+        console.log(`Result ${index}:`, result)
+      })
       suggestions.value.push(...results) // Add new results to the existing array
     }
   })
