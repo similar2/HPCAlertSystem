@@ -56,7 +56,8 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./mysql/data:/var/lib/mysql
+      - ./mysql/conf:/etc/mysql/conf.d
+      - /home/wuyx/mysql/data:/var/lib/mysql
       - ./mysql/tables.sql:/docker-entrypoint-initdb.d/tables.sql
 
 
