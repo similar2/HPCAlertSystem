@@ -15,7 +15,6 @@
         <el-select v-model="formModel.type" placeholder="请输入硬件类型">
           <el-option label="BMC" value="BMC"></el-option>
           <el-option label="HOST" value="HOST"></el-option>
-
         </el-select>
       </el-form-item>
 
@@ -113,16 +112,30 @@ const open = () => {
   }
 }
 onMounted(() => {
-  fetchDynamicSuggestions((results) => {
-    // Ensure `results` is an array and add it to the existing `suggestions`
-    if (Array.isArray(results)) {
-      results.forEach((result, index) => {
-        console.log(`Result ${index}:`, result)
-      })
-      suggestions.value.push(...results) // Add new results to the existing array
-    }
-  })
-})
+    fetchDynamicSuggestions((results) => {
+      // Ensure `results` is an array and add it to the existing `suggestions`
+      if (Array.isArray(results)) {
+        results.forEach((result, index) => {
+          console.log(`Result ${index} (type: ${typeof result}):`, result)
+        })
+
+        // Extract the `value` property if `results` are objects
+        const stringResults = results.map((result) => {
+          // Check if the `value` property exists and is a string
+          if (result && typeof result.value === 'string') {
+            return result.value // Extract the metric name from the `value` field
+          } else {
+            console.warn('Skipping non-string or missing value field:', result)
+            return null // Handle as needed
+          }
+        })
+        .filter(Boolean) // Remove any null/undefined results
+
+        suggestions.value.push(...stringResults) // Add new results to the existing array
+      }
+    })
+  }
+)
 const fetchSuggestions = (queryString, callback) => {
   try {
     if (queryString) {
@@ -131,9 +144,15 @@ const fetchSuggestions = (queryString, callback) => {
       const lastPart = parts[parts.length - 1]
 
       // Filter results that match the last part as a prefix
-      const results = suggestions.value.filter((item) =>
-        item.toLowerCase().startsWith(lastPart.toLowerCase())
-      )
+      const results = suggestions.value.filter((item) => {
+        // Ensure item is a string before calling `toLowerCase()`
+        if (typeof item === 'string') {
+          return item.toLowerCase().includes(lastPart.toLowerCase())
+        } else {
+          console.warn('Skipping non-string item:', item)
+          return false // Skip non-string items
+        }
+      })
 
       // Map results to the correct format and pass them to the callback
       callback(results.map((item) => ({ value: item })))

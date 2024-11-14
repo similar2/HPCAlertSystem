@@ -4,7 +4,6 @@ import { Chart, registerables } from 'chart.js'
 import 'chartjs-adapter-date-fns'
 import PageContainer from '@/components/pageContainer.vue'
 import { getBaseURL } from '@/utils/request.js'
-import { formatToDateTimeLocal } from '@/utils/format.js'
 
 Chart.register(...registerables)
 
@@ -20,48 +19,15 @@ const cpuStep = ref(60) // Default to 1-minute interval
 // Logged-in user chart related refs
 const userChartInstance = ref(null)
 const userQuery = ref('logged_in_users') // Replace with your actual logged-in user query
-const userEndTime = ref(cpuEndTime.value) // Align end time with CPU chart
-const userStartTime = ref(cpuStartTime.value) // Align start time with CPU chart
+const userEndTime = ref(Math.floor(Date.now() / 1000)) // Align end time with CPU chart
+const userStartTime = ref(userEndTime.value - 24 * 3600) // Align start time with CPU chart
 const userStep = ref(60) // Default to 1-minute interval
 
 const showCpuSettings = ref(false)
 const showUserSettings = ref(false) // Control visibility of the settings panel
 
-// CPU formatted start and end times
-const formattedCpuStartTime = ref(formatToDateTimeLocal(cpuStartTime.value))
-const formattedCpuEndTime = ref(formatToDateTimeLocal(cpuEndTime.value))
-
-// User formatted start and end times
-const formattedUserStartTime = ref(formatToDateTimeLocal(userStartTime.value))
-const formattedUserEndTime = ref(formatToDateTimeLocal(userEndTime.value))
-
 // Refs for the user data
 const loggedInUsernames = ref([])
-// Update Unix timestamp when input changes for CPU chart
-const updateCpuStartTime = () => {
-  cpuStartTime.value = Math.floor(
-    new Date(formattedCpuStartTime.value).getTime() / 1000
-  )
-}
-
-const updateCpuEndTime = () => {
-  cpuEndTime.value = Math.floor(
-    new Date(formattedCpuEndTime.value).getTime() / 1000
-  )
-}
-
-// Update Unix timestamp when input changes for User chart
-const updateUserStartTime = () => {
-  userStartTime.value = Math.floor(
-    new Date(formattedUserStartTime.value).getTime() / 1000
-  )
-}
-
-const updateUserEndTime = () => {
-  userEndTime.value = Math.floor(
-    new Date(formattedUserEndTime.value).getTime() / 1000
-  )
-}
 
 const fetchPrometheusData = async (
   query,
@@ -214,8 +180,8 @@ const handleClickOutside = (event) => {
 const updateTimes = () => {
   cpuEndTime.value = Math.floor(Date.now() / 1000) // Recalculate 24 hours ago
   cpuStartTime.value = cpuEndTime.value - 24 * 3600 // Recalculate 48 hours ago
-  userStartTime.value = Math.floor(Date.now() / 1000)
-  userEndTime.value = userEndTime.value - 24 * 3600
+  userEndTime.value = Math.floor(Date.now() / 1000)
+  userStartTime.value = userEndTime.value - 24 * 3600
 }
 document.addEventListener('click', handleClickOutside)
 
@@ -249,22 +215,6 @@ onMounted(() => {
           ></textarea>
         </div>
         <div class="settings-item">
-          <label>Start Time:</label>
-          <input
-            type="datetime-local"
-            v-model="formattedCpuStartTime"
-            @change="updateCpuStartTime"
-          />
-        </div>
-        <div class="settings-item">
-          <label>End Time:</label>
-          <input
-            type="datetime-local"
-            v-model="formattedCpuEndTime"
-            @change="updateCpuEndTime"
-          />
-        </div>
-        <div class="settings-item">
           <label>Step (seconds):</label>
           <input type="number" v-model.number="cpuStep" />
         </div>
@@ -290,22 +240,6 @@ onMounted(() => {
             rows="2"
             style="resize: vertical"
           ></textarea>
-        </div>
-        <div class="settings-item">
-          <label>Start Time:</label>
-          <input
-            type="datetime-local"
-            v-model="formattedUserStartTime"
-            @change="updateUserStartTime"
-          />
-        </div>
-        <div class="settings-item">
-          <label>End Time:</label>
-          <input
-            type="datetime-local"
-            v-model="formattedUserEndTime"
-            @change="updateUserEndTime"
-          />
         </div>
         <div class="settings-item">
           <label>Step (seconds):</label>
