@@ -22,8 +22,14 @@ spring:
             enable: true
             required: true
     port: 994
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
+      password: redis
 logging:
   level:
     edu.sustech.hpc: debug
   pattern:
-    dateformat: HH:mm:ss:SSS
+    dateformat: yyyy-MM-dd HH:mm:ss:SSS
