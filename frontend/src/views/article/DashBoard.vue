@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { Chart, registerables } from 'chart.js'
 import 'chartjs-adapter-date-fns'
 import PageContainer from '@/components/pageContainer.vue'
@@ -7,10 +7,14 @@ import { getBaseURL } from '@/utils/request.js'
 
 Chart.register(...registerables)
 
+// Reactive reference for the cluster name
+const selectedCluster = ref('taiyi')
+
 // CPU chart related refs
 const cpuChartInstance = ref(null)
-const cpuQuery = ref(
-  '100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)'
+const cpuQuery = computed(
+  () =>
+    `100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle", cluster ="${selectedCluster.value}"}[5m])) * 100)`
 ) //default cpu query
 const cpuEndTime = ref(Math.floor(Date.now() / 1000)) // Default to 24 hours ago
 const cpuStartTime = ref(cpuEndTime.value - 24 * 3600) // Default to 48 hours ago
@@ -18,10 +22,16 @@ const cpuStep = ref(60) // Default to 1-minute interval
 
 // Logged-in user chart related refs
 const userChartInstance = ref(null)
-const userQuery = ref('logged_in_users') // Replace with your actual logged-in user query
+const userQuery = computed(
+  () => `logged_in_users{cluster="${selectedCluster.value}"}`
+)
 const userEndTime = ref(Math.floor(Date.now() / 1000)) // Align end time with CPU chart
 const userStartTime = ref(userEndTime.value - 24 * 3600) // Align start time with CPU chart
 const userStep = ref(60) // Default to 1-minute interval
+
+const userDetailQuery = computed(
+  () => `logged_in_user_details{cluster="${selectedCluster.value}"}`
+)
 
 const showCpuSettings = ref(false)
 const showUserSettings = ref(false) // Control visibility of the settings panel
@@ -37,7 +47,7 @@ const fetchPrometheusData = async (
   try {
     const baseURL = getBaseURL()
     let url = `${baseURL}:9090/api/v1/${endpoint}?query=${encodeURIComponent(query)}`
-
+    console.log(query)
     // Add additional parameters if provided (e.g., start, end, step)
     for (const [key, value] of Object.entries(params)) {
       url += `&${key}=${value}`
@@ -80,7 +90,8 @@ const fetchQueryData = async (query, startTime, endTime, step) => {
 }
 
 const fetchLoggedInUsernames = async () => {
-  const result = await fetchPrometheusData('logged_in_user_details', 'query')
+  console.log(userQuery.value)
+  const result = await fetchPrometheusData(userDetailQuery.value, 'query')
 
   if (result.length > 0) {
     loggedInUsernames.value = result.map((entry) => entry.metric.username)
@@ -176,6 +187,13 @@ const handleClickOutside = (event) => {
     showUserSettings.value = false
   }
 }
+// Handle cluster change to update charts
+const handleClusterChange = () => {
+  updateCpuChart()
+  updateUserChart()
+  updateUserNames()
+}
+
 // Function to update the times dynamically
 const updateTimes = () => {
   cpuEndTime.value = Math.floor(Date.now() / 1000) // Recalculate 24 hours ago
@@ -199,6 +217,16 @@ onMounted(() => {
 
 <template>
   <page-container title="概览">
+    <!-- Radio group for selecting the cluster -->
+    <el-radio-group
+      v-model="selectedCluster"
+      @change="handleClusterChange"
+      class="cluster-selector"
+    >
+      <el-radio label="taiyi">taiyi</el-radio>
+      <el-radio label="qiming">qiming</el-radio>
+    </el-radio-group>
+
     <!-- CPU Chart container -->
     <div class="chart-container">
       <div class="settings-button" @click="showCpuSettings = !showCpuSettings">
@@ -260,6 +288,10 @@ onMounted(() => {
 .chart-container {
   position: relative;
   padding: 20px;
+}
+
+.radio-container {
+  margin-bottom: 20px; /* Adds space between the radio group and the charts */
 }
 
 .settings-button {
