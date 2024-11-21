@@ -10,8 +10,9 @@ import lombok.experimental.Accessors;
 public class Hardware {
     @TableId(type=IdType.AUTO)
     private Integer id;
+    private Integer serverId;
+    private String deviceName;
     private HardwareType type; //对应的硬件表名
     private String ip;
-    private Integer serverId;
     private String name;
 }
