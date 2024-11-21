@@ -1,10 +1,10 @@
-import { getBaseURL } from '@/utils/request.js'
+import { getServerURL } from '@/utils/request.js'
 
 export const fetchDynamicSuggestions = async (callback) => {
   try {
     // Fetch the data from the API
     const response = await fetch(
-      `${getBaseURL()}:9090/api/v1/label/__name__/values`
+      `${getServerURL()}:9090/api/v1/label/__name__/values`
     )
     const result = await response.json()
 

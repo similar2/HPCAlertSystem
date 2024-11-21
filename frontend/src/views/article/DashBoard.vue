@@ -3,7 +3,7 @@ import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { Chart, registerables } from 'chart.js'
 import 'chartjs-adapter-date-fns'
 import PageContainer from '@/components/pageContainer.vue'
-import { getBaseURL } from '@/utils/request.js'
+import { getServerURL } from '@/utils/request.js'
 
 Chart.register(...registerables)
 
@@ -45,7 +45,7 @@ const fetchPrometheusData = async (
   params = {}
 ) => {
   try {
-    const baseURL = getBaseURL()
+    const baseURL = getServerURL()
     let url = `${baseURL}:9090/api/v1/${endpoint}?query=${encodeURIComponent(query)}`
     console.log(query)
     // Add additional parameters if provided (e.g., start, end, step)
