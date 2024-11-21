@@ -11,4 +11,4 @@ route:
 receivers:
   - name: 'webhook-alert'  # 接收器名称
     webhook_configs:
-      - url: 'https://7d0b1b4a.r17.cpolar.top/alerts'  # Java 服务器的 Webhook 地址
+      - url: 'http://172.18.6.108/api/alerts'  # Java 服务器的 Webhook 地址
