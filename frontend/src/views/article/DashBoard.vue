@@ -3,7 +3,7 @@ import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { Chart, registerables } from 'chart.js'
 import 'chartjs-adapter-date-fns'
 import PageContainer from '@/components/pageContainer.vue'
-import { getBaseURL } from '@/utils/request.js'
+import { getServerURL } from '@/utils/request.js'
 
 Chart.register(...registerables)
 
@@ -14,7 +14,16 @@ const selectedCluster = ref('taiyi')
 const cpuChartInstance = ref(null)
 const cpuQuery = computed(
   () =>
-    `100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle", cluster ="${selectedCluster.value}"}[5m])) * 100)`
+    `(
+  sum(
+    (
+      1 - (sum(irate(node_cpu_seconds_total{mode="idle", cluster="${selectedCluster.value}"}[5m])) by (instance, cpu) /
+           sum(irate(node_cpu_seconds_total{cluster="${selectedCluster.value}"}[5m])) by (instance, cpu))
+    )
+  ) /
+  sum(count(node_cpu_seconds_total{cluster="${selectedCluster.value}", mode="idle"}) by (instance, cpu))
+) * 100
+`
 ) //default cpu query
 const cpuEndTime = ref(Math.floor(Date.now() / 1000)) // Default to 24 hours ago
 const cpuStartTime = ref(cpuEndTime.value - 24 * 3600) // Default to 48 hours ago
@@ -45,7 +54,7 @@ const fetchPrometheusData = async (
   params = {}
 ) => {
   try {
-    const baseURL = getBaseURL()
+    const baseURL = getServerURL()
     let url = `${baseURL}:9090/api/v1/${endpoint}?query=${encodeURIComponent(query)}`
     console.log(query)
     // Add additional parameters if provided (e.g., start, end, step)
