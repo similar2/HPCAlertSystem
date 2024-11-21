@@ -12,6 +12,7 @@ import edu.sustech.hpc.result.PageResult;
 import edu.sustech.hpc.service.AlertService;
 import edu.sustech.hpc.service.PrometheusService;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.validation.annotation.Validated;
@@ -24,7 +25,14 @@ import java.util.Map;
 
 @PathController("/alerts")
 @CrossOrigin
+@Slf4j
 public class AlertController {
+    @PostMapping
+    public ApiResponse receiveAlerts(@RequestBody String alertPayload) {
+        log.info("Receive alert: {}", alertPayload);
+        prometheusService.parseAlerts(alertPayload);
+        return ApiResponse.success();
+    }
 
     @Resource
     private AlertService alertService;

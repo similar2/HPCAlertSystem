@@ -5,6 +5,7 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import edu.sustech.hpc.constant.CaptchaConstant;
 import edu.sustech.hpc.dao.RoleDao;
 import edu.sustech.hpc.dao.UserDao;
 import edu.sustech.hpc.dao.UserRoleDao;
@@ -21,9 +22,13 @@ import edu.sustech.hpc.result.PageResult;
 import edu.sustech.hpc.util.EmailUtil;
 import edu.sustech.hpc.util.JwtUtil;
 import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,35 +48,61 @@ import java.util.stream.Collectors;
 import static edu.sustech.hpc.util.AssertUtil.asserts;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class UserService {
 
     public static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
-    @Resource
-    private EmailUtil emailUtil;
-    @Resource
-    private ThreadPoolExecutor threadPool;
+    private final EmailUtil emailUtil;
+
+    private final ThreadPoolExecutor threadPool;
+
+    private final RedisTemplate<String, Object> redisTemplate;
 
     //邮箱->验证码, 例:example@gmail.com->648413
-    private final ConcurrentHashMap<String, String> verifyCodes = new ConcurrentHashMap<>();
 
     public void sendVerifyCode(String email) {
-        //1.发送验证码
-        String verifyCode = RandomUtil.randomNumbers(6); // 生成6位数字验证码
-        String content = "验证码:" + verifyCode + ", 有效期2分钟";
-        //2.验证码存入HashMap中，2分钟后清除
-        threadPool.execute(() -> {
-            emailUtil.sendMail(email, content, "SUSTech-HPC-Monitor邮箱验证");
-            verifyCodes.put(email, verifyCode);
-            LOGGER.info("Verify code {} sent to {}", verifyCode, email);
-            try {
-                Thread.sleep(TimeUnit.MINUTES.toMillis(2));
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            verifyCodes.remove(email);
-            LOGGER.info("Verify code {} of {} expired", verifyCode, email);
-        });
+
+
+        String captcha = RandomUtil.randomNumbers(CaptchaConstant.Captcha_LENGTH);
+        ValueOperations<String, Object> ops = redisTemplate.opsForValue();
+        String captchaKey = CaptchaConstant.REGISTER_EMAIL_CAPTCHA + email;
+        String sendCountKey = CaptchaConstant.REGISTER_EMAIL_SEND_COUNT + email;
+
+        // 检查当天是否超过发送次数限制
+        Integer sendCount = (Integer) redisTemplate.opsForValue().get(sendCountKey);
+        asserts(
+                sendCount == null || sendCount < CaptchaConstant.MAX_SEND_COUNT_PER_DAY,
+                CaptchaConstant.CAPTCHA_MAX_SEND_LIMIT_EXCEEDED.formatted(CaptchaConstant.MAX_SEND_COUNT_PER_DAY)
+        );
+
+        // 检查重发时间限制
+        Long remainingTime = redisTemplate.getExpire(captchaKey, TimeUnit.SECONDS);
+        if (remainingTime != null) {
+            // 计算已经过去的时间
+            long elapsedTime = CaptchaConstant.CAPTCHA_EXPIRE_TIME - remainingTime;
+
+            asserts(
+                    elapsedTime >= CaptchaConstant.MIN_RETRY_TIME,
+                    CaptchaConstant.CAPTCHA_RETRY_TOO_SOON.formatted((CaptchaConstant.MIN_RETRY_TIME - elapsedTime))
+            );
+        }
+
+        // 如果没有验证码，或者已经过期，则重新生成验证码
+        ops.set(captchaKey, captcha, CaptchaConstant.CAPTCHA_EXPIRE_TIME, TimeUnit.SECONDS);
+
+        // 更新发送次数
+        if (sendCount == null) {
+            ops.set(sendCountKey, 1, 1, TimeUnit.DAYS);
+        } else {
+            ops.increment(sendCountKey, 1);  // 增加发送次数
+        }
+
+        String content = CaptchaConstant.REGISTER_CONTENT_TEMPLATE.formatted(captcha);
+        // 发送邮件
+        emailUtil.sendMail(email, content, CaptchaConstant.REGISTER_EMAIL_SUBJECT);
+        log.info("已发送到邮箱：{}, 验证码：{}", email, captcha);
     }
 
     @Resource
@@ -97,9 +128,15 @@ public class UserService {
     }
 
     public UserInfo register(String verifyCode, String email, String username, String password) {
-        String trueCode = verifyCodes.get(email);
-        asserts(trueCode != null, "验证码已过期，请重新发送");
-        asserts(trueCode.equals(verifyCode), "验证码错误");
+
+        String key = CaptchaConstant.REGISTER_EMAIL_CAPTCHA + email;
+
+        asserts(Boolean.TRUE.equals(redisTemplate.hasKey(key)), CaptchaConstant.CAPTCHA_NOT_SEND_OR_EXPIRED);
+
+
+        String trueCode = (String) redisTemplate.opsForValue().get(key);
+        asserts(verifyCode.equals(trueCode), CaptchaConstant.CAPTCHA_ERROR);
+
         //判断该email是否已被注册
         User user = userDao.selectOne(new LambdaQueryWrapper<User>()
                 .eq(User::getEmail, email));
@@ -136,6 +173,7 @@ public class UserService {
 
     /**
      * 分页查询
+     *
      * @param userPageQueryDTO
      * @return
      */
@@ -168,7 +206,7 @@ public class UserService {
         for (UserPageQueryVo userPageQueryVo : records) {
             List<UserRole> userRoles = userRoleDao.selectList(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, userPageQueryVo.getId()));
 
-            userPageQueryVo.setRoles( userRoles.stream()
+            userPageQueryVo.setRoles(userRoles.stream()
                     .map(userRole -> {
                         Integer roleId = userRole.getRoleId();
                         String roleName = roleMap.get(roleId);
@@ -185,6 +223,7 @@ public class UserService {
 
     /**
      * 启用或禁用账号
+     *
      * @param status
      * @param id
      */
@@ -198,6 +237,7 @@ public class UserService {
 
     /**
      * 新增用户
+     *
      * @param userDTO
      */
     public void save(UserDTO userDTO) {
@@ -222,6 +262,7 @@ public class UserService {
 
     /**
      * 根据id查询用户信息
+     *
      * @param id
      * @return
      */
@@ -235,6 +276,7 @@ public class UserService {
 
     /**
      * 修改用户信息
+     *
      * @param userDTO
      */
     public void update(UserDTO userDTO) {
@@ -243,6 +285,7 @@ public class UserService {
         if (StrUtil.isNotBlank(userDTO.getPassword())) {
             user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         }
+        user.setUpdateTime(LocalDateTime.now());
         userDao.updateById(user);
 
         List<Integer> roleIds = userDTO.getRoleIds();
@@ -257,6 +300,7 @@ public class UserService {
 
     /**
      * 通过邮箱获取用户信息
+     *
      * @param email
      * @return
      */
@@ -272,6 +316,7 @@ public class UserService {
 
     /**
      * 删除用户
+     *
      * @param id
      */
     public void delete(Integer id) {
@@ -281,6 +326,7 @@ public class UserService {
 
     /**
      * 移除用户角色关系
+     *
      * @param userRole
      */
     public void removeUserRole(UserRole userRole) {

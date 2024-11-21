@@ -7,6 +7,12 @@ global:
 rule_files:
   - rule.yml
 
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - 172.18.6.108:9093
+
 scrape_configs:
   - job_name: ipmi
     params:

@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
-@PathController("/devices")
+@PathController("/api/devices")
 public class DeviceController {
 
     @Resource

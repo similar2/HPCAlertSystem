@@ -16,7 +16,7 @@ const router = createRouter({
       children: [
         {
           path: '/article/manage',
-          component: () => import('@/views/article/WarningManage.vue')
+          component: () => import('@/views/article/DashBoard.vue')
         },
         {
           path: '/article/detail',
