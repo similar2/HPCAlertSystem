@@ -21,8 +21,12 @@
   - 前端url修改
 
     - `frontend/src/utils/request.js`
-      - 改为`const baseURL = 'http://172.18.6.108/'`  或实际地址
-    
+      - 改为`const baseURL = 'http://172.18.6.108/'`  或实际地址 
+
+  - `docker compose.yml`mysql 数据文件位置
+  
+    - mysql container下`- /home/wuyx/mysql/data:/var/lib/mysql` 删除或改为自定义位置
+
 
 如果想要本地测试或运行的话，反之即可，也就是加上`/api`前缀、路径位置改为本地位置、url改为`localhost`或本机地址。
      
@@ -58,16 +62,7 @@
 
 4. 在服务器上参考[官方文档](https://docs.docker.com/engine/install/)安装Docker环境
 
-5. 进入`/deploy`文件夹，运行`docker compose up -d`即可一键部署
-
-   启动prometheus容器时可能会遇到如下权限不足的报错，导致无法启动
-
-   ```
-   caller=query_logger.go:87 level=error component=activeQueryTracker msg="Error opening query log file" file=/prometheus/queries.active err="open /prometheus/queries.active: permission denied"
-   panic: Unable to create mmap-ed active query log
-   ```
-
-   参考https://github.com/prometheus/prometheus/issues/9704，赋权`chmod 777 ./prometheus/data`即可解决
-
-6. 浏览器访问系统前端：http://<ip地址>
+5. 进入`/deploy`文件夹，运行`deploy.sh`脚本即可一键部署
+6. 先使用`chmod +x deploy.sh`让脚本可执行，随后`./deploy &`使脚本在后台自动运行
+8. 浏览器访问系统前端：http://<ip地址>
 
