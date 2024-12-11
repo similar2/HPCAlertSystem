@@ -1,0 +1,14 @@
+global:
+  resolve_timeout: 30s  # 从 firing 到 resolved 的通知延迟时间
+
+route:
+  group_by: ['alertname']  # 按 alertname 分组
+  group_wait: 10s          # 第一个告警触发后的等待时间
+  group_interval: 5m       # 组内告警的通知间隔
+  repeat_interval: 1h      # 相同告警的重复通知间隔
+  receiver: 'webhook-alert'  # 默认接收者名称
+
+receivers:
+  - name: 'webhook-alert'  # 接收器名称
+    webhook_configs:
+      - url: 'http://172.18.6.108/api/alerts'  # Java 服务器的 Webhook 地址

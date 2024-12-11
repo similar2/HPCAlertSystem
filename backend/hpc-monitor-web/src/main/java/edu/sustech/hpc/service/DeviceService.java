@@ -7,8 +7,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.yulichang.toolkit.JoinWrappers;
 import edu.sustech.hpc.dao.AssigneeDao;
+import edu.sustech.hpc.dao.DeviceAlertDao;
 import edu.sustech.hpc.dao.DeviceDao;
 import edu.sustech.hpc.dao.ServerDao;
+import edu.sustech.hpc.dao.OtherDeviceAlertDao;
 import edu.sustech.hpc.exceptions.DuplicateDeviceException;
 import edu.sustech.hpc.model.dto.ServerHardwareBmc;
 import edu.sustech.hpc.model.param.DeviceParam;
@@ -32,6 +34,9 @@ public class DeviceService {
 
     @Resource
     private AssigneeDao assigneeDao;
+
+    @Resource
+    private OtherDeviceAlertDao otherDeviceAlertDao;
 
 
     /**
@@ -88,6 +93,12 @@ public class DeviceService {
                             .put("password", deviceInfo.getPassword())
                             .put("port", deviceInfo.getPort()));
         }
+        else {
+            OtherDeviceAlert otherDeviceAlert = otherDeviceAlertDao.selectById(id);
+            if (otherDeviceAlert != null) {
+                other.put("alert", otherDeviceAlert.isAlert());
+            }
+        }
         return deviceParam.setOther(other);
     }
 
@@ -129,6 +140,13 @@ public class DeviceService {
                     .setManageIp(serverInfo.get("manageIp").asText())
                     .setPublicIp(serverInfo.get("publicIp").asText());
             serverDao.updateById(server);
+        }
+        else {
+            JsonNode otherDeviceAlert = deviceParam.getOther();
+            OtherDeviceAlert otherDeviceAlert1 = new OtherDeviceAlert()
+                    .setId(id)
+                    .setAlert(otherDeviceAlert.get("alert").asBoolean());
+            otherDeviceAlertDao.updateById(otherDeviceAlert1);
         }
         return deviceParam.setId(id);
     }

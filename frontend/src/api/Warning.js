@@ -74,3 +74,33 @@ export const artAddFile = (file) => {
     }
   })
 }
+// 获取所有辅机告警记录
+export const getAllDeviceAlertsService = () => request.get('/api/device-alerts')
+
+// 分页获取辅机告警记录
+export const getDeviceAlertsPageService = (params) => {
+  return request.get('/api/device-alerts', { params })
+}
+
+// 获取单个辅机告警
+export const getDeviceAlertByIdService = (id) =>
+    request.get(`/api/device-alerts/${id}`)
+
+// 搜索设备告警（根据设备ID）
+export const searchDeviceAlertsService = (deviceId) => {
+  return request.get(`/api/device-alerts/device/${deviceId}`);
+}
+
+
+// 添加辅机告警
+export const addDeviceAlertService = (data) =>
+    request.post('/api/device-alerts', data)
+
+// 修改辅机告警
+export const updateDeviceAlertService = (id, data) =>
+    request.patch(`/api/device-alerts/${id}`, data)
+
+// 删除辅机告警
+export const deleteDeviceAlertService = (id) =>
+    request.delete(`/api/device-alerts/${id}`)
+

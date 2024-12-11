@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
-@PathController("/devices")
+@PathController("/api/devices")
 public class DeviceController {
 
     @Resource
@@ -78,7 +78,7 @@ public class DeviceController {
     public ApiResponse addAssignees(
             @PathVariable Integer deviceId,
             @RequestBody ArrayNode userIdList
-            ) {
+    ) {
         for(JsonNode objNode : userIdList) {
             Integer userId = objNode.asInt();
             deviceService.addAssignee(new Assignee(deviceId, userId));

@@ -26,4 +26,6 @@ public class DeviceParam {
     @NotNull
     public Integer clusterId; //1=太乙 2=启明
     public JsonNode other; //各种设备专有字段
+
+
 }

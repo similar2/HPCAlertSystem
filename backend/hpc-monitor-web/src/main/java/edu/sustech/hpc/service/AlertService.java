@@ -100,6 +100,10 @@ public class AlertService {
     }
 
     void addPrometheusAlert(Alert alert, PrometheusAlertInfo prometheusAlertInfo) {
+        if ("resolved".equals(prometheusAlertInfo.getState())) {
+            alert.setSolveTime(prometheusAlertInfo.getResolvedTime());
+            alert.setSolveMethod("Auto resolved");
+        }
         add(alert);
         prometheusAlertDao.insert(
                 PrometheusAlert.builder()
@@ -113,6 +117,11 @@ public class AlertService {
 
     void updatePrometheusAlert(Alert alert, PrometheusAlertInfo prometheusAlertInfo) {
         PrometheusAlert prometheusAlert = prometheusAlertDao.selectById(alert.getId());
+        if ("resolved".equals(prometheusAlertInfo.getState())){
+            alert.setSolveTime(prometheusAlertInfo.getResolvedTime());
+            alert.setSolveMethod("Auto resolved");
+            alertDao.updateById(alert);
+        }
         if (prometheusAlertInfo.getActiveTime().isAfter(prometheusAlert.getLastOccurrence())) {
             prometheusAlert.setLastOccurrence(prometheusAlertInfo.getActiveTime());
             prometheusAlertDao.updateById(prometheusAlert);

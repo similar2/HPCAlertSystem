@@ -43,6 +43,18 @@ services:
       - '--web.enable-lifecycle' # https://prometheus.io/docs/prometheus/latest/configuration/configuration/#configuration
     depends_on:
       - ipmi-exporter
+      - alertmanager
+  
+  alertmanager:
+    image: prom/alertmanager:v0.25.0
+    container_name: hpc-monitor-alertmanager
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alertmanager/config.yml:/etc/alertmanager/config.yml
+      - ./alertmanager/data:/alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
 
   mysql:
     image: mysql:8.0.36

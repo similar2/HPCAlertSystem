@@ -11,8 +11,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class PrometheusAlertInfo {
-    String  jobName, alertName, instance;
+    String jobName, alertName, instance, state;
     LocalDateTime activeTime;
+    LocalDateTime resolvedTime;
     AlertSeverity severity;
     String summary;
     JsonNode other;

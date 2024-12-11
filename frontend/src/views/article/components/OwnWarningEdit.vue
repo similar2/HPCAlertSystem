@@ -1,15 +1,15 @@
 <template>
   <el-drawer
-    v-model="visibleDrawer"
-    title="添加报警规则"
-    direction="rtl"
-    size="50%"
+      v-model="visibleDrawer"
+      title="添加报警规则"
+      direction="rtl"
+      size="50%"
   >
     <el-form
-      :model="formModel"
-      ref="formRef"
-      :rules="rules"
-      label-width="100px"
+        :model="formModel"
+        ref="formRef"
+        :rules="rules"
+        label-width="100px"
     >
       <el-form-item label="硬件类型" prop="type">
         <el-select v-model="formModel.type" placeholder="请输入硬件类型">
@@ -20,22 +20,22 @@
 
       <el-form-item label="告警名" prop="alertName">
         <el-input
-          v-model="formModel.alertName"
-          placeholder="请输入告警名"
+            v-model="formModel.alertName"
+            placeholder="请输入告警名"
         ></el-input>
       </el-form-item>
       <el-form-item label="表达式" prop="expr">
         <el-autocomplete
-          v-model="formModel.expr"
-          placeholder="请输入表达式"
-          :fetch-suggestions="fetchSuggestions"
+            v-model="formModel.expr"
+            placeholder="请输入表达式"
+            :fetch-suggestions="fetchSuggestions"
         ></el-autocomplete>
       </el-form-item>
 
       <el-form-item label="告警严重度" prop="severity">
         <el-select
-          v-model="formModel.severity"
-          placeholder="请选择告警严重程度"
+            v-model="formModel.severity"
+            placeholder="请选择告警严重程度"
         >
           <el-option label="NOTE" value="NOTE"></el-option>
           <el-option label="LOW" value="LOW"></el-option>
@@ -46,15 +46,15 @@
 
       <el-form-item label="持续时间" prop="timeDuration">
         <el-input
-          v-model="formModel.timeDuration"
-          placeholder="请输入持续时间"
+            v-model="formModel.timeDuration"
+            placeholder="请输入持续时间"
         ></el-input>
       </el-form-item>
 
       <el-form-item label="说明" prop="description">
         <el-input
-          v-model="formModel.description"
-          placeholder="请输入说明"
+            v-model="formModel.description"
+            placeholder="请输入说明"
         ></el-input>
       </el-form-item>
 
@@ -112,29 +112,29 @@ const open = () => {
   }
 }
 onMounted(() => {
-    fetchDynamicSuggestions((results) => {
-      // Ensure `results` is an array and add it to the existing `suggestions`
-      if (Array.isArray(results)) {
-        results.forEach((result, index) => {
-          console.log(`Result ${index} (type: ${typeof result}):`, result)
-        })
+      fetchDynamicSuggestions((results) => {
+        // Ensure `results` is an array and add it to the existing `suggestions`
+        if (Array.isArray(results)) {
+          results.forEach((result, index) => {
+            console.log(`Result ${index} (type: ${typeof result}):`, result)
+          })
 
-        // Extract the `value` property if `results` are objects
-        const stringResults = results.map((result) => {
-          // Check if the `value` property exists and is a string
-          if (result && typeof result.value === 'string') {
-            return result.value // Extract the metric name from the `value` field
-          } else {
-            console.warn('Skipping non-string or missing value field:', result)
-            return null // Handle as needed
-          }
-        })
-        .filter(Boolean) // Remove any null/undefined results
+          // Extract the `value` property if `results` are objects
+          const stringResults = results.map((result) => {
+            // Check if the `value` property exists and is a string
+            if (result && typeof result.value === 'string') {
+              return result.value // Extract the metric name from the `value` field
+            } else {
+              console.warn('Skipping non-string or missing value field:', result)
+              return null // Handle as needed
+            }
+          })
+              .filter(Boolean) // Remove any null/undefined results
 
-        suggestions.value.push(...stringResults) // Add new results to the existing array
-      }
-    })
-  }
+          suggestions.value.push(...stringResults) // Add new results to the existing array
+        }
+      })
+    }
 )
 const fetchSuggestions = (queryString, callback) => {
   try {
@@ -307,4 +307,3 @@ const suggestions = ref([
   'scrape_samples_post_metric_relabeling', 'scrape_samples_scraped', 'scrape_series_added', 'up'
 ])
 </script>
-

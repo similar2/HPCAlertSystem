@@ -28,7 +28,7 @@ public class PrometheusServiceTest {
 
     @Test
     public void getAllActiveAlertsTest() throws IOException {
-        System.out.println(prometheusService.getActiveAlerts());
+//        System.out.println(prometheusService.getActiveAlerts());
     }
 
     @Test

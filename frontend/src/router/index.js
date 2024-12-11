@@ -16,7 +16,7 @@ const router = createRouter({
       children: [
         {
           path: '/article/manage',
-          component: () => import('@/views/article/WarningManage.vue')
+          component: () => import('@/views/article/DashBoard.vue')
         },
         {
           path: '/article/detail',
@@ -72,6 +72,33 @@ const router = createRouter({
           component: () => import('@/views/userManager/permission.vue'),
           meta: { permission: 'permission:list' }
         },
+        {
+          path: '/article/auxiliary-monitoring/device',
+          component: () => import('@/views/article/components/DeviceManagement.vue'),
+          meta: {
+            name: 'DeviceManagement',
+            requiresAuth: true,
+            //requiredPermission: 'device:list',
+          },
+        },
+        {
+          path: '/article/auxiliary-monitoring/alert-management',
+          component: () => import('@/views/article/components/AlertManagement.vue'),
+          meta: {
+            name: 'AlertManagement',
+            requiresAuth: true,
+            //requiredPermission: 'alert:manage',
+          },
+        },
+        {
+          path: '/article/auxiliary-monitoring/statistics',
+          component: () => import('@/views/article/components/Statistics.vue'),
+          meta: {
+            requiresAuth: true,
+            //requiredPermission: 'alert:manage',
+          },
+        }
+
       ]
     },
     {

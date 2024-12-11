@@ -1,6 +1,7 @@
 package edu.sustech.hpc.service;
 
 import com.google.common.io.CharStreams;
+import edu.sustech.hpc.handler.ApiException;
 import edu.sustech.hpc.model.param.AlertRuleParam;
 import edu.sustech.hpc.model.vo.*;
 import edu.sustech.hpc.po.AlertSeverity;
@@ -9,8 +10,10 @@ import edu.sustech.hpc.util.PrometheusUtils;
 import edu.sustech.hpc.util.Utils;
 import edu.sustech.hpc.util.YamlObj;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,17 +30,19 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class PrometheusService {
 
     @Resource
     private JobMappingService jobMappingService;
 
-    @Scheduled(fixedRate = 60000)
+//    @Scheduled(fixedRate = 60000)
     public void getAlertFromPrometheus() throws IOException {
-        List<PrometheusAlertInfo> prometheusAlertInfoList = getActiveAlerts();
-        for (PrometheusAlertInfo prometheusAlertInfo : prometheusAlertInfoList) {
-            jobMappingService.getJobService(prometheusAlertInfo.getJobName()).checkAddActiveAlert(prometheusAlertInfo);
-        }
+        log.info("Checking active alerts from Prometheus");
+//        List<PrometheusAlertInfo> prometheusAlertInfoList = getActiveAlerts();
+//        for (PrometheusAlertInfo prometheusAlertInfo : prometheusAlertInfoList) {
+//            jobMappingService.getJobService(prometheusAlertInfo.getJobName()).checkAddActiveAlert(prometheusAlertInfo);
+//        }
     }
 
     public Map<String, List<String>> getFilterOptionsByMetricName(HardwareType hardwareType, String metricName) {
@@ -252,33 +258,82 @@ public class PrometheusService {
 //        return filteredPrometheusTargetInfoList;
 //    }
 
-    public List<PrometheusAlertInfo> getActiveAlerts() throws IOException {
-        JSONObject response = new JSONObject(CharStreams.toString(new InputStreamReader(
-                new URL("http://172.18.6.108:9090/api/v1/alerts").openStream(), StandardCharsets.UTF_8)));
-        JSONArray alerts = response.getJSONObject("data").getJSONArray("alerts");
-        List<PrometheusAlertInfo> prometheusAlertInfoList = new ArrayList<>();
-        for (int i = 0; i < alerts.length(); i++) {
-            JSONObject alert = alerts.getJSONObject(i);
-            JSONObject labels = alert.getJSONObject("labels");
-            if (!alert.getString("state").equals("firing"))
-                continue;
-
-            String jobName = labels.getString("job");
-            PrometheusAlertInfo prometheusAlertInfo = PrometheusAlertInfo.builder()
-                    .instance(labels.getString("instance"))
-                    .jobName(jobName)
-                    .alertName(labels.getString("alertname"))
-                    .activeTime(ZonedDateTime.parse(alert.getString("activeAt")).toLocalDateTime())
-                    .severity(AlertSeverity.valueOf(labels.getString("severity")))
-                    .summary(alert.getJSONObject("annotations").getString("summary"))
-                    .other(jobMappingService.getJobService(jobName).getActivePrometheusAlertInfoOther(alert)).build();
-            prometheusAlertInfoList.add(prometheusAlertInfo);
-        }
-        return prometheusAlertInfoList;
-    }
+//    public List<PrometheusAlertInfo> getActiveAlerts() throws IOException {
+//        JSONObject response = new JSONObject(CharStreams.toString(new InputStreamReader(
+//                new URL("http://172.18.6.108:9090/api/v1/alerts").openStream(), StandardCharsets.UTF_8)));
+//        JSONArray alerts = response.getJSONObject("data").getJSONArray("alerts");
+//        List<PrometheusAlertInfo> prometheusAlertInfoList = new ArrayList<>();
+//        for (int i = 0; i < alerts.length(); i++) {
+//            JSONObject alert = alerts.getJSONObject(i);
+//            JSONObject labels = alert.getJSONObject("labels");
+//            if (!alert.getString("state").equals("firing"))
+//                continue;
+//
+//            String jobName = labels.getString("job");
+//            PrometheusAlertInfo prometheusAlertInfo = PrometheusAlertInfo.builder()
+//                    .instance(labels.getString("instance"))
+//                    .jobName(jobName)
+//                    .alertName(labels.getString("alertname"))
+//                    .activeTime(ZonedDateTime.parse(alert.getString("activeAt")).toLocalDateTime())
+//                    .severity(AlertSeverity.valueOf(labels.getString("severity")))
+//                    .summary(alert.getJSONObject("annotations").getString("summary"))
+//                    .other(jobMappingService.getJobService(jobName).getActivePrometheusAlertInfoOther(alert)).build();
+//            prometheusAlertInfoList.add(prometheusAlertInfo);
+//        }
+//        return prometheusAlertInfoList;
+//    }
 
     public static void main(String[] argv) {
         PrometheusService prometheusService = new PrometheusService();
         System.out.println(prometheusService.jobMappingService.getJobService("ipmi_exporter"));
+    }
+
+    public void parseAlerts(String alertPayload) {
+        try {
+            // 解析Json串
+            List<PrometheusAlertInfo> prometheusAlertInfoList = parseAlertManagerPayload(alertPayload);
+
+            for (PrometheusAlertInfo prometheusAlertInfo : prometheusAlertInfoList) {
+                jobMappingService.getJobService(prometheusAlertInfo.getJobName()).checkAddActiveAlert(prometheusAlertInfo);
+            }
+        } catch (Exception e) {
+            log.error("Invalid alert payload", e);
+            throw new ApiException(201,"Invalid alert payload");
+        }
+    }
+
+    public List<PrometheusAlertInfo> parseAlertManagerPayload(String alertPayload) {
+        List<PrometheusAlertInfo> prometheusAlertInfoList = new ArrayList<>();
+
+        JSONObject alertJson = new JSONObject(alertPayload);
+        JSONArray alerts = alertJson.getJSONArray("alerts");
+
+        for (int i = 0; i < alerts.length(); i++) {
+            JSONObject alert = alerts.getJSONObject(i);
+            JSONObject labels = alert.getJSONObject("labels");
+            JSONObject annotations = alert.getJSONObject("annotations");
+
+            String jobName = labels.getString("job");
+
+            PrometheusAlertInfo prometheusAlertInfo = PrometheusAlertInfo.builder()
+                    .instance(labels.getString("instance"))
+                    .jobName(labels.getString("job"))
+                    .alertName(labels.getString("alertname"))
+                    .activeTime(parseTime(alert.getString("startsAt")))
+                    .resolvedTime(parseTime(alert.getString("endsAt")))
+                    .severity(AlertSeverity.valueOf(labels.getString("severity").toUpperCase()))
+                    .summary(annotations.getString("summary"))
+                    .state(alert.getString("status"))
+                    .other(jobMappingService.getJobService(jobName).getActivePrometheusAlertInfoOther(alert))
+                    .build();
+
+            prometheusAlertInfoList.add(prometheusAlertInfo);
+        }
+
+        return prometheusAlertInfoList;
+    }
+
+    private LocalDateTime parseTime(String time) {
+        return ZonedDateTime.parse(time).toLocalDateTime();
     }
 }
