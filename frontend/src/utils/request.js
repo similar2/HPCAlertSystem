@@ -4,7 +4,7 @@ import { ElMessage } from 'element-plus'
 import router from '@/router'
 
 const getBaseURL = (url) => {
-  return 'http://localhost:8080'
+    return 'http://localhost:8080'
 }
 
 const getServerURL = (url) => {

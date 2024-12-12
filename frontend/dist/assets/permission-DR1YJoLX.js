@@ -1,0 +1,1 @@
+import{aJ as e}from"./index-CTSderqS.js";const t=()=>e.get("/api/user/getAllPermissions"),n=()=>e.get("/api/permissions"),o=s=>e.get(`/api/permissions/${s}`),a=(s,i)=>e.put(`/api/permissions/${s}`,i),p=s=>e.delete(`/api/permissions/${s}`),m=s=>e.post("/api/permissions",s);export{o as a,m as c,p as d,n as f,t as g,a as u};
