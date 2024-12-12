@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@PathController("api/user")
+@PathController("/user")
 public class UserController {
     @Resource
     private UserService userService;

@@ -78,7 +78,7 @@ public class DeviceController {
     public ApiResponse addAssignees(
             @PathVariable Integer deviceId,
             @RequestBody ArrayNode userIdList
-            ) {
+    ) {
         for(JsonNode objNode : userIdList) {
             Integer userId = objNode.asInt();
             deviceService.addAssignee(new Assignee(deviceId, userId));

@@ -5,3 +5,7 @@ html/
 *.iml
 *.jar
 *.zip
+/node_modules
+/package-lock.json
+/package.json
+/pnpm-lock.yaml
