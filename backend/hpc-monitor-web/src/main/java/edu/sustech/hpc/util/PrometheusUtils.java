@@ -2,6 +2,8 @@ package edu.sustech.hpc.util;
 
 import edu.sustech.hpc.exceptions.PromQLValidationException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,16 +14,17 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+@Component
 public class PrometheusUtils {
+    @Value("${prometheus.prometheus-server-url}")
+    private String prometheusServerUrl;
 
-    private static final String PROMETHEUS_URL = "http://172.18.6.108:9090/api/v1/query";
-
-    public static void validatePromQL(String expr) throws PromQLValidationException {
+    public void validatePromQL(String expr) throws PromQLValidationException {
         String query = "query=" + URLEncoder.encode(expr, StandardCharsets.UTF_8);
 
         try {
             // Create and configure the connection
-            URL urlObj = new URL(PROMETHEUS_URL);
+            URL urlObj = new URL("http://" + prometheusServerUrl + "/api/v1/query");
             HttpURLConnection connection = (HttpURLConnection) urlObj.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");

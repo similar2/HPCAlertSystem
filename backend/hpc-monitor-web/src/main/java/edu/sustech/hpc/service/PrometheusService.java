@@ -13,8 +13,8 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
@@ -35,14 +35,14 @@ public class PrometheusService {
 
     @Resource
     private JobMappingService jobMappingService;
+    @Value("${prometheus.prometheus-server-url}")
+    private String prometheusServerUrl;
+    @Autowired
+    private PrometheusUtils prometheusUtils;
 
-//    @Scheduled(fixedRate = 60000)
+    //    @Scheduled(fixedRate = 60000)
     public void getAlertFromPrometheus() throws IOException {
         log.info("Checking active alerts from Prometheus");
-//        List<PrometheusAlertInfo> prometheusAlertInfoList = getActiveAlerts();
-//        for (PrometheusAlertInfo prometheusAlertInfo : prometheusAlertInfoList) {
-//            jobMappingService.getJobService(prometheusAlertInfo.getJobName()).checkAddActiveAlert(prometheusAlertInfo);
-//        }
     }
 
     public Map<String, List<String>> getFilterOptionsByMetricName(HardwareType hardwareType, String metricName) {
@@ -58,7 +58,7 @@ public class PrometheusService {
     }
 
     public void reloadPrometheus() throws IOException, InterruptedException {
-        String command = "curl -XPOST http://172.18.6.108:9090/-/reload";
+        String command = "curl -XPOST http://" + prometheusServerUrl + ":9090/-/reload";
         Process proc = Runtime.getRuntime().exec(command);
         proc.waitFor();
     }
@@ -146,7 +146,7 @@ public class PrometheusService {
         String expr = alertRuleParam.getExpr();
         // ** Validate the PromQL expression before proceeding **
 
-        PrometheusUtils.validatePromQL(expr);  // Using the utility method
+        prometheusUtils.validatePromQL(expr);  // Using the utility method
 
         rule.put("expr", expr);
         if (alertRuleParam.getTimeDuration() != null)
@@ -189,7 +189,7 @@ public class PrometheusService {
 
     public List<AlertRuleInfo> getAllAlertRules() throws IOException {
         JSONObject response = new JSONObject(CharStreams.toString(new InputStreamReader(
-                new URL("http://172.18.6.108:9090/api/v1/rules").openStream(), StandardCharsets.UTF_8)));
+                new URL("http:/" + prometheusServerUrl + ":9090/api/v1/rules").openStream(), StandardCharsets.UTF_8)));
         JSONArray ruleGroups = response.getJSONObject("data")
                 .getJSONArray("groups");
         List<AlertRuleInfo> alertRuleInfoList = new ArrayList<>();
@@ -208,81 +208,6 @@ public class PrometheusService {
         return alertRuleInfoList;
     }
 
-//    public List<PrometheusTargetInfo> _getAllTargets() throws IOException {
-//        JSONObject response = new JSONObject(CharStreams.toString(new InputStreamReader(
-//                new URL("http://172.18.6.108:9090/api/v1/targets").openStream(), "UTF-8")));
-//        JSONArray targets = response.getJSONObject("data").getJSONArray("activeTargets");
-//        List<PrometheusTargetInfo> prometheusTargetInfoList = new ArrayList<>();
-//        for (int i = 0; i < targets.length(); i++) {
-//            JSONObject target = targets.getJSONObject(i).getJSONObject("discoveredLabels");
-//            PrometheusTargetInfo prometheusTargetInfo = new PrometheusTargetInfo(
-//                    target.getString("job"),
-//                    target.getString("__address__"),
-//                    target.getString("__scrape_interval__"),
-//                    target.getString("__scrape_timeout__")
-//            );
-//            prometheusTargetInfoList.add(prometheusTargetInfo);
-//        }
-//        return prometheusTargetInfoList;
-//    }
-
-//    public List<HardwareReply> getAllHardwareReply(String jobName) throws IOException {
-//        List<PrometheusTargetInfo> prometheusTargetInfoList = _getAllTargets();
-//        List<HardwareReply> hardwareReplyList = new ArrayList<>();
-//        for (PrometheusTargetInfo prometheusTargetInfo : prometheusTargetInfoList) {
-//            if (jobName != null && !prometheusTargetInfo.getJobName().equals(jobName))
-//                continue;
-//            HardwareInfo hardwareInfo = jobMappingService.getHardwareInfo(prometheusTargetInfo);
-//            ServerInfo serverInfo = databaseService.getServerInfoFromHardwareInfo(hardwareInfo);
-//            DeviceInfo deviceInfo = databaseService.getDeviceInfoFromServerInfo(serverInfo);
-//            ClusterInfo clusterInfo = databaseService.getClusterInfoFromDeviceInfo(deviceInfo);
-//            hardwareReplyList.add(new HardwareReply(
-//                    prometheusTargetInfo, hardwareInfo, serverInfo,
-//                    deviceInfo, clusterInfo));
-//        }
-//        return hardwareReplyList;
-//    }
-
-//    public List<HardwareReply> getAllHardwareReply() throws IOException {
-//        return getAllHardwareReply(null);
-//    }
-//
-//    public List<PrometheusTargetInfo> getTargets(String jobName) throws IOException {
-//        List<PrometheusTargetInfo> prometheusTargetInfoList = _getAllTargets();
-//        if (jobName == null)
-//            return prometheusTargetInfoList;
-//        List<PrometheusTargetInfo> filteredPrometheusTargetInfoList = new ArrayList<>();
-//        for (PrometheusTargetInfo prometheusTargetInfo : prometheusTargetInfoList)
-//            if (prometheusTargetInfo.getJobName().equals(jobName))
-//                filteredPrometheusTargetInfoList.add(prometheusTargetInfo);
-//        return filteredPrometheusTargetInfoList;
-//    }
-
-//    public List<PrometheusAlertInfo> getActiveAlerts() throws IOException {
-//        JSONObject response = new JSONObject(CharStreams.toString(new InputStreamReader(
-//                new URL("http://172.18.6.108:9090/api/v1/alerts").openStream(), StandardCharsets.UTF_8)));
-//        JSONArray alerts = response.getJSONObject("data").getJSONArray("alerts");
-//        List<PrometheusAlertInfo> prometheusAlertInfoList = new ArrayList<>();
-//        for (int i = 0; i < alerts.length(); i++) {
-//            JSONObject alert = alerts.getJSONObject(i);
-//            JSONObject labels = alert.getJSONObject("labels");
-//            if (!alert.getString("state").equals("firing"))
-//                continue;
-//
-//            String jobName = labels.getString("job");
-//            PrometheusAlertInfo prometheusAlertInfo = PrometheusAlertInfo.builder()
-//                    .instance(labels.getString("instance"))
-//                    .jobName(jobName)
-//                    .alertName(labels.getString("alertname"))
-//                    .activeTime(ZonedDateTime.parse(alert.getString("activeAt")).toLocalDateTime())
-//                    .severity(AlertSeverity.valueOf(labels.getString("severity")))
-//                    .summary(alert.getJSONObject("annotations").getString("summary"))
-//                    .other(jobMappingService.getJobService(jobName).getActivePrometheusAlertInfoOther(alert)).build();
-//            prometheusAlertInfoList.add(prometheusAlertInfo);
-//        }
-//        return prometheusAlertInfoList;
-//    }
-
     public static void main(String[] argv) {
         PrometheusService prometheusService = new PrometheusService();
         System.out.println(prometheusService.jobMappingService.getJobService("ipmi_exporter"));
@@ -298,7 +223,7 @@ public class PrometheusService {
             }
         } catch (Exception e) {
             log.error("Invalid alert payload", e);
-            throw new ApiException(201,"Invalid alert payload");
+            throw new ApiException(201, "Invalid alert payload");
         }
     }
 

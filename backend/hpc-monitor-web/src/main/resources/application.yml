@@ -33,3 +33,6 @@ logging:
     edu.sustech.hpc: debug
   pattern:
     dateformat: yyyy-MM-dd HH:mm:ss:SSS
+
+prometheus:
+  prometheus-server-url: 172.18.6.108
