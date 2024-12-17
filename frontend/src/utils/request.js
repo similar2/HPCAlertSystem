@@ -4,11 +4,12 @@ import { ElMessage } from 'element-plus'
 import router from '@/router'
 
 const getBaseURL = (url) => {
-  return 'http://172.18.6.108'
+  //the ip of where this system at
+  return 'http://172.18.6.108/'
 }
 const getServerURL = (url) => {
+  //the ip of where the prometheus system at
   return 'http://172.18.6.108'
-
 }
 
 const instance = axios.create({
@@ -29,6 +30,7 @@ instance.interceptors.request.use(
   (err) => Promise.reject(err)
 )
 
+// Response Interceptor
 instance.interceptors.response.use(
   (res) => {
     if (res.data.code === 200) {
