@@ -7,6 +7,7 @@ const getBaseURL = (url) => {
   //the ip of where this system at
   return 'http://172.18.6.108/'
 }
+
 const getServerURL = (url) => {
   //the ip of where the prometheus system at
   return 'http://172.18.6.108'
@@ -30,7 +31,6 @@ instance.interceptors.request.use(
   (err) => Promise.reject(err)
 )
 
-// Response Interceptor
 instance.interceptors.response.use(
   (res) => {
     if (res.data.code === 200) {
