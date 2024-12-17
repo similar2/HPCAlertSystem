@@ -56,8 +56,6 @@ public class UserService {
 
     private final EmailUtil emailUtil;
 
-    private final ThreadPoolExecutor threadPool;
-
     private final RedisTemplate<String, Object> redisTemplate;
 
     //邮箱->验证码, 例:example@gmail.com->648413
