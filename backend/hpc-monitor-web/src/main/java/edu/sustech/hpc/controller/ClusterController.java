@@ -8,6 +8,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
@@ -43,8 +44,8 @@ public class ClusterController {
      * @param id cluster id
      * @return cluster
      */
-    @GetMapping
-    public ApiResponse<Cluster> getById(Integer id){
+    @GetMapping("/{id}")
+    public ApiResponse<Cluster> getById(@PathVariable Integer id){
         log.info("Get cluster by id: {}", id);
         return ApiResponse.success(clusterService.get(id));
     }

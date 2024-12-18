@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@PathController("/api/device-alerts")
+@PathController("/device-alerts")
 public class DeviceAlertController {
 
     @Resource
