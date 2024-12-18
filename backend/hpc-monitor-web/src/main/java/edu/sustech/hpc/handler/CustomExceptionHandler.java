@@ -72,4 +72,9 @@ public class CustomExceptionHandler {
         return badRequest("PromQL Validation Error: " + e.getMessage());
     }
 
+    @ExceptionHandler(Exception.class)
+    public ApiResponse handleException(Exception e) {
+        return badRequest(e.getMessage());
+    }
+
 }
