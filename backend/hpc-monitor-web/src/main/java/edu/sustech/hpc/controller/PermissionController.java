@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/permissions")  // 将基路径更改为 /permissions
+@RequestMapping("/permissions")  // 将基路径更改为 /permissions
 public class PermissionController {
 
     @Autowired

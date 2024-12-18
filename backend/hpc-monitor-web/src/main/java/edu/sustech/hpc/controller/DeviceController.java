@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
-@PathController("/api/devices")
+@PathController("/devices")
 public class DeviceController {
 
     @Resource
@@ -36,8 +36,13 @@ public class DeviceController {
     private DatabaseService databaseService;
 
     @GetMapping
-    public ApiResponse<List<DeviceParam>> all() {
-        List<DeviceParam> devices = deviceService.all();
+    public ApiResponse<List<DeviceParam>> all(
+            @RequestParam(required = false) Integer clusterId
+    ) {
+        List<DeviceParam> devices = deviceService.all(clusterId);
+        if (devices == null) {
+            return ApiResponse.success(new ArrayList<>());
+        }
         List<Alert> alerts = alertService.getAll(
                 null, null, null, Boolean.FALSE);
         List<String> deviceNames = new ArrayList<>();

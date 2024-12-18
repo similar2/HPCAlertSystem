@@ -42,16 +42,15 @@ public class DeviceService {
     /**
      * @return 获取所有设备，不填入设备专有字段other
      */
-    public List<DeviceParam> all() {
-        return deviceDao.selectList(new LambdaQueryWrapper<Device>()
-                        .eq(Device::getDeleted, false))
-                .stream()
-                .map(device -> {
-                    DeviceParam deviceParam = new DeviceParam();
-                    BeanUtil.copyProperties(device, deviceParam);
-                    return deviceParam;
-                })
-                .toList();
+    public List<DeviceParam> all(Integer clusterId) {
+        return BeanUtil.copyToList(
+                deviceDao.selectList(
+                        new LambdaQueryWrapper<Device>()
+                                .eq(Device::getDeleted, false)
+                                .eq(clusterId != null, Device::getClusterId, clusterId)
+                ),
+                DeviceParam.class
+        );
     }
 
     /**

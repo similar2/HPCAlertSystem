@@ -32,7 +32,7 @@ class DeviceServiceTest {
 
     @Test
     void all() {
-        deviceService.all();
+        deviceService.all(null);
     }
 
     @Test
