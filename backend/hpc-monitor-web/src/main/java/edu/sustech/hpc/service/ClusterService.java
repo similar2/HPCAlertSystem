@@ -1,4 +1,4 @@
-﻿package edu.sustech.hpc.service;
+package edu.sustech.hpc.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import edu.sustech.hpc.dao.ClusterDao;

@@ -1,4 +1,4 @@
-﻿package edu.sustech.hpc.controller;
+package edu.sustech.hpc.controller;
 
 import edu.sustech.hpc.annotation.PathController;
 import edu.sustech.hpc.po.Cluster;
@@ -6,10 +6,7 @@ import edu.sustech.hpc.result.ApiResponse;
 import edu.sustech.hpc.service.ClusterService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -68,7 +65,7 @@ public class ClusterController {
      * @return success
      */
     @PostMapping("/update")
-    public ApiResponse update(Cluster cluster){
+    public ApiResponse update(@RequestBody Cluster cluster){
         log.info("Update cluster: {}", cluster);
         clusterService.update(cluster);
         return ApiResponse.success();
