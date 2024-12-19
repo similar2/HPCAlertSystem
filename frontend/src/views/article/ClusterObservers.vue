@@ -151,6 +151,9 @@ onMounted(async () => {
   const res = await getClusterList()
   ClusterList.value = res.data.data
 
+  if (ClusterList.value.length === 0) {
+    return
+  }
   selectedCluster.value = ClusterList.value[0].name
   currentClusterId.value = ClusterList.value[0].id
   getDeviceList()
@@ -199,10 +202,20 @@ const onDeleteClusterOption = async (id) => {
     confirmButtonText: '确认',
     cancelButtonText: '取消'
   })
-  // const res = await deleteCluster(currentClusterId.value)
-  // console.log(res)
-  ClusterList.value = ClusterList.value.filter((item) => item.id !== id)
+  const res = await deleteCluster(id)
+  if(res.data.code !== 200) {
+    ElMessage({ type: 'error', message: '集群删除失败' })
+    return
+  }
+  const res1 = await getClusterList()
+  ClusterList.value = res1.data.data
   ElMessage({ type: 'success', message: '集群删除成功' })
+  if (ClusterList.value.length === 0) {
+    return
+  }
+  selectedCluster.value = ClusterList.value[0].name
+  currentClusterId.value = ClusterList.value[0].id
+  getDeviceList()
 }
 
 // 编辑新增逻辑
