@@ -135,7 +135,6 @@ import {
 } from '@/api/cluster'
 import router from '@/router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { c } from 'vite/dist/node/types.d-aGj9QkWt'
 
 const loading = ref(false)
 const ClusterList = ref([])
