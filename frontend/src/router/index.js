@@ -23,12 +23,8 @@ const router = createRouter({
           component: () => import('@/views/article/WarningDetail.vue')
         },
         {
-          path: '/article/observers1',
-          component: () => import('@/views/article/ClusterObservers1.vue')
-        },
-        {
-          path: '/article/observers2',
-          component: () => import('@/views/article/ClusterObservers2.vue')
+          path: '/article/observers',
+          component: () => import('@/views/article/ClusterObservers.vue')
         },
         {
           path: '/article/warning',

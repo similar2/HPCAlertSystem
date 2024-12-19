@@ -5,8 +5,8 @@ export default {
     const userStore = useUserStore();
     const requiredPermission = binding.value;
 
-    console.log(userStore.permissions)
-    console.log(requiredPermission)
+    // console.log(userStore.permissions)
+    // console.log(requiredPermission)
     
     // 检查权限
     if (!userStore.permissions.includes(requiredPermission)) {

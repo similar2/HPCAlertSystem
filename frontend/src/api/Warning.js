@@ -31,7 +31,14 @@ export const artEditWarningService = (data, id) =>
 export const artDelWarningService = (id, data) =>
   request.post(`/api/alerts/solve/${id}?solveMethod=${data}`)
 //获取所有设备
-export const artGetAllDevicesService = () => request.get('/api/devices')
+export const artGetAllDevicesService = (id) => {
+  let url = '/api/devices'
+  // console.log(id)
+  if (id) {
+    url = `/api/devices?clusterId=${id}`
+  }
+  return request.get(url)
+}
 export const artGetDeviceService = (id) => request.get(`/api/devices/${id}`)
 //增加设备
 export const artAddDeviceService = (data) => request.post('/api/devices', data)

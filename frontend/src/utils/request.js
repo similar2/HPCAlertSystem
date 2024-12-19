@@ -6,6 +6,7 @@ import router from '@/router'
 const getBaseURL = (url) => {
   //the ip of where this system at
   return 'http://172.18.6.108/'
+  // return 'http://localhost:8080/'
 }
 
 const getServerURL = (url) => {

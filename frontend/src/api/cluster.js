@@ -14,11 +14,11 @@ export const getClusterById = (id) => {
     })
 }
 
-export const createCluster = (clusterName) => {
+export const createCluster = (name) => {
     return request({
         url: '/api/cluster',
         method: 'post',
-        params: {clusterName}
+        params: {name}
     })
 }
 

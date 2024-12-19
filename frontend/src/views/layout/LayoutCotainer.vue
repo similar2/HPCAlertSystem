@@ -72,21 +72,10 @@
                 <el-icon><Promotion /></el-icon>
                 <span>问题列表</span>
               </el-menu-item>
-              <el-sub-menu index="/article/observers">
-                <template #title>
-                  <el-icon><Promotion /></el-icon>
-                  <span>监控集群</span>
-                </template>
-                <el-menu-item
-                    v-for="cluster in clusters"
-                    :key="cluster.id"
-                    :index="`/article/observers${cluster.id}`"
-                    @click="() => router.push(`/article/observers${cluster.id}`)"
-                    v-permission="`cluster${cluster.id}:list`"
-                >
-                  <span>{{ cluster.name }}</span>
-                </el-menu-item>
-              </el-sub-menu>
+              <el-menu-item index="/article/observers" v-permission="'cluster:list'">
+                <el-icon><Promotion /></el-icon>
+                <span>监控集群</span>
+              </el-menu-item>
                 <el-sub-menu index="/article/auxiliary-monitoring">
                   <template #title>
                     <el-icon><Promotion /></el-icon>

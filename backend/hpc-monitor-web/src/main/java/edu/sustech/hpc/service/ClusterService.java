@@ -36,6 +36,13 @@ public class ClusterService {
     }
 
     public void add(String name) {
+        Cluster cluster = clusterDao.selectOne(
+                new LambdaQueryWrapper<Cluster>()
+                        .eq(Cluster::getName, name)
+        );
+        if (cluster != null) {
+            throw new RuntimeException("集群名已存在，不可重复");
+        }
         clusterDao.insert(new Cluster().setName(name));
     }
 
