@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class BmcService extends JobService {
+    String targetConfigFile;
 
     BmcService() {
+        targetConfigFile = "/prometheus/targets.yml";
         jobName = "ipmi_exporter";
         hardwareType = HardwareType.BMC;
     }

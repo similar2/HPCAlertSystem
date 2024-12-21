@@ -11,8 +11,10 @@ import java.io.IOException;
 
 @Service
 public class HostService extends JobService {
+    String configFile;
 
     HostService() {
+        configFile = "/deploy/prometheus/prometheus.yml";
         jobName = "node_exporter";
         hardwareType = HardwareType.HOST;
     }
