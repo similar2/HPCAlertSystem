@@ -40,11 +40,6 @@ public class PrometheusService {
     @Autowired
     private PrometheusUtils prometheusUtils;
 
-    //    @Scheduled(fixedRate = 60000)
-    public void getAlertFromPrometheus() {
-        log.info("Checking active alerts from Prometheus");
-    }
-
     public Map<String, List<String>> getFilterOptionsByMetricName(HardwareType hardwareType, String metricName) {
         JobService jobService = jobMappingService.getJobService(hardwareType);
         Map<String, List<String>> map = new HashMap<>();
@@ -183,7 +178,7 @@ public class PrometheusService {
 
     public List<AlertRuleInfo> getAllAlertRules() throws IOException {
         JSONObject response = new JSONObject(CharStreams.toString(new InputStreamReader(
-                new URL("http:/" + prometheusServerUrl + ":9090/api/v1/rules").openStream(), StandardCharsets.UTF_8)));
+                new URL("http://" + prometheusServerUrl + ":9090/api/v1/rules").openStream(), StandardCharsets.UTF_8)));
         JSONArray ruleGroups = response.getJSONObject("data")
                 .getJSONArray("groups");
         List<AlertRuleInfo> alertRuleInfoList = new ArrayList<>();
