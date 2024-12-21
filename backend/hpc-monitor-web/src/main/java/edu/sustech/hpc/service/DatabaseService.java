@@ -30,11 +30,6 @@ public class DatabaseService {
                 .eq(Device::getId, serverInfo.getId())));
     }
 
-    ClusterInfo getClusterInfoFromDeviceInfo(DeviceInfo deviceInfo) {
-        return new ClusterInfo(clusterDao.selectOne(new LambdaQueryWrapper<Cluster>()
-                .eq(Cluster::getId, deviceInfo.getClusterId())));
-    }
-
     public List<Cluster> getClusterInfo() {
         return clusterDao.selectList(null);
     }

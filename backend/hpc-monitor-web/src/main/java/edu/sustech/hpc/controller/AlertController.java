@@ -121,14 +121,4 @@ public class AlertController {
         Alert alert = alertService.get(id);
         return ApiResponse.success(alert);
     }
-
-//    @PostMapping("/modify/{id}")
-//    public ApiResponse<Alert> modify(@PathVariable Integer id,
-//                                     @RequestBody @Validated AlertParam alertParam){
-//        Alert alert = alertService.modify(id,
-//                                        alertParam.getDescription(),
-//                                        alertParam.getDeviceName(),
-//                                        alertParam.getSolveMethod());
-//        return ApiResponse.success(alert);
-//    }
 }

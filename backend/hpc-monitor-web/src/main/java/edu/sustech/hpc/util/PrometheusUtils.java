@@ -52,8 +52,6 @@ public class PrometheusUtils {
                 } else if (jsonResponse.getJSONObject("data").getJSONArray("result").isEmpty()) {
                     throw new PromQLValidationException("Not Existing Metric Name or No Data Yet");
                 }
-
-
             }
 
         } catch (IOException e) {

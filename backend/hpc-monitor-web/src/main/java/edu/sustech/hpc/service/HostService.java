@@ -3,10 +3,7 @@ package edu.sustech.hpc.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import edu.sustech.hpc.model.vo.*;
-import edu.sustech.hpc.po.Alert;
-import edu.sustech.hpc.po.AlertType;
-import edu.sustech.hpc.po.Hardware;
-import edu.sustech.hpc.po.HardwareType;
+import edu.sustech.hpc.po.*;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +11,10 @@ import java.io.IOException;
 
 @Service
 public class HostService extends JobService {
-    String configFile;
 
     HostService() throws IOException {
-        configFile = "/deploy/prometheus/prometheus.yml";
         jobName = "node_exporter";
         hardwareType = HardwareType.HOST;
-
     }
 
     @Override
@@ -63,8 +57,4 @@ public class HostService extends JobService {
         return hardware;
     }
 
-    @Override
-    public Hardware _getHardwarePo(PrometheusTargetInfo prometheusTargetInfo) {
-        return null;
-    }
 }

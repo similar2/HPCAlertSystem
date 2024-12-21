@@ -41,7 +41,7 @@ public class PrometheusService {
     private PrometheusUtils prometheusUtils;
 
     //    @Scheduled(fixedRate = 60000)
-    public void getAlertFromPrometheus() throws IOException {
+    public void getAlertFromPrometheus() {
         log.info("Checking active alerts from Prometheus");
     }
 
@@ -139,12 +139,7 @@ public class PrometheusService {
 
         Map<String, Object> rule = new HashMap<>();
         rule.put("alert", alertRuleParam.getAlertName());
-//        String expr =
-//                alertRuleParam.getMetricName() + "{job=\"" +
-//                        jobName + "\"" + jobService.getAlertRuleFilteredExpr(alertRuleParam)
-//                        + "} " + alertRuleParam.getExpr();
         String expr = alertRuleParam.getExpr();
-        // ** Validate the PromQL expression before proceeding **
 
         prometheusUtils.validatePromQL(expr);  // Using the utility method
 
@@ -171,7 +166,6 @@ public class PrometheusService {
         HardwareType type = jobMappingService.getHardwareType(groupName);
         String query = rule.getString("query");
         query = query.replace("~", "");
-//        query = query.replace("[0-9]*", "");
         if (query.endsWith("_"))
             query = query.substring(0, query.length() - 1);
         AlertRuleInfo alertRuleInfo = new AlertRuleInfo(

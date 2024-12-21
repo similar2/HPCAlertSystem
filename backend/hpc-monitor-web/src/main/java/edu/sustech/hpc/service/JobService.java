@@ -1,11 +1,7 @@
 package edu.sustech.hpc.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import edu.sustech.hpc.dao.AlertDao;
-import edu.sustech.hpc.model.param.AlertRuleParam;
 import edu.sustech.hpc.model.vo.PrometheusAlertInfo;
-import edu.sustech.hpc.model.vo.PrometheusTargetInfo;
-import edu.sustech.hpc.po.Hardware;
 import edu.sustech.hpc.po.HardwareType;
 import jakarta.annotation.Resource;
 
@@ -32,9 +28,6 @@ public abstract class JobService {
     HardwareDao hardwareDao;
 
     @Resource
-    AlertDao alertDao;
-
-    @Resource
     AlertService alertService;
 
     @Resource
@@ -45,5 +38,4 @@ public abstract class JobService {
     public abstract JsonNode getActivePrometheusAlertInfoOther(JSONObject alertInfo);
 
     public abstract void checkAddActiveAlert(PrometheusAlertInfo prometheusAlertInfo);
-    public abstract Hardware _getHardwarePo(PrometheusTargetInfo prometheusTargetInfo);
 }
