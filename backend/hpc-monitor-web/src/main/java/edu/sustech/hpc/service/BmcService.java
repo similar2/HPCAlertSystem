@@ -9,14 +9,10 @@ import edu.sustech.hpc.po.*;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
-
 @Service
 public class BmcService extends JobService {
-    String targetConfigFile;
 
-    BmcService() throws IOException {
-        targetConfigFile = "/prometheus/targets.yml";
+    BmcService() {
         jobName = "ipmi_exporter";
         hardwareType = HardwareType.BMC;
     }
