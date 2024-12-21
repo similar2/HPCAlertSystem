@@ -12,7 +12,7 @@ import java.io.IOException;
 @Service
 public class HostService extends JobService {
 
-    HostService() throws IOException {
+    HostService() {
         jobName = "node_exporter";
         hardwareType = HardwareType.HOST;
     }
@@ -32,17 +32,15 @@ public class HostService extends JobService {
         String generated_alertName = prometheusAlertInfo.getAlertName();
         if (prometheusAlertInfo.getOther().has("name"))
             generated_alertName += "_" + prometheusAlertInfo.getOther().get("name").asText();
-        HardwareInfo hardwareInfo = new HardwareInfo(_getHardwarePo(prometheusAlertInfo.getInstance()));
-        ServerInfo serverInfo = databaseService.getServerInfoFromHardwareInfo(hardwareInfo);
-        DeviceInfo deviceInfo = databaseService.getDeviceInfoFromServerInfo(serverInfo);
-        Alert alert = alertService.getActiveAlert(generated_alertName, deviceInfo.getName());
+        Hardware hardware = _getHardwarePo(prometheusAlertInfo.getInstance());
+        Alert alert = alertService.getActiveAlert(generated_alertName, hardware.getDeviceName());
         if (alert == null) {
             alertService.addPrometheusAlert(
                     Alert.builder().alertName(generated_alertName)
                             .createTime(prometheusAlertInfo.getActiveTime())
                             .description(prometheusAlertInfo.getSummary())
                             .severity(prometheusAlertInfo.getSeverity())
-                            .deviceName(deviceInfo.getName())
+                            .deviceName(hardware.getDeviceName())
                             .type(AlertType.PROMETHEUS)
                             .build()
                     , prometheusAlertInfo);
