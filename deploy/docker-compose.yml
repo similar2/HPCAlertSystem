@@ -72,6 +72,21 @@ services:
       - /home/wuyx/mysql/data:/var/lib/mysql
       - ./mysql/tables.sql:/docker-entrypoint-initdb.d/tables.sql
 
+  redis:
+    image: redis:7
+    container_name: hpc-monitor-redis
+    command: ["redis-server", "/etc/redis/redis.conf"]
+    volumes:
+      - ./redis/conf/redis.conf:/etc/redis/redis.conf
+      - ./redis/data:/data
+    ports:
+      - "6379:6379"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "2"
+    restart: always
 
   web:
     image: openjdk:21
@@ -87,6 +102,7 @@ services:
     depends_on:
       - prometheus
       - mysql
+      - redis
 
   nginx:
     image: nginx:1.25.5

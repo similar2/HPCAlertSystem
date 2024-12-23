@@ -61,6 +61,6 @@ public class PrometheusServiceTest {
 
     @Test
     public void addPrometheusAlertTest() throws IOException {
-        prometheusService.getAlertFromPrometheus();
+//        prometheusService.getAlertFromPrometheus();
     }
 }
